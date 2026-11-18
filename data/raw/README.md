@@ -115,6 +115,55 @@ Total catch per year = `df.groupby("year").tonnes.sum()`. Useful extra angles: s
 
 ---
 
+## 3. Alternative sources for cross-validation — `validation/`
+
+Each file overlaps a main series (same quantity, same years) but comes from a **different publisher, method or spatial unit**, so the main data can be checked against it.
+
+| File | Cross-checks main file | Why it's a useful check |
+|---|---|---|
+| `un_sdg/14_4_1_ER_H2O_FWTL.csv` | `owid/share-of-fish-stocks-overexploited.csv` (overexploited = 100 − sustainable) | Official UN publication of FAO's numbers → tests that OWID's processing is faithful. Also extends World to **2023–2024** (FAO's new 2025 method — do not join to the old series) and gives **SEA country values 2016–2024** |
+| `world_bank/ER.FSH.CAPT.MT.csv` | `owid/capture-fishery-production.csv` | Original publisher via API (vintage 2026-11-11, newer than OWID's 2026-07-27) → tests OWID processing and data revisions |
+| `sau_regions/stock_status/global.csv` | FAO World % overexploited | **Different method**: FAO stock assessments vs SAU catch-based status |
+| `sau_regions/stock_status/fao_71_*.csv`, `fao_57_*.csv` | FAO Areas 71 & 57 % overexploited | Same regions, different method |
+| `sau_regions/catch/global.csv` | `owid/capture-fishery-production.csv` (World) | Officially **reported** catch vs SAU **reconstructed** catch (reported + unreported) |
+| `sau_regions/*/lme_34…38_*.csv` | `sau/*` EEZ files | Same method, **different spatial unit** (ecosystem vs national zone) → tests that SEA conclusions don't depend on how the region is drawn |
+| `sau_regions/marine_trophic_index/fao_*`, `global` | `sau/marine_trophic_index/*` | Regional/global mean trophic level as a benchmark for the EEZ series |
+
+### `validation/sau_regions/` — 1950–2019
+
+Same formats as the EEZ files (`stock_status/`, `marine_trophic_index/`), plus `catch/` with `year, landings, discards, reported, unreported` (tonnes; landings + discards = reported + unreported = total catch).
+
+| Region file | Area |
+|---|---|
+| `global` | All oceans |
+| `fao_57_indian_ocean_eastern` | FAO Area 57 (Andaman Sea, Strait of Malacca, Bay of Bengal…) |
+| `fao_71_pacific_western_central` | FAO Area 71 (South China Sea, Gulf of Thailand, Indonesian & Philippine seas…) |
+| `lme_34_bay_of_bengal` … `lme_38_indonesian_sea` | Large Marine Ecosystems 34 Bay of Bengal, 35 Gulf of Thailand, 36 South China Sea, 37 Sulu-Celebes Sea, 38 Indonesian Sea |
+
+### `validation/un_sdg/14_4_1_ER_H2O_FWTL.csv`
+
+`geo_area_code, geo_area_name, year, value_pct_sustainable, observation_status, nature, source` — % of fish stocks **within** biologically sustainable levels. Rows: World (1974–2021, 2023, 2024), Malaysia, Indonesia, Thailand, Viet Nam, Philippines (2016–2024), and the 16 FAO Major Fishing Areas.
+
+### `validation/world_bank/ER.FSH.CAPT.MT.csv`
+
+`country, iso3, year, capture_fisheries_production_t` — World + SEA5, 1960–2024 (WDI, last updated 2026-11-11).
+
+### First look at agreement (Spearman ρ; preview only — formal tests go in the notebook)
+
+| Pair | Years | ρ levels | ρ year-to-year changes |
+|---|---|---|---|
+| FAO % overexploited World: OWID vs UN SDG | 1974–2021 | 1.00 | 1.00 (identical) |
+| Capture World: OWID vs World Bank API | 1960–2024 | 1.00 | 1.00 (tiny revisions) |
+| % overexploited World: FAO vs SAU | 1974–2019 | 0.94 | 0.03 |
+| % overexploited Area 71: FAO vs SAU | 2004–2019 (9 pts) | 0.40 | 0.19 |
+| % overexploited Area 57: FAO vs SAU | 2004–2019 (9 pts) | 0.55 | −0.33 |
+| Catch World: FAO capture vs SAU reported | 1960–2019 | 0.98 | 0.93 |
+| Catch per SEA country: FAO vs SAU reported (EEZ sum) | 1960–2019 | 0.85–1.00 | 0.39–0.95 |
+
+Reading: the two methods agree on the **long-run trend** of overexploitation but not on **year-to-year moves** (FAO's World series is partly interpolated), so trend tests are robust while lag correlations on differenced FAO data need caution. FAO/SAU catch ratios above 1 for Thailand (1.30) and the Philippines (1.77) are expected: FAO capture includes **inland** fisheries, SAU is marine only.
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -129,7 +178,7 @@ Total catch per year = `df.groupby("year").tonnes.sum()`. Useful extra angles: s
 
 ## How the committed files were obtained
 
-The cloud workspace used to build this repo could not reach OWID or SAU directly, so the files were fetched in a web browser using exactly the URLs and filtering in `src/download_data.py`, bundled with SHA-256 checksums, and verified after transfer (39/39 files matched). Running `python src/download_data.py` re-creates them from source.
+The cloud workspace used to build this repo could not reach OWID or SAU directly, so the files were fetched in a web browser using exactly the URLs and filtering in `src/download_data.py`, bundled with SHA-256 checksums, and verified after transfer (39/39 files matched; the 26 validation files likewise 26/26). Running `python src/download_data.py` re-creates them from source.
 
 ---
 
@@ -141,3 +190,6 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - Pauly, D., Zeller, D. & Palomares, M.L.D. (Eds.) (2020). *Sea Around Us Concepts, Design and Data*. www.seaaroundus.org — EEZ catch, Marine Trophic Index and stock-status data, dataset version v50-1, accessed 18 Nov 2026.
 - Kleisner, K., Zeller, D., Froese, R. & Pauly, D. (2013). Using global catch data for inferences on the world's marine fisheries. *Fish and Fisheries*, 14(3), 293–311. (stock-status method)
 - Pauly, D. et al. (1998). Fishing down marine food webs. *Science*, 279(5352), 860–863. (mean trophic level indicator)
+- United Nations Statistics Division. *Global SDG Indicators Database*, series ER_H2O_FWTL (indicator 14.4.1). Source: FAO (2025), *Review of the state of world marine fishery resources – 2025*, FAO Fisheries and Aquaculture Technical Paper No. 721. https://unstats.un.org/sdgs/dataportal, accessed 18 Nov 2026.
+- World Bank. *World Development Indicators*, ER.FSH.CAPT.MT — Capture fisheries production (metric tons), last updated 11 Nov 2026. https://data.worldbank.org/indicator/ER.FSH.CAPT.MT
+- Sea Around Us regional data (Global, FAO Areas 57 & 71, LMEs 34–38), v50-1, accessed 18 Nov 2026 — cite as Pauly, Zeller & Palomares (2020) above.

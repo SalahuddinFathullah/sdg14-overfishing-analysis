@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟡 Data collected — all raw datasets in `data/raw/`; cleaning & analysis not started yet. See [Progress](#progress).
+> **Status:** 🟡 Data collected — main datasets and alternative validation sources in `data/raw/`; cleaning & analysis not started yet. See [Progress](#progress).
 
 ---
 
@@ -20,7 +20,7 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 | Report section (weight) | What we produce | Where in this repo |
 |---|---|---|
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
-| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix | [§3](#3-datasets), `notebooks/01_*` |
+| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), `notebooks/01_*` |
 | EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | `notebooks/02_*`, `figures/` |
 | Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests** | [§4](#4-analysis-pipeline), `notebooks/03_*` |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
@@ -89,6 +89,17 @@ SDG target **14.4** calls for ending overfishing and restoring stocks to sustain
 
 **Why Sea Around Us became the main SEA source:** FAO publishes stock status only by large fishing area, and the OWID series for Areas 71/57 has just 10 uneven points — fine for a Mann-Kendall test but too short for ACF/CCF. Sea Around Us gives an annual 70-year series per EEZ, which supports the full pipeline and lets us compare the 5 countries (Kruskal-Wallis + Dunn).
 
+### Alternative sources for cross-validation (`data/raw/validation/`)
+
+| Source | Checks | Type of check |
+|--------|--------|---------------|
+| UN SDG Global Database — indicator 14.4.1 | FAO % overexploited (OWID) | Same data, official publisher → processing check |
+| World Bank WDI API — `ER.FSH.CAPT.MT` | Capture production (OWID) | Same data, original publisher → processing & revision check |
+| Sea Around Us — World, FAO Areas 57/71 | FAO % overexploited, FAO capture | **Different method** (catch-based status; reconstructed catch) |
+| Sea Around Us — 5 SEA Large Marine Ecosystems | Sea Around Us EEZ series | **Different spatial unit** (ecosystem vs national zone) |
+
+Details and a first look at agreement: [data dictionary §3](data/raw/README.md#3-alternative-sources-for-cross-validation--validation).
+
 **Dropped:** Global Fishing Watch (needs a registered account and its effort series is only 2012–2024) and SEAFDEC (PDF tables). Neither is needed for the hypotheses above; GFW can be added later as an optional extension.
 
 ---
@@ -152,6 +163,20 @@ Load & clean ──► Explore (plots, missing years)
 - **Comparing the 5 SEA countries (Stage 2):** if a **Kruskal-Wallis** test shows the countries differ (e.g. in year-on-year change of mean trophic level), **Dunn's post-hoc test** with Holm correction identifies which country pairs differ.
 - **Segmented regression:** if a breakpoint at 2015 is significant, a **Chow test** confirms the structural break.
 
+### Data validation against alternative sources (Data Understanding & Preparation)
+
+Before testing hypotheses, each main series is checked against an alternative source over their common years. Two sources rarely agree on **levels** (different coverage and methods: e.g. FAO capture includes inland catch, Sea Around Us adds unreported catch), so validity means they agree on **direction and trend**, while any level gap is explained.
+
+| Question | Test | Pairs |
+|---|---|---|
+| Is there a systematic difference between the two sources? | **Wilcoxon signed-rank** on paired years (paired *t*-test only if the differences pass Shapiro-Wilk) | all pairs |
+| How large is the bias and how wide is the disagreement? | **Bland-Altman**: mean difference ± 1.96 SD (limits of agreement); use % difference when levels differ in scale | same-unit pairs (% stocks, tonnes) |
+| Do they agree point-for-point? | **Lin's concordance correlation coefficient (CCC)** — penalises both scatter and bias, unlike Pearson | same-unit pairs |
+| Do they move together? | **Spearman ρ on levels *and* on first differences** — level correlation is inflated by shared trends; differences show year-to-year agreement | all pairs |
+| Do they show the same trend? | **Sen's slope with 95% CI** for each source, plus Mann-Kendall direction; overlapping CIs → same trend | all pairs |
+
+Because years are autocorrelated, the paired-test *p*-values are optimistic; we report them alongside effect sizes (bias, CCC, Sen's slope) rather than relying on *p* alone.
+
 ---
 
 ## 5. Known caveats (for the Limitations section)
@@ -174,6 +199,7 @@ sdg14-overfishing-analysis/
 ├── requirements.txt     ← Python dependencies
 ├── data/
 │   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md
+│   │   └── validation/  ← alternative sources for cross-checking (UN SDG, World Bank, SAU regions)
 │   └── processed/       ← cleaned, analysis-ready CSVs
 ├── notebooks/           ← Jupyter notebooks (stage1_global, stage2_sea, …)
 ├── src/
@@ -204,7 +230,9 @@ jupyter lab
 |------|-------|--------|-----------------|
 | Repo & plan set up | — | ✅ Done | `README.md` |
 | Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
+| Download alternative sources for validation | 1–2 | ✅ Done | `data/raw/validation/` |
 | Clean global datasets | 1 | ⬜ Not started | — |
+| Validate main data vs alternative sources | 1–2 | ⬜ Not started | — |
 | Exploratory plots + ACF | 1 | ⬜ Not started | — |
 | ADF + differencing | 1 | ⬜ Not started | — |
 | H1a trend tests (Mann-Kendall, segmented regression) | 1 | ⬜ Not started | — |
@@ -228,6 +256,7 @@ _None yet — results will be added here as each test is completed._
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-18 | Salah | Added alternative sources for cross-validation (UN SDG 14.4.1, World Bank API, Sea Around Us World / FAO areas 57 & 71 / 5 SEA LMEs; 26 files), validation test plan, download script `--only validation` |
 
 ---
 

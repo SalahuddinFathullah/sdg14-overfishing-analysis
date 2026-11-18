@@ -26,11 +26,18 @@ Sources
                              landings/discards x reported/unreported x domestic/foreign fleet
    for the 11 EEZs belonging to the 5 SEA focus countries.
 
+3. Alternative sources for cross-validation  ->  data/raw/validation/
+   - sau_regions/   SAU stock status, MTI and catch for the World, FAO areas 57/71
+                    and the 5 SEA Large Marine Ecosystems (LMEs 34-38)
+   - un_sdg/        UN SDG Global Database, indicator 14.4.1 (series ER_H2O_FWTL)
+   - world_bank/    World Bank WDI API, capture production ER.FSH.CAPT.MT
+
 Usage
 -----
-    python src/download_data.py            # download everything
+    python src/download_data.py                   # download everything
     python src/download_data.py --only owid
     python src/download_data.py --only sau
+    python src/download_data.py --only validation
 
 Notes
 -----
@@ -211,6 +218,101 @@ def download_sau() -> None:
             (out_dir / f"{eez_slug(eez_id)}.csv").write_text(text, encoding="utf-8")
 
 
+# --------------------------------------------------------------------------- #
+# Validation (alternative) sources  ->  data/raw/validation/
+# --------------------------------------------------------------------------- #
+# Sea Around Us at other spatial scales: the whole ocean, the two FAO areas that
+# cover SEA, and the 5 SEA Large Marine Ecosystems (LMEs).
+SAU_REGIONS = {
+    ("global", 1): "global",
+    ("fao", 57): "fao_57_indian_ocean_eastern",
+    ("fao", 71): "fao_71_pacific_western_central",
+    ("lme", 34): "lme_34_bay_of_bengal",
+    ("lme", 35): "lme_35_gulf_of_thailand",
+    ("lme", 36): "lme_36_south_china_sea",
+    ("lme", 37): "lme_37_sulu_celebes_sea",
+    ("lme", 38): "lme_38_indonesian_sea",
+}
+SAU_API = "https://api.seaaroundus.org/api/v1"
+UN_SDG_URL = ("https://unstats.un.org/SDGAPI/v1/sdg/Series/Data"
+              "?seriesCode=ER_H2O_FWTL&pageSize=10000")          # SDG 14.4.1
+WB_URL = ("https://api.worldbank.org/v2/country/WLD;MYS;IDN;THA;VNM;PHL"
+          "/indicator/ER.FSH.CAPT.MT?format=json&per_page=1000")  # capture production
+
+
+def js_num(x) -> str:
+    """Format a number the way JavaScript's String(x) does (used for the committed files)."""
+    if x is None:
+        return ""
+    if isinstance(x, float) and x.is_integer():
+        return str(int(x))
+    return repr(x) if isinstance(x, float) else str(x)
+
+
+def q(s) -> str:
+    """Quote a CSV field only when needed (same rule as the committed files)."""
+    s = "" if s is None else str(s)
+    return '"' + s.replace('"', '""') + '"' if any(c in s for c in '",\n\r') else s
+
+
+def download_validation() -> None:
+    root = RAW_DIR / "validation"
+
+    # 1) Sea Around Us regional series ---------------------------------------
+    for (region, rid), slug in SAU_REGIONS.items():
+        print(f"SAU   region {slug}")
+        for measure, url in {
+            "stock_status": f"{SAU_API}/{region}/stock-status/?format=csv&region_id={rid}&sub_area_id=",
+            "marine_trophic_index": f"{SAU_API}/{region}/marine-trophic-index/?format=csv&region_id={rid}"
+                                    "&transfer_efficiency=0.1&sub_area_id=&tl_min=2&tl_max=5",
+        }.items():
+            text = first_csv_in_zip(get(url, timeout=300))
+            out = root / "sau_regions" / measure / f"{slug}.csv"
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text.replace("\r\n", "\n").rstrip("\n") + "\n", encoding="utf-8")
+
+        # Catch: two small JSON chart series (catch type, reporting status) joined by year.
+        series: dict[str, dict[int, float]] = {}
+        for dim in ("reporting-status", "catchtype"):
+            js = json.loads(get(f"{SAU_API}/{region}/tonnage/{dim}/?region_id={rid}", timeout=300))
+            for d in js["data"]:
+                series[d["key"]] = {int(y): v for y, v in d["values"]}
+        years = sorted({y for s in series.values() for y in s})
+        lines = ["year,landings,discards,reported,unreported"]
+        for y in years:
+            vals = [js_num(series.get(k, {}).get(y)) for k in ("Landings", "Discards", "Reported", "Unreported")]
+            lines.append(",".join([str(y)] + vals))
+        out = root / "sau_regions" / "catch" / f"{slug}.csv"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # 2) UN SDG Global Database, indicator 14.4.1 -----------------------------
+    print("UN SDG 14.4.1 (ER_H2O_FWTL)")
+    keep = {"World", "Malaysia", "Indonesia", "Thailand", "Viet Nam", "Philippines"}
+    rows = [d for d in json.loads(get(UN_SDG_URL))["data"]
+            if d["geoAreaName"] in keep or d["geoAreaName"].startswith("FAO Major Fishing Area")]
+    rows.sort(key=lambda d: (d["geoAreaName"], float(d["timePeriodStart"])))
+    lines = ["geo_area_code,geo_area_name,year,value_pct_sustainable,observation_status,nature,source"]
+    for d in rows:
+        a = d["attributes"]
+        lines.append(",".join([str(d["geoAreaCode"]), q(d["geoAreaName"]), js_num(d["timePeriodStart"]),
+                               str(d["value"]), q(a.get("Observation Status")), q(a.get("Nature")), q(d["source"])]))
+    out = root / "un_sdg" / "14_4_1_ER_H2O_FWTL.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # 3) World Bank WDI API, capture fisheries production ---------------------
+    print("World Bank ER.FSH.CAPT.MT")
+    data = json.loads(get(WB_URL))[1]
+    data.sort(key=lambda d: (d["countryiso3code"], int(d["date"])))
+    lines = ["country,iso3,year,capture_fisheries_production_t"]
+    for d in data:
+        lines.append(",".join([q(d["country"]["value"]), d["countryiso3code"], d["date"], js_num(d["value"])]))
+    out = root / "world_bank" / "ER.FSH.CAPT.MT.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -224,14 +326,16 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau"], help="download one source only")
+    parser.add_argument("--only", choices=["owid", "sau", "validation"], help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
         download_sau()
+    if "validation" in parts:
+        download_validation()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 
