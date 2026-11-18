@@ -1,0 +1,16 @@
+# Data handling
+pandas>=2.0
+numpy>=1.24
+
+# Statistics & time-series tests (ADF, ACF/CCF, regression, Granger)
+statsmodels>=0.14
+scipy>=1.10
+pymannkendall>=1.4   # Mann-Kendall trend test
+scikit-posthocs>=0.9 # Dunn's post-hoc test
+
+# Plotting
+matplotlib>=3.7
+seaborn>=0.12
+
+# Notebooks
+jupyterlab>=4.0

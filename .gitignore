@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large raw data (keep small CSVs; add download links in README instead)
+data/raw/*.parquet
+data/raw/*.zip
+data/raw/*.gz
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
