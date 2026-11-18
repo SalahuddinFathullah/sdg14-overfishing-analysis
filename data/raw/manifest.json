@@ -1,0 +1,28 @@
+{
+  "retrieved": "2026-11-18",
+  "parts": [
+    "owid",
+    "sau"
+  ],
+  "owid_entities_kept": [
+    "World",
+    "Malaysia",
+    "Indonesia",
+    "Thailand",
+    "Vietnam",
+    "Philippines"
+  ],
+  "sau_eezs": {
+    "459": "Malaysia (Peninsula West)",
+    "460": "Malaysia (Peninsula East)",
+    "461": "Malaysia (Sabah)",
+    "463": "Malaysia (Sarawak)",
+    "937": "Indonesia (Central)",
+    "361": "Indonesia (Eastern)",
+    "938": "Indonesia (Indian Ocean)",
+    "956": "Thailand (Andaman Sea)",
+    "957": "Thailand (Gulf of Thailand)",
+    "704": "Viet Nam",
+    "608": "Philippines"
+  }
+}

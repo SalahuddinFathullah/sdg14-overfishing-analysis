@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟡 Planning — repo set up, no analysis code pushed yet. See [Progress](#progress).
+> **Status:** 🟡 Data collected — all raw datasets in `data/raw/`; cleaning & analysis not started yet. See [Progress](#progress).
 
 ---
 
@@ -65,26 +65,31 @@ SDG target **14.4** calls for ending overfishing and restoring stocks to sustain
 
 ## 3. Datasets
 
+✅ **All datasets are downloaded and committed in [`data/raw/`](data/raw/)** — see the [data dictionary](data/raw/README.md) for every column, unit and known issue. Re-download from source with `python src/download_data.py`.
+
 ### Stage 1 (global)
 
-| Dataset | Variable | Coverage | Link |
+| Dataset | Variable | Coverage | File |
 |---------|----------|----------|------|
-| OWID / FAO — *Share of fish stocks overexploited* | % of assessed stocks overexploited | Global, 1974–2021 | [ourworldindata.org](https://ourworldindata.org/grapher/share-of-fish-stocks-overexploited) |
-| OWID / World Bank — *Capture fishery production* (`ER.FSH.CAPT.MT`) | Tonnes of wild fish landed | Global & per country, 1960–2023 | [ourworldindata.org](https://ourworldindata.org/grapher/capture-fishery-production) |
+| FAO via OWID — *Share of fish stocks overexploited* | % of assessed stocks overexploited | World 1974–2021 (48 yrs) | `owid/share-of-fish-stocks-overexploited.csv` |
+| FAO via OWID — *Fish stocks within sustainable levels* (SDG 14.4.1) | % sustainable / % overexploited | World 1974–2021 | `owid/fish-stocks-within-sustainable-levels.csv` |
+| FAO/World Bank via OWID — *Capture fishery production* | Wild catch (t) | World 1960–2024 | `owid/capture-fishery-production.csv` |
 
-Both are single CSVs (direct download link on each chart), so Stage 1 needs no heavy data wrangling.
+### Stage 2 (Southeast Asia — Malaysia, Indonesia, Thailand, Vietnam, Philippines)
 
-### Stage 2 (Southeast Asia)
+| Dataset | What it gives | Coverage | Folder / file |
+|---------|---------------|----------|---------------|
+| **Sea Around Us — stock status** | % of stocks (and % of catch) collapsed / over-exploited / exploited / developing / rebuilding | 11 SEA EEZs, 1950–2019 | `sau/stock_status/` |
+| **Sea Around Us — Marine Trophic Index** | Mean trophic level of catch, FiB index, mean max fish length | 11 SEA EEZs, 1950–2019 | `sau/marine_trophic_index/` |
+| **Sea Around Us — catch summary** | Total catch (t) & value by sector, landings/discards, reported/unreported, domestic/foreign fleet | 11 SEA EEZs, 1950–2019 | `sau/catch_summary/` |
+| **FAO via OWID — Areas 71 & 57** | % stocks overexploited in Western Central Pacific (71) and Eastern Indian Ocean (57) | 2004–2021, biennial (10 pts) | `owid/share-of-fish-stocks-overexploited.csv` |
+| FAO/World Bank via OWID — capture production | Wild catch (t) per country | SEA5 + World, 1960–2024 | `owid/capture-fishery-production.csv` |
+| Sea Around Us via OWID — catch by gear, discards | Context for EDA (trawling share, waste) | SEA5 + World, 1950–2018 | `owid/fish-catch-gear-type.csv`, `owid/fish-discards.csv` |
+| FAO/World Bank via OWID — aquaculture | Context: farmed fish growth while wild catch plateaus | SEA5 + World, 1960–2024 | `owid/aquaculture-farmed-fish-production.csv` |
 
-| Dataset | What it gives | Notes |
-|---------|---------------|-------|
-| **FAO stock status — Areas 71 & 57** | % of stocks fished sustainably | Area 71 = South China Sea, Gulf of Thailand, Indonesia/Philippines. Area 57 = Andaman Sea, Strait of Malacca. ⚠️ See caveat on the 2025 method change below. |
-| **Sea Around Us** | Reconstructed catch per EEZ (incl. discards & unreported catch) and **Mean Trophic Index** | Every SEA EEZ, annual from 1950. Also on AWS: [registry.opendata.aws](https://registry.opendata.aws/sau-global-fisheries-catch-data/) |
-| **OWID / World Bank capture production** | Catch per SEA country | Sum the 5 focus countries for a regional series |
-| **Global Fishing Watch** *(optional)* | Fishing effort (hours) by EEZ & flag, 2012–2024 | Free registration, non-commercial licence. Use monthly data — annual gives only ~13 points. [globalfishingwatch.org](https://globalfishingwatch.org/?p=6131) |
-| **SEAFDEC Fishery Statistical Bulletin** *(optional)* | Official ASEAN fishery statistics | Mostly PDF tables, more cleaning. [seafdec.org](https://www.seafdec.org/stat2022/) |
+**Why Sea Around Us became the main SEA source:** FAO publishes stock status only by large fishing area, and the OWID series for Areas 71/57 has just 10 uneven points — fine for a Mann-Kendall test but too short for ACF/CCF. Sea Around Us gives an annual 70-year series per EEZ, which supports the full pipeline and lets us compare the 5 countries (Kruskal-Wallis + Dunn).
 
-Raw downloads go in `data/raw/` (not committed if large — see `.gitignore`). Cleaned versions go in `data/processed/`.
+**Dropped:** Global Fishing Watch (needs a registered account and its effort series is only 2012–2024) and SEAFDEC (PDF tables). Neither is needed for the hypotheses above; GFW can be added later as an optional extension.
 
 ---
 
@@ -152,10 +157,11 @@ Load & clean ──► Explore (plots, missing years)
 ## 5. Known caveats (for the Limitations section)
 
 1. **Catch ≠ overfishing.** Catch rises while a fishery develops, then falls once stocks collapse. Lagged correlation captures part of this, but catch is a proxy, not a direct measure.
-2. **FAO changed its stock-assessment method in 2025.** In Area 71 the number of assessed stocks jumped from 43 to 265, and the sustainable share fell from ~77–80% to 52.5%. FAO states this does not necessarily mean stocks got worse. **Do not run a trend test across that break** — use pre-2025 data only, with Sea Around Us mean trophic level as a backup indicator.
-3. **Gaps in early FAO years.** ACF and CCF assume evenly spaced data — check and handle missing years before running them.
-4. **Short series.** Global Fishing Watch annual data gives ~13 points — too few for a reliable CCF. Use monthly aggregation if effort data is included.
-5. **Country-level overexploitation is not published.** SEA stock status is only available by FAO fishing area, not per country.
+2. **FAO changed its stock-assessment method in 2025.** In Area 71 the number of assessed stocks jumped from 43 to 265, and the sustainable share fell from ~77–80% to 52.5%. Our FAO data ends in 2021, so the break is not in our series — but mention that newer FAO figures are not comparable.
+3. **Interpolated FAO years.** The World overexploited series has stretches that rise by a constant step each year (linear interpolation between assessments), which inflates autocorrelation. Robustness check: re-run H1a on assessment years only.
+4. **Sea Around Us stock status is derived from catch.** A stock is labelled "over-exploited"/"collapsed" from its catch relative to its historical peak (Kleisner et al. 2013). So for **H2b**, correlating catch with stock status is partly circular — use **mean trophic level** (independent of catch volume) as the main overfishing response, and treat stock status as supporting evidence.
+5. **Country-level FAO stock status is not published.** FAO reports by fishing area only; that is why Sea Around Us EEZ data is used for SEA.
+6. **Different end years.** FAO stocks end 2021, SAU 2019, capture 2024 — align on the common window before correlating.
 
 ---
 
@@ -167,10 +173,11 @@ sdg14-overfishing-analysis/
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
-│   ├── raw/             ← original downloads, untouched
+│   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md
 │   └── processed/       ← cleaned, analysis-ready CSVs
 ├── notebooks/           ← Jupyter notebooks (stage1_global, stage2_sea, …)
-├── src/                 ← reusable Python functions (loading, tests, plots)
+├── src/
+│   └── download_data.py ← re-downloads everything in data/raw/
 └── figures/             ← exported charts for the report
 ```
 
@@ -184,6 +191,8 @@ cd sdg14-overfishing-analysis
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+# data is already in data/raw/; to re-download from source:
+python src/download_data.py
 jupyter lab
 ```
 
@@ -194,13 +203,15 @@ jupyter lab
 | Step | Stage | Status | Notebook / file |
 |------|-------|--------|-----------------|
 | Repo & plan set up | — | ✅ Done | `README.md` |
-| Download & clean global datasets | 1 | ⬜ Not started | — |
+| Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
+| Clean global datasets | 1 | ⬜ Not started | — |
 | Exploratory plots + ACF | 1 | ⬜ Not started | — |
 | ADF + differencing | 1 | ⬜ Not started | — |
 | H1a trend tests (Mann-Kendall, segmented regression) | 1 | ⬜ Not started | — |
 | H1b cross-correlation (CCF) | 1 | ⬜ Not started | — |
 | **Stage 1 decision** | 1 | ⬜ Pending | — |
-| Download & clean SEA datasets | 2 | ⬜ Not started | — |
+| Download SEA datasets | 2 | ✅ Done | `data/raw/sau/`, `data/raw/owid/` |
+| Clean SEA datasets | 2 | ⬜ Not started | — |
 | H2a / H2b tests on SEA | 2 | ⬜ Not started | — |
 | H2c SEA vs global comparison | 2 | ⬜ Not started | — |
 | Final figures & write-up | — | ⬜ Not started | — |
@@ -216,6 +227,7 @@ _None yet — results will be added here as each test is completed._
 | Date | Author | Change |
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
+| 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
 
 ---
 
@@ -230,4 +242,4 @@ _None yet — results will be added here as each test is completed._
 
 ## License
 
-Code in this repository is released under the [MIT License](LICENSE). Datasets remain under their original providers' licences (OWID: CC BY 4.0; Sea Around Us, FAO, Global Fishing Watch and SEAFDEC: see each provider's terms).
+Code in this repository is released under the [MIT License](LICENSE). Datasets remain under their original providers' licences (OWID: CC BY 4.0; Sea Around Us: free for non-commercial use with citation; FAO: see FAO terms). Full citations are in [`data/raw/README.md`](data/raw/README.md#references-for-the-report).

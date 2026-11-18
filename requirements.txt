@@ -1,5 +1,6 @@
 # Data handling
 pandas>=2.0
+requests>=2.31       # used by src/download_data.py
 numpy>=1.24
 
 # Statistics & time-series tests (ADF, ACF/CCF, regression, Granger)
