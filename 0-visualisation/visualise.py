@@ -234,7 +234,7 @@ def stacked_area(ax, x, ys: list, colors: list, labels: list) -> None:
 # Data loading
 # =========================================================================== #
 def owid(slug: str) -> pd.DataFrame:
-    """Load an OWID grapher CSV and rename the value column(s) to simple names."""
+    """Load an OWID grapher CSV (columns: Entity, Code, Year, <value columns>)."""
     return pd.read_csv(RAW / "owid" / f"{slug}.csv")
 
 
