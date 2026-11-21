@@ -107,7 +107,7 @@ The full SAU catch export (one row per taxon × fishing country × gear × end u
 | `fishing_sector` | Industrial, Artisanal, Subsistence, Recreational |
 | `catch_type` | Landings, Discards |
 | `reporting_status` | Reported (in official FAO statistics), Unreported (reconstructed by SAU) |
-| `fleet` | `domestic` = fished by the EEZ's own country; `foreign` = fished by other countries' fleets |
+| `fleet` | `domestic` = fished by the EEZ's own country (the name outside or inside the brackets of the EEZ name, e.g. *Malaysia* for "Malaysia (Peninsula West)" and "Sabah (Malaysia)"); `foreign` = other countries' fleets |
 | `tonnes` | Catch (t), summed |
 | `landed_value` | Landed value (real 2010 USD), summed |
 
@@ -172,7 +172,8 @@ Reading: the two methods agree on the **long-run trend** of overexploitation but
 4. **Different end years:** OWID capture to 2024, SAU to 2018/2019, FAO stocks to 2021. Align on the common window before correlating.
 5. **Country vs EEZ:** OWID values are per country; SAU values are per EEZ. Sum sub-EEZs to get country totals for SAU.
 6. **Name mismatch:** OWID uses `Vietnam`, SAU uses `Viet Nam`.
-7. **SAU discard series start late** for some countries in OWID (Malaysia/Thailand 1961, Vietnam 1987) — missing ≠ zero.
+7. **Fixed 2026-11-21:** the first version of `catch_summary/` labelled all catch in the 9 split EEZs (Malaysia, Indonesia, Thailand) as `foreign` because the fishing country was compared with the full EEZ name. Files were rebuilt; totals are unchanged, only the domestic/foreign split.
+8. **SAU discard series start late** for some countries in OWID (Malaysia/Thailand 1961, Vietnam 1987) — missing ≠ zero.
 
 ---
 

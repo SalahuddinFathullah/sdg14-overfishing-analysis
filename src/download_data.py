@@ -51,6 +51,7 @@ import argparse
 import csv
 import io
 import json
+import re
 import time
 import zipfile
 from datetime import date
@@ -144,12 +145,22 @@ def first_csv_in_zip(blob: bytes) -> str:
         return zf.read(name).decode("utf-8")
 
 
+def eez_countries(area: str) -> list[str]:
+    """
+    Candidate owner-country names for an SAU EEZ name. The country is either the
+    part outside the brackets ("Malaysia (Peninsula West)") or inside them
+    ("Sabah (Malaysia)"); unsplit EEZs are just the country ("Viet Nam").
+    """
+    m = re.match(r"^(.*?)\s*\((.*)\)\s*$", area)
+    return [m.group(1).strip(), m.group(2).strip()] if m else [area.strip()]
+
+
 def summarise_catch(text: str) -> str:
     """
     Aggregate the full SAU catch export (one row per taxon x fleet x gear x ...)
     to one row per year x fishing_sector x catch_type x reporting_status x fleet.
 
-    fleet = "domestic" if the fishing country owns the EEZ, else "foreign".
+    fleet = "domestic" if the fishing country is the EEZ's country, else "foreign".
     Sums are accumulated in file order with plain floats (no pandas) so the
     output is identical to the committed files.
     """
@@ -170,7 +181,7 @@ def summarise_catch(text: str) -> str:
     for row in reader:
         if not row:
             continue
-        fleet = "domestic" if row[col["fishing_entity"]] == row[col["area_name"]] else "foreign"
+        fleet = "domestic" if row[col["fishing_entity"]] in eez_countries(row[col["area_name"]]) else "foreign"
         key = (int(row[col["year"]]), row[col["fishing_sector"]], row[col["catch_type"]],
                row[col["reporting_status"]], fleet)
         acc = totals.setdefault(key, [0.0, 0.0])

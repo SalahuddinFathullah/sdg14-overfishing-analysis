@@ -10,7 +10,7 @@ pymannkendall>=1.4   # Mann-Kendall trend test
 scikit-posthocs>=0.9 # Dunn's post-hoc test
 
 # Plotting
-matplotlib>=3.7
+matplotlib>=3.9          # tick_labels in boxplot
 seaborn>=0.12
 
 # Notebooks

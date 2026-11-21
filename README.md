@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟡 Data collected — main datasets and alternative validation sources in `data/raw/`; cleaning & analysis not started yet. See [Progress](#progress).
+> **Status:** 🟡 Exploration — data collected and 28 exploratory figures in [`0-visualisation/`](0-visualisation/); cleaning & formal tests not started yet. See [Progress](#progress).
 
 ---
 
@@ -21,7 +21,7 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 |---|---|---|
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
 | Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), `notebooks/01_*` |
-| EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | `notebooks/02_*`, `figures/` |
+| EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`0-visualisation/`](0-visualisation/) |
 | Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests** | [§4](#4-analysis-pipeline), `notebooks/03_*` |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
 | Conclusion (5%) | Direct answer to each hypothesis + SDG 14.4 relevance | [Findings](#findings-so-far) |
@@ -195,6 +195,10 @@ Because years are autocorrelated, the paired-test *p*-values are optimistic; we 
 ```
 sdg14-overfishing-analysis/
 ├── README.md            ← this file (project plan + progress log)
+├── 0-visualisation/
+│   ├── visualise.py     ← creates every exploratory figure from data/raw/
+│   ├── README.md        ← figure gallery with descriptions
+│   └── figures/         ← 28 PNGs in 4 sections (global, sea_owid, sea_sau, validation)
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
@@ -219,6 +223,8 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 # data is already in data/raw/; to re-download from source:
 python src/download_data.py
+# regenerate all exploratory figures:
+python 0-visualisation/visualise.py
 jupyter lab
 ```
 
@@ -232,8 +238,9 @@ jupyter lab
 | Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
 | Download alternative sources for validation | 1–2 | ✅ Done | `data/raw/validation/` |
 | Clean global datasets | 1 | ⬜ Not started | — |
-| Validate main data vs alternative sources | 1–2 | ⬜ Not started | — |
-| Exploratory plots + ACF | 1 | ⬜ Not started | — |
+| Validate main data vs alternative sources | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/4_validation/` |
+| Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
+| Exploratory plots + ACF | 1 | ✅ Done | `0-visualisation/figures/1_global/` |
 | ADF + differencing | 1 | ⬜ Not started | — |
 | H1a trend tests (Mann-Kendall, segmented regression) | 1 | ⬜ Not started | — |
 | H1b cross-correlation (CCF) | 1 | ⬜ Not started | — |
@@ -246,7 +253,13 @@ jupyter lab
 
 ### Findings so far
 
-_None yet — results will be added here as each test is completed._
+_Exploratory only — formal tests pending. See [`0-visualisation/`](0-visualisation/)._
+
+- **World:** % of stocks overexploited rose from ~10% (1974) to 35.5% (2021); the fitted slope is +0.55 pp/yr before 2015 and +0.48 pp/yr after — little sign of SDG-era improvement (fig 1.01).
+- **Catch vs overexploitation:** world wild catch plateaued at ~90–95 Mt from the mid-1990s while overexploitation kept rising (figs 1.03–1.04).
+- **ACF:** both series are strongly autocorrelated in levels and close to white noise after differencing → correlation tests must use differenced series (fig 1.05).
+- **SEA:** FAO Area 71 (South China Sea etc.) went from ~6% to 47% overexploited between 2004 and 2021, the largest rise of any FAO area (fig 1.07). In Sea Around Us data, ~50% of stocks in most SEA EEZs are collapsed or over-exploited by 2019, tracking or exceeding the world level; Vietnam is the exception (~20%) (figs 3.01–3.03).
+- **Validation:** OWID matches the UN SDG database exactly; FAO and Sea Around Us agree on the long-run trend but Sea Around Us shows a steeper rise after 2000 (Bland-Altman bias −4 pp, widening) (figs 4.01–4.03).
 
 ---
 
@@ -256,6 +269,7 @@ _None yet — results will be added here as each test is completed._
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-21 | Salah | Added `0-visualisation/` (visualise.py + 28 figures + gallery README); fixed domestic/foreign fleet labels in `sau/catch_summary/` for the 9 split EEZs (and in `download_data.py`); first exploratory findings |
 | 2026-11-18 | Salah | Added alternative sources for cross-validation (UN SDG 14.4.1, World Bank API, Sea Around Us World / FAO areas 57 & 71 / 5 SEA LMEs; 26 files), validation test plan, download script `--only validation` |
 
 ---
