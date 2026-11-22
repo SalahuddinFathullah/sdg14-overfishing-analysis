@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟡 Exploration — data collected and 28 exploratory figures in [`0-visualisation/`](0-visualisation/); cleaning & formal tests not started yet. See [Progress](#progress).
+> **Status:** 🟡 Exploration — data collected, data-integrity checks added, 34 exploratory figures in [`0-visualisation/`](0-visualisation/); cleaning & formal tests not started yet. See [Progress](#progress).
 
 ---
 
@@ -99,6 +99,17 @@ SDG target **14.4** calls for ending overfishing and restoring stocks to sustain
 | Sea Around Us — 5 SEA Large Marine Ecosystems | Sea Around Us EEZ series | **Different spatial unit** (ecosystem vs national zone) |
 
 Details and a first look at agreement: [data dictionary §3](data/raw/README.md#3-alternative-sources-for-cross-validation--validation).
+
+### Data-integrity sources — is officially reported catch believable? (`data/raw/validation/`)
+
+| Source | Check |
+|--------|-------|
+| SDG 14.7.1 (fisheries % of GDP, via OWID) + World Bank GDP & capture, ~100 countries | **Implied value per tonne** — does reported catch fit the money it earns, compared with peers? |
+| UN Comtrade, fish exports (HS 03), 2011–2023 | **Mirror trade** — exports a country reports vs imports its partners report from it |
+| Sea Around Us taxon-level catch records | **Benford's law** on leading digits of reported vs reconstructed catch |
+| Sea Around Us catch summary (already in repo) | **Reconstructed ÷ reported** — how much catch is missing from official statistics |
+
+Details: [data dictionary §4](data/raw/README.md#4-data-integrity-sources--is-reported-catch-plausible).
 
 **Dropped:** Global Fishing Watch (needs a registered account and its effort series is only 2012–2024) and SEAFDEC (PDF tables). Neither is needed for the hypotheses above; GFW can be added later as an optional extension.
 
@@ -198,12 +209,13 @@ sdg14-overfishing-analysis/
 ├── 0-visualisation/
 │   ├── visualise.py     ← creates every exploratory figure from data/raw/
 │   ├── README.md        ← figure gallery with descriptions
-│   └── figures/         ← 28 PNGs in 4 sections (global, sea_owid, sea_sau, validation)
+│   └── figures/         ← 34 PNGs in 5 sections (global, sea_owid, sea_sau, validation, integrity)
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
 │   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md
 │   │   └── validation/  ← alternative sources for cross-checking (UN SDG, World Bank, SAU regions)
+│   │                      and data-integrity sources (economic/, comtrade/, benford/)
 │   └── processed/       ← cleaned, analysis-ready CSVs
 ├── notebooks/           ← Jupyter notebooks (stage1_global, stage2_sea, …)
 ├── src/
@@ -240,6 +252,7 @@ jupyter lab
 | Clean global datasets | 1 | ⬜ Not started | — |
 | Validate main data vs alternative sources | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/4_validation/` |
 | Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
+| Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/5_integrity/` |
 | Exploratory plots + ACF | 1 | ✅ Done | `0-visualisation/figures/1_global/` |
 | ADF + differencing | 1 | ⬜ Not started | — |
 | H1a trend tests (Mann-Kendall, segmented regression) | 1 | ⬜ Not started | — |
@@ -260,6 +273,7 @@ _Exploratory only — formal tests pending. See [`0-visualisation/`](0-visualisa
 - **ACF:** both series are strongly autocorrelated in levels and close to white noise after differencing → correlation tests must use differenced series (fig 1.05).
 - **SEA:** FAO Area 71 (South China Sea etc.) went from ~6% to 47% overexploited between 2004 and 2021, the largest rise of any FAO area (fig 1.07). In Sea Around Us data, ~50% of stocks in most SEA EEZs are collapsed or over-exploited by 2019, tracking or exceeding the world level; Vietnam is the exception (~20%) (figs 3.01–3.03).
 - **Validation:** OWID matches the UN SDG database exactly; FAO and Sea Around Us agree on the long-run trend but Sea Around Us shows a steeper rise after 2000 (Bland-Altman bias −4 pp, widening) (figs 4.01–4.03).
+- **Data integrity (SEA5):** no sign of fabricated catch figures — leading digits of reported catch follow Benford's law closely for every country (MAD 0.0007–0.0028, Nigrini "close conformity"), and no country's fisheries value-vs-catch is a peer outlier (|z| ≤ 1.4). The real gap is **under-reporting**: Sea Around Us estimates 45% (Philippines), 39% (Malaysia), 28% (Vietnam), 24% (Thailand) and 10% (Indonesia) of 2015–19 catch is missing from official statistics. Mirror trade: only Malaysia shows partner-recorded imports well above its own reported exports, since 2019 (+10% to +22%); Vietnam and Thailand show the opposite (partners record 6–11% less), which points to re-exports or transshipment rather than hidden exports (figs 5.01–5.06).
 
 ---
 
@@ -269,6 +283,7 @@ _Exploratory only — formal tests pending. See [`0-visualisation/`](0-visualisa
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-22 | Salah | Added data-integrity sources recommended for validation (SDG 14.7.1 + World Bank GDP/capture, UN Comtrade mirror trade, Benford digit counts from SAU records), `download_data.py --only integrity`, and visualisation section 5 (6 figures) |
 | 2026-11-21 | Salah | Added `0-visualisation/` (visualise.py + 28 figures + gallery README); fixed domestic/foreign fleet labels in `sau/catch_summary/` for the 9 split EEZs (and in `download_data.py`); first exploratory findings |
 | 2026-11-18 | Salah | Added alternative sources for cross-validation (UN SDG 14.4.1, World Bank API, Sea Around Us World / FAO areas 57 & 71 / 5 SEA LMEs; 26 files), validation test plan, download script `--only validation` |
 

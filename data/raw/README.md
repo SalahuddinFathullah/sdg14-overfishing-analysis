@@ -164,6 +164,39 @@ Reading: the two methods agree on the **long-run trend** of overexploitation but
 
 ---
 
+## 4. Data-integrity sources — is reported catch plausible?
+
+These test whether the officially **reported** catch of each SEA country is believable, using numbers that are produced independently or are harder to fake.
+
+| File | What it gives | Integrity check |
+|---|---|---|
+| `validation/economic/fisheries_gdp_capture.csv` | SDG 14.7.1 (sustainable fisheries value added, % of GDP), GDP (current USD), reported capture (t) | **Implied value per tonne** = (14.7.1 % × GDP) ÷ capture. A country far above peers may under-report tonnes; far below may over-report |
+| `validation/comtrade/fish_hs03_mirror_trade.csv` | Fish exports (HS chapter 03) a SEA country reported vs imports from it reported by all its partners | **Mirror trade gap**. Partner imports should be ~0–10% higher (CIF includes freight/insurance; exports are FOB). Much larger gaps suggest under-reported exports |
+| `validation/benford/sau_catch_leading_digits.csv` | Leading-digit counts of every taxon-level catch value in the SAU export, Reported vs Unreported | **Benford's law** — fabricated or heavily rounded numbers break the natural leading-digit pattern |
+| `sau/catch_summary/` (already in repo) | Reported vs reconstructed catch | **Reconstructed ÷ reported ratio** — direct estimate of how much catch is missing from official statistics |
+
+### `validation/economic/fisheries_gdp_capture.csv`
+
+`iso3, country, year, sustainable_fisheries_pct_gdp, gdp_current_usd, capture_t`
+
+- Rows: SEA5 and World for every SDG year (2011, 2013 … 2023); **all other countries for 2021 and 2023** (peer group, ~100 countries) where all three values exist.
+- Sources: SDG 14.7.1 via OWID (same values as the UN SDG database, ISO3-coded); World Bank WDI `NY.GDP.MKTP.CD` and `ER.FSH.CAPT.MT` (vintage 2026-11-11).
+- ⚠️ **Circularity:** FAO computes 14.7.1 by scaling fisheries value added by the share of stocks fished sustainably in the region. Do **not** correlate it with % overexploited stocks. For the integrity check, compare countries within the same FAO region (SEA5 are all in Areas 57/71).
+- ⚠️ Capture includes inland fisheries; 14.7.1 is marine capture only.
+
+### `validation/comtrade/fish_hs03_mirror_trade.csv`
+
+`country, m49, year, reported_exports_usd, partner_imports_usd, n_partners` — SEA5, 2011–2023. Values are annual totals (all partners, all transport modes) in current USD. Source: UN Comtrade public API (preview endpoint).
+- ⚠️ **Philippines 2014–2023 partner imports are blank**: the free Comtrade quota ran out during download (HTTP 403). Re-run `python src/download_data.py --only integrity` on another day to fill them.
+
+### `validation/benford/sau_catch_leading_digits.csv`
+
+`eez_id, country, reporting_status, d1 … d9` — counts of the first significant digit of `tonnes` for every row (taxon × fishing country × sector × gear × year) of the full SAU EEZ catch export with tonnes > 0. ~30,000–115,000 values per EEZ and status.
+- Use **MAD** (mean absolute deviation from Benford proportions, Nigrini 2012) rather than chi-square: with this many values chi-square rejects even trivial deviations.
+- ⚠️ SAU disaggregates national totals spatially and by taxon, which can itself shape the digits — interpret Reported vs Unreported **relative to each other**.
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -194,3 +227,7 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - United Nations Statistics Division. *Global SDG Indicators Database*, series ER_H2O_FWTL (indicator 14.4.1). Source: FAO (2025), *Review of the state of world marine fishery resources – 2025*, FAO Fisheries and Aquaculture Technical Paper No. 721. https://unstats.un.org/sdgs/dataportal, accessed 18 Nov 2026.
 - World Bank. *World Development Indicators*, ER.FSH.CAPT.MT — Capture fisheries production (metric tons), last updated 11 Nov 2026. https://data.worldbank.org/indicator/ER.FSH.CAPT.MT
 - Sea Around Us regional data (Global, FAO Areas 57 & 71, LMEs 34–38), v50-1, accessed 18 Nov 2026 — cite as Pauly, Zeller & Palomares (2020) above.
+- FAO (2025) – processed by Our World in Data. "Sustainable fisheries as a proportion of GDP" (SDG 14.7.1, series EN_SCP_FSHGDP) [dataset]. https://ourworldindata.org/grapher/sustainable-fisheries-as-a-proportion-of-gdp, accessed 22 Nov 2026.
+- World Bank. *World Development Indicators*, NY.GDP.MKTP.CD — GDP (current US$), last updated 11 Nov 2026.
+- United Nations. *UN Comtrade Database*, HS chapter 03 (fish, crustaceans, molluscs), annual, 2011–2023. https://comtradeplus.un.org, accessed 22 Nov 2026.
+- Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley. (MAD conformity thresholds)

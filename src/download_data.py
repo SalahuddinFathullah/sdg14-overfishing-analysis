@@ -32,12 +32,18 @@ Sources
    - un_sdg/        UN SDG Global Database, indicator 14.4.1 (series ER_H2O_FWTL)
    - world_bank/    World Bank WDI API, capture production ER.FSH.CAPT.MT
 
+4. Data-integrity sources  ->  data/raw/validation/{economic,comtrade,benford}/
+   - economic/   SDG 14.7.1 + World Bank GDP + capture (implied value per tonne)
+   - comtrade/   UN Comtrade mirror trade statistics for fish (HS 03)
+   - benford/    leading-digit counts of SAU taxon-level catch values
+
 Usage
 -----
     python src/download_data.py                   # download everything
     python src/download_data.py --only owid
     python src/download_data.py --only sau
     python src/download_data.py --only validation
+    python src/download_data.py --only integrity    # SDG 14.7.1/GDP, Comtrade, Benford (slow)
 
 Notes
 -----
@@ -324,6 +330,117 @@ def download_validation() -> None:
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+# --------------------------------------------------------------------------- #
+# Data-integrity sources  ->  data/raw/validation/{economic,comtrade,benford}/
+# --------------------------------------------------------------------------- #
+OWID_SDG1471 = OWID_BASE.format(slug="sustainable-fisheries-as-a-proportion-of-gdp")
+WB_ALL = ("https://api.worldbank.org/v2/country/all/indicator/{ind}"
+          "?format=json&per_page=20000&date=2011:2023")
+COMTRADE = "https://comtradeapi.un.org/public/v1/preview/C/A/HS"
+COMTRADE_M49 = {458: "Malaysia", 360: "Indonesia", 764: "Thailand", 704: "Vietnam", 608: "Philippines"}
+SEA_ISO3 = ["MYS", "IDN", "THA", "VNM", "PHL"]
+
+
+def download_integrity() -> None:
+    """
+    1) economic/fisheries_gdp_capture.csv
+       SDG 14.7.1 (sustainable fisheries, % of GDP; OWID copy, ISO3-coded) + World Bank
+       GDP (current USD) + World Bank capture production (t). SEA5 and World for every
+       SDG year (2011-2023, biennial); all other countries for 2021 and 2023 (peer group).
+    2) comtrade/fish_hs03_mirror_trade.csv
+       UN Comtrade, HS chapter 03 (fish): exports each SEA5 country reported vs the sum
+       of imports from it reported by all partner countries ("mirror" statistics).
+       The public preview API is slow (~15 s/request) and rate-limited.
+    3) benford/sau_catch_leading_digits.csv
+       Leading-digit counts (1-9) of every taxon-level catch value in the full SAU
+       EEZ catch export, split into Reported and Unreported (reconstructed) catch.
+    """
+    root = RAW / "validation"
+
+    # 1) economic table -----------------------------------------------------
+    print("OWID SDG 14.7.1 + World Bank GDP and capture")
+    sdg = {}
+    lines = get(OWID_SDG1471).decode("utf-8").strip().split("\n")
+    for row in csv.reader(lines[1:]):
+        if row[1]:
+            sdg[(row[1], int(row[2]))] = (row[0], row[3])
+
+    def wb(ind: str) -> dict:
+        data = json.loads(get(WB_ALL.format(ind=ind)))[1]
+        return {(d["countryiso3code"], int(d["date"])): d["value"] for d in data if d["value"] is not None}
+
+    gdp, cap = wb("NY.GDP.MKTP.CD"), wb("ER.FSH.CAPT.MT")
+    rows = []
+
+    def add(iso: str, sdg_code: str, year: int) -> None:
+        s = sdg.get((sdg_code, year))
+        if s and (iso, year) in gdp and (iso, year) in cap:
+            rows.append((iso, s[0], year, s[1], js_num(gdp[(iso, year)]), js_num(cap[(iso, year)])))
+
+    years = [2011, 2013, 2015, 2017, 2019, 2021, 2023]
+    for iso in SEA_ISO3:
+        for y in years:
+            add(iso, iso, y)
+    for y in years:
+        add("WLD", "OWID_WRL", y)
+    for iso, y in sdg:
+        if not iso.startswith("OWID") and iso not in SEA_ISO3 and y in (2021, 2023):
+            add(iso, iso, y)
+    rows.sort(key=lambda r: (r[0], r[2]))
+    out = root / "economic" / "fisheries_gdp_capture.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("iso3,country,year,sustainable_fisheries_pct_gdp,gdp_current_usd,capture_t\n"
+                   + "".join(",".join([r[0], q(r[1]), str(r[2]), r[3], r[4], r[5]]) + "\n" for r in rows),
+                   encoding="utf-8")
+
+    # 2) Comtrade mirror trade -------------------------------------------------
+    def is_total(d: dict) -> bool:
+        return d["partner2Code"] == 0 and d["motCode"] == 0 and d["customsCode"] == "C00"
+
+    lines = ["country,m49,year,reported_exports_usd,partner_imports_usd,n_partners"]
+    for code, name in COMTRADE_M49.items():
+        for y in range(2011, 2024):
+            print(f"Comtrade {name} {y}")
+            exp = [d for d in json.loads(get(f"{COMTRADE}?reporterCode={code}&period={y}&cmdCode=03"
+                                             f"&flowCode=X&partnerCode=0", timeout=120))["data"] if is_total(d)]
+            imp = [d for d in json.loads(get(f"{COMTRADE}?partnerCode={code}&period={y}&cmdCode=03"
+                                             f"&flowCode=M", timeout=120))["data"]
+                   if is_total(d) and d["partnerCode"] == code and d["reporterCode"] != code]
+            e = sum(d["primaryValue"] for d in exp)
+            m = sum(d["primaryValue"] for d in imp)
+            lines.append(f"{name},{code},{y},{e:.0f},{m:.0f},{len(imp)}")
+            time.sleep(1.2)
+    out = root / "comtrade" / "fish_hs03_mirror_trade.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    # 3) Benford leading-digit counts from the full SAU catch export -----------
+    lines = ["eez_id,country,reporting_status,d1,d2,d3,d4,d5,d6,d7,d8,d9"]
+    country = {459: "Malaysia", 460: "Malaysia", 461: "Malaysia", 463: "Malaysia", 361: "Indonesia",
+               937: "Indonesia", 938: "Indonesia", 956: "Thailand", 957: "Thailand", 704: "Vietnam", 608: "Philippines"}
+    for eez_id in sorted(SAU_EEZS):
+        print(f"SAU   benford {SAU_EEZS[eez_id]}")
+        text = first_csv_in_zip(get(SAU_MEASURES["catch_summary"].format(id=eez_id), timeout=300))
+        reader = csv.reader(io.StringIO(text))
+        header = next(reader)
+        it, ir = header.index("tonnes"), header.index("reporting_status")
+        counts = {"Reported": [0] * 9, "Unreported": [0] * 9}
+        for row in reader:
+            if not row or row[ir] not in counts:
+                continue
+            try:
+                v = float(row[it])
+            except ValueError:
+                continue
+            if v > 0:
+                counts[row[ir]][int(f"{v:e}"[0]) - 1] += 1
+        for st in ("Reported", "Unreported"):
+            lines.append(",".join([str(eez_id), country[eez_id], st] + [str(n) for n in counts[st]]))
+    out = root / "benford" / "sau_catch_leading_digits.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -337,16 +454,18 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau", "validation"], help="download one part only")
+    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity"], help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau", "validation"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
         download_sau()
     if "validation" in parts:
         download_validation()
+    if "integrity" in parts:
+        download_integrity()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

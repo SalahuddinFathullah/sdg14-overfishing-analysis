@@ -4,8 +4,8 @@ All figures are produced by [`visualise.py`](visualise.py) from the raw data in 
 
 ```bash
 pip install -r requirements.txt
-python 0-visualisation/visualise.py                    # all 28 figures
-python 0-visualisation/visualise.py --only global      # one section: global | sea_owid | sea_sau | validation
+python 0-visualisation/visualise.py                    # all 34 figures
+python 0-visualisation/visualise.py --only global      # one section: global | sea_owid | sea_sau | validation | integrity
 ```
 
 PNG, 200 dpi, saved under `figures/<section>/`. Several datasets are shown with more than one chart type, because each type answers a different question (trend, composition, distribution, relationship, agreement).
@@ -59,6 +59,19 @@ PNG, 200 dpi, saved under `figures/<section>/`. Several datasets are shown with 
 | 4.04 | ![](figures/4_validation/4.04_fao_vs_sau_areas_71_57.png) | Line | FAO vs Sea Around Us for the two SEA fishing areas |
 | 4.05 | ![](figures/4_validation/4.05_catch_fao_vs_sau_scatter.png) | Scatter + 1:1 line | FAO capture vs Sea Around Us reported catch, with Lin's CCC |
 | 4.06 | ![](figures/4_validation/4.06_eez_vs_lme_overexploited.png) | Small multiples | Same indicator for national zones (EEZs) vs Large Marine Ecosystems |
+
+## 5 · Data integrity — is the officially reported catch believable?
+
+Uses independent or hard-to-fake numbers to test whether SEA countries' **reported** catch is plausible (data: [`data/raw/validation/`](../data/raw/validation/), dictionary §4).
+
+| # | Figure | Chart type | What it shows |
+|---|---|---|---|
+| 5.01 | ![](figures/5_integrity/5.01_value_per_tonne.png) | Two-panel line | Value per tonne: GDP-implied (SDG 14.7.1 × GDP ÷ reported catch) vs Sea Around Us landed value per tonne |
+| 5.02 | ![](figures/5_integrity/5.02_peer_value_vs_catch.png) | Log-log scatter + fit | Fisheries value added vs reported catch for ~100 countries; z-score = how unusual each SEA country is vs peers |
+| 5.03 | ![](figures/5_integrity/5.03_reconstructed_vs_reported_ratio.png) | Line | Reconstructed ÷ reported catch — how much catch is missing from official statistics |
+| 5.04 | ![](figures/5_integrity/5.04_mirror_trade_hs03.png) | Small multiples, line + bar | Fish exports each country reported vs imports its trading partners reported (UN Comtrade mirror statistics) and the % gap |
+| 5.05 | ![](figures/5_integrity/5.05_benford_catch_values.png) | Grouped bars + reference line | Leading-digit distribution of reported vs reconstructed catch values against Benford's law, with Nigrini MAD |
+| 5.06 | ![](figures/5_integrity/5.06_integrity_summary.png) | Ranked heatmap table | All four checks side by side; darker = more suspicious within SEA5 |
 
 ---
 

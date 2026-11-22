@@ -20,6 +20,7 @@ Sections
 2_sea_owid    Southeast Asia country series from OWID (capture, gear, discards)
 3_sea_sau     Southeast Asia Sea Around Us EEZ series (stock status, MTL, catch) (H2a-H2c)
 4_validation  Main datasets vs alternative sources (data validity checks)
+5_integrity   Is reported catch plausible? GDP, mirror trade, Benford, reconstruction gap
 
 Style
 -----
@@ -872,11 +873,204 @@ def section_validation() -> None:
 
 
 # =========================================================================== #
+# Section 5 — Data integrity: is reported catch plausible?
+# =========================================================================== #
+ISO_TO_COUNTRY = {"MYS": "Malaysia", "IDN": "Indonesia", "THA": "Thailand", "VNM": "Vietnam", "PHL": "Philippines"}
+BENFORD = np.log10(1 + 1 / np.arange(1, 10))  # expected share of leading digits 1..9
+
+
+def benford_mad(counts: np.ndarray) -> float:
+    """Mean absolute deviation from Benford's law (Nigrini). Preferred over chi-square
+    for very large samples, where chi-square rejects even trivial deviations."""
+    p = counts / counts.sum()
+    return float(np.mean(np.abs(p - BENFORD)))
+
+
+def nigrini_label(mad: float) -> str:
+    """Nigrini (2012) conformity bands for first-digit MAD."""
+    return ("close conformity" if mad < 0.006 else "acceptable" if mad < 0.012
+            else "marginal" if mad < 0.015 else "nonconformity")
+
+
+def section_integrity() -> None:
+    sec = "5_integrity"
+    print("Section 5: data integrity")
+    V = RAW / "validation"
+    econ = pd.read_csv(V / "economic" / "fisheries_gdp_capture.csv")
+    # Sustainable fisheries value added (USD) = SDG 14.7.1 (% of GDP) x GDP
+    econ["fish_va_usd"] = econ["sustainable_fisheries_pct_gdp"] / 100 * econ["gdp_current_usd"]
+    econ["usd_per_t"] = econ["fish_va_usd"] / econ["capture_t"]
+    d = load_sau_eez()["catch"]
+
+    # 5.1 Value per tonne: GDP-implied vs Sea Around Us landed value ---------
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(14, 4.8))
+    for iso, c in ISO_TO_COUNTRY.items():
+        g = econ[econ["iso3"] == iso]
+        a1.plot(g["year"], g["usd_per_t"], color=COUNTRY_COLOR[c], marker="o", markersize=5,
+                markeredgecolor=SURFACE, markeredgewidth=1.5, label=c)
+    w = econ[econ["iso3"] == "WLD"]
+    a1.plot(w["year"], w["usd_per_t"], color=WORLD_COLOR, lw=1.4, label="World")
+    lv = d.groupby(["country", "year"])[["landed_value", "tonnes"]].sum()
+    lv = (lv["landed_value"] / lv["tonnes"]).unstack(0)
+    for c in SEA5:
+        a2.plot(lv.index, lv[c], color=COUNTRY_COLOR[c], label=c)
+    a1.set_title("GDP-implied: fisheries value added ÷ reported catch (current USD/t)", fontsize=10)
+    a2.set_title("Sea Around Us landed value ÷ catch (real 2010 USD/t)", fontsize=10)
+    a1.set_ylabel("USD per tonne")
+    a1.set_ylim(0, None)
+    a2.set_ylim(0, None)
+    a1.legend(loc="upper right", fontsize=8)
+    suptitle(fig, "Integrity check 1 — Value per tonne of fish: does reported catch fit the money?",
+             "A country far above its peers may be under-reporting tonnes; far below, over-reporting. "
+             "Note: SDG 14.7.1 is scaled by stock sustainability, and units differ between panels")
+    layout(fig, 0)
+    save(fig, sec, "5.01_value_per_tonne", "UN SDG 14.7.1 via OWID; World Bank WDI; Sea Around Us")
+
+    # 5.2 Peer cross-section: fisheries value added vs reported catch (log-log)
+    year = 2021
+    x = econ[(econ["year"] == year) & (econ["iso3"] != "WLD") & (econ["fish_va_usd"] > 0)].copy()
+    lx, ly = np.log10(x["capture_t"]), np.log10(x["fish_va_usd"])
+    slope, icpt, r, p, _ = stats.linregress(lx, ly)
+    x["resid"] = ly - (icpt + slope * lx)
+    x["z"] = (x["resid"] - x["resid"].mean()) / x["resid"].std(ddof=1)
+    fig, ax = plt.subplots(figsize=(9, 6))
+    peers = x[~x["iso3"].isin(ISO_TO_COUNTRY)]
+    ax.scatter(peers["capture_t"], peers["fish_va_usd"], s=24, color=NEUTRAL, edgecolor=SURFACE, lw=1, label="Other countries")
+    xs = np.logspace(lx.min(), lx.max(), 50)
+    ax.plot(xs, 10 ** (icpt + slope * np.log10(xs)), color=INK_2, lw=1.2, label=f"Log-log fit (R² = {r**2:.2f})")
+    for iso, c in ISO_TO_COUNTRY.items():
+        row = x[x["iso3"] == iso]
+        if row.empty:
+            continue
+        # SEA points sit close together, so their z-scores go in the legend instead of on the plot.
+        ax.scatter(row["capture_t"], row["fish_va_usd"], s=70, color=COUNTRY_COLOR[c], edgecolor=SURFACE, lw=2,
+                   zorder=3, label=f"{c} (z = {row['z'].iloc[0]:+.1f})")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel("Reported wild capture (tonnes, log scale)")
+    ax.set_ylabel("Sustainable fisheries value added (USD, log scale)")
+    ax.grid(axis="x")
+    legend_right(ax)
+    suptitle(fig, f"Integrity check 2 — Fisheries value added vs reported catch, {len(x)} countries, {year}",
+             "z = how far a country sits above (+) or below (−) the fitted line, in standard deviations. |z| > 2 would be a red flag")
+    save(fig, sec, "5.02_peer_value_vs_catch", "UN SDG 14.7.1 via OWID; World Bank WDI")
+
+    # 5.3 Reconstructed ÷ reported catch ratio (Sea Around Us) ---------------
+    tot = d.groupby(["country", "year"])["tonnes"].sum()
+    rep = d[d["reporting_status"] == "Reported"].groupby(["country", "year"])["tonnes"].sum()
+    ratio = (tot / rep).unstack(0)
+    fig, ax = plt.subplots(figsize=(9.5, 4.8))
+    for c in SEA5:
+        ax.plot(ratio.index, ratio[c], color=COUNTRY_COLOR[c], label=c)
+    ax.axhline(1, color=AXIS, lw=1)
+    ax.text(1951, 1.02, "1 = everything was reported", fontsize=8, color=MUTED, va="bottom")
+    ax.set_ylabel("Reconstructed ÷ reported catch")
+    ax.set_ylim(0.9, None)
+    legend_right(ax)
+    suptitle(fig, "Integrity check 3 — How much catch is missing from official statistics?",
+             "Sea Around Us total (reported + reconstructed unreported) divided by the officially reported part")
+    save(fig, sec, "5.03_reconstructed_vs_reported_ratio", "Sea Around Us (v50-1), EEZ data")
+
+    # 5.4 Mirror trade: own exports vs what partners say they imported -------
+    ct = pd.read_csv(V / "comtrade" / "fish_hs03_mirror_trade.csv")
+    ct["gap_pct"] = (ct["partner_imports_usd"] / ct["reported_exports_usd"] - 1) * 100
+    fig, axes = plt.subplots(2, 5, figsize=(16, 6.4), sharex=True, gridspec_kw={"height_ratios": [3, 2]})
+    for j, c in enumerate(SEA5):
+        g = ct[ct["country"] == c]
+        a, b = axes[0, j], axes[1, j]
+        a.plot(g["year"], g["reported_exports_usd"], color=COUNTRY_COLOR[c], label="Exports it reported")
+        a.plot(g["year"], g["partner_imports_usd"], color=INK_2, lw=1.4, label="Imports partners reported")
+        a.yaxis.set_major_formatter(mticker.FuncFormatter(lambda v, _: f"{v / 1e9:g}"))
+        a.set_title(c, fontsize=10)
+        b.axhspan(0, 10, color=GRID, alpha=0.7, lw=0)
+        b.bar(g["year"], g["gap_pct"], color=[COUNTRY_COLOR[c] if v >= 0 else NEUTRAL for v in g["gap_pct"]], width=0.7)
+        b.axhline(0, color=AXIS, lw=0.8)
+        b.set_xticks(range(2011, 2024, 4))
+        b.tick_params(axis="x", labelrotation=90)
+    axes[0, 0].set_ylabel("Fish exports (billion USD)")
+    axes[1, 0].set_ylabel("Partner − own (%)")
+    axes[0, 0].legend(loc="upper left", fontsize=8)
+    missing = sorted(ct.loc[ct["partner_imports_usd"].isna(), "country"].unique())
+    note = f" Missing partner data: {', '.join(missing)} (some years, API quota)." if missing else ""
+    suptitle(fig, "Integrity check 4 — Mirror trade: fish exports (HS 03) vs what trading partners recorded",
+             "Shaded band 0–10% = normal gap (imports are valued with freight and insurance, CIF; exports without, FOB). "
+             "Larger positive gaps suggest under-reported exports." + note)
+    layout(fig, 0)
+    save(fig, sec, "5.04_mirror_trade_hs03", "UN Comtrade (public preview API), HS chapter 03")
+
+    # 5.5 Benford's law on catch values: reported vs reconstructed ------------
+    bf = pd.read_csv(V / "benford" / "sau_catch_leading_digits.csv")
+    dcols = [f"d{i}" for i in range(1, 10)]
+    g = bf.groupby(["country", "reporting_status"])[dcols].sum()
+    fig, axes = plt.subplots(1, 5, figsize=(16, 4.4), sharey=True)
+    digits = np.arange(1, 10)
+    mads = {}
+    for ax, c in zip(axes, SEA5):
+        for k, (st, colour, off) in enumerate([("Reported", COUNTRY_COLOR[c], -0.2), ("Unreported", NEUTRAL, 0.2)]):
+            cnt = g.loc[(c, st)].to_numpy(float)
+            mads[(c, st)] = benford_mad(cnt)
+            ax.bar(digits + off, cnt / cnt.sum(), width=0.38, color=colour,
+                   label=f"{'Reported' if st == 'Reported' else 'Reconstructed (unreported)'}")
+        ax.plot(digits, BENFORD, color=INK, lw=1.4, marker="o", markersize=4, label="Benford's law")
+        ax.set_title(f"{c}\nMAD reported {mads[(c, 'Reported')]:.4f} ({nigrini_label(mads[(c, 'Reported')])})", fontsize=9)
+        ax.set_xticks(digits)
+        ax.set_xlabel("Leading digit")
+    axes[0].set_ylabel("Share of catch values")
+    axes[0].legend(loc="upper right", fontsize=8)
+    suptitle(fig, "Integrity check 5 — Benford's law: do catch figures have natural leading digits?",
+             "Fabricated numbers often break Benford's law. MAD = mean absolute deviation; Nigrini bands: <0.006 close, "
+             "<0.012 acceptable, <0.015 marginal, else nonconformity")
+    layout(fig, 0)
+    save(fig, sec, "5.05_benford_catch_values", "Sea Around Us (v50-1) taxon-level catch records")
+
+    # 5.6 Summary: all checks side by side ------------------------------------
+    unrep = (1 - 1 / ratio.loc[2015:2019]).mean() * 100
+    z21 = x.set_index("iso3")["z"].rename(index=ISO_TO_COUNTRY)
+    gap = ct[ct["year"].between(2015, 2023)].groupby("country")["gap_pct"].median()
+    mad_rep = pd.Series({c: mads[(c, "Reported")] for c in SEA5})
+    summary = pd.DataFrame({
+        "Unreported share of catch\n(SAU, 2015–19 mean, %)": unrep,
+        "Value-vs-catch z-score\n(2021, vs peers)": z21,
+        "Mirror trade gap\n(2015–23 median, %)": gap,
+        "Benford MAD\n(reported catch)": mad_rep,
+    }).loc[SEA5]
+    # Colour each column by rank (1 = least suspicious, 5 = most) so different units can share one scale.
+    suspicion = pd.DataFrame({
+        summary.columns[0]: summary.iloc[:, 0].rank(),
+        summary.columns[1]: summary.iloc[:, 1].abs().rank(),
+        summary.columns[2]: summary.iloc[:, 2].rank(),
+        summary.columns[3]: summary.iloc[:, 3].rank(),
+    })
+    fig, ax = plt.subplots(figsize=(11, 4.6))
+    im = ax.imshow(suspicion.values, cmap=SEQ_BLUE, vmin=0.5, vmax=5.5, aspect="auto")
+    fmt = ["{:.0f}%", "{:+.2f}", "{:+.0f}%", "{:.4f}"]
+    for i in range(len(SEA5)):
+        for j in range(summary.shape[1]):
+            v = summary.iloc[i, j]
+            ax.text(j, i, "n/a" if pd.isna(v) else fmt[j].format(v), ha="center", va="center", fontsize=10,
+                    color="#ffffff" if suspicion.iloc[i, j] >= 4 else INK)
+    ax.set_xticks(range(summary.shape[1]), summary.columns, fontsize=9)
+    ax.set_yticks(range(len(SEA5)), SEA5)
+    ax.xaxis.tick_top()
+    ax.grid(False)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
+    ok = summary.iloc[:, [0, 2]].dropna()
+    rho_txt = (f"Spearman ρ, unreported share vs mirror gap = {stats.spearmanr(ok.iloc[:, 0], ok.iloc[:, 1])[0]:.2f} "
+               f"(n = {len(ok)}, indicative only)") if len(ok) >= 3 else "Too few countries for a correlation"
+    suptitle(fig, "Integrity summary — which countries' official numbers look least reliable?",
+             f"Darker = more suspicious within SEA5 (ranked per column). {rho_txt}")
+    fig.subplots_adjust(top=0.72)
+    save(fig, sec, "5.06_integrity_summary", "Sea Around Us; UN SDG 14.7.1; World Bank; UN Comtrade")
+
+
+# =========================================================================== #
 SECTIONS = {
     "global": section_global,
     "sea_owid": section_sea_owid,
     "sea_sau": section_sea_sau,
     "validation": section_validation,
+    "integrity": section_integrity,
 }
 
 
