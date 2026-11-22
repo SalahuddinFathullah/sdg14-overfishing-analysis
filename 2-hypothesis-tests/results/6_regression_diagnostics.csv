@@ -12,3 +12,10 @@ model,n,r2,shapiro_p,durbin_watson,ljung_box_lag,ljung_box_p,breusch_pagan_p,hac
 "H2c gap: Area 71 vs world, % overexploited (FAO)",10,0.403238,0.752841,2.0567,2,0.59666,0.028792,2
 "H2c gap: Area 57 vs world, % overexploited (FAO)",10,0.147759,0.230305,1.240572,2,0.326297,0.806136,2
 "H2c gap: Area 71 vs world, without 2021 (FAO)",9,0.170902,0.793257,2.851917,1,0.10236,0.365851,2
+H5b rebuilding segmented: World (SAU),30,0.593372,0.042937,0.325923,6,0.000368,0.003688,3
+"H5b rebuilding segmented: SEA, 5 countries (SAU)",30,0.936492,0.01885,0.894451,6,0.012406,0.346229,3
+H5b rebuilding segmented: Malaysia,30,0.896138,0.620537,0.735497,6,0.027348,0.418183,3
+H5b rebuilding segmented: Indonesia,30,0.71645,0.961066,0.677804,6,0.00515,0.253375,3
+H5b rebuilding segmented: Thailand,30,0.880854,0.827791,0.970885,6,0.002329,0.072862,3
+H5b rebuilding segmented: Vietnam,30,0.350691,0.220194,0.58611,6,4.6e-05,0.25924,3
+H5b rebuilding segmented: Philippines,30,0.815872,0.9441,0.844905,6,0.019962,0.273958,3

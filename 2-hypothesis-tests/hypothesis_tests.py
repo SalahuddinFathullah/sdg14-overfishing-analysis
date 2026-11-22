@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4), in 4 iterations
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5), in 5 iterations
 =========================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -55,6 +55,14 @@ Runs the analysis pipeline in README §4 on the raw data:
                      SEA EEZs around China's 2014 reclamation, randomization inference, placebo
     i4_descriptive   offshore oil & gas platforms (2017–23) and wind turbines (2016–21): too
                      short to test, summarised and plotted
+
+  Iteration 5 (more power and the "restore stocks" half of SDG 14.4, new hypothesis H5):
+    i5_h5a           pooled panel: 11 EEZs (5 countries for effort), EEZ + year fixed effects,
+                     with and without unit trends, wild cluster bootstrap p-values
+    i5_h5b           share of rebuilding stocks 2015–19 vs 2010–14 (paired Wilcoxon across EEZs)
+                     and segmented trend at 2015 for SEA, countries and the world
+    i5_h5c           Fishing-in-Balance index: Mann-Kendall since 1990, decomposition into
+                     catch and trophic-level parts
 
   Summary (report figure):
     summary          all 8 world drivers from iterations 1–4 on one common method:
@@ -1869,6 +1877,383 @@ def section_i4_descriptive() -> None:
 
 
 # =========================================================================== #
+# ITERATION 5 — pooled panel test, stock rebuilding, Fishing-in-Balance (H5)
+# =========================================================================== #
+# Iterations 1–4 tested each driver on single yearly series of 20–70 points, so a
+# common objection is low statistical power. Iteration 5 adds three tests:
+#   H5a  pooled panel: all 11 EEZs (or 5 countries for effort) in one regression with
+#        EEZ and year fixed effects. Year effects absorb the common upward trend, so the
+#        driver's effect is estimated from differences BETWEEN EEZs in how fast pressure
+#        and overexploitation moved — exactly the variation the single-series tests lacked.
+#        Few clusters (11 / 5) → p-values from a wild cluster bootstrap (Webb weights).
+#   H5b  SDG 14.4 also asks to RESTORE stocks: did the share of rebuilding stocks rise
+#        after 2015? (EEZ-level paired test + segmented trend for SEA and the world)
+#   H5c  Fishing-in-Balance index (Pauly et al. 2000): does catch still compensate for
+#        the change in trophic level? Explains why SEA mean trophic level rises while
+#        stocks worsen.
+# Iterations 1–4 above are unchanged.
+
+PROC = ROOT / "data" / "processed"
+WEBB = np.array([-np.sqrt(1.5), -1.0, -np.sqrt(0.5), np.sqrt(0.5), 1.0, np.sqrt(1.5)])  # Webb 6-point weights
+N_BOOT = 9999
+TE = 0.1   # trophic transfer efficiency used in the FiB index (Pauly et al. 2000)
+
+
+def eez_full_panel() -> pd.DataFrame:
+    """Cleaned EEZ-year table (3-data-quality/clean_data.py output): adds industrial and rebuilding shares."""
+    p = pd.read_csv(PROC / "sea_eez_annual.csv")
+    return p.rename(columns={"eez_id": "unit", "pct_overexploited": "over", "mean_trophic_level": "mtl",
+                             "catch_t": "catch"})
+
+
+def effort_panel() -> pd.DataFrame:
+    """
+    Country-year panel 1950–2017: % overexploited, MTL and break-adjusted log effort.
+    Effort has single-year source breaks (Thailand 2002/2011, Malaysia 1965); in a LEVEL
+    regression a break would act as a permanent jump, so log effort is rebuilt by
+    cumulating the growth series with the break years set to zero growth.
+    """
+    se, cs = sea_effort(), country_series()
+    rows = []
+    for c in SEA5:
+        e = se[c]["nom_kwdays"]
+        d = np.log(e).diff()
+        d[d.abs() > BREAK_DLOG] = 0.0
+        loge = np.log(e.iloc[0]) + d.fillna(0).cumsum()
+        df = cs[c].loc[:2017].join(loge.rename("log_effort"), how="inner")
+        rows.append(df.assign(unit=c, country=c).reset_index())
+    return pd.concat(rows, ignore_index=True)
+
+
+def fwl_residuals(df: pd.DataFrame, cols: list[str], unit_trends: bool) -> pd.DataFrame:
+    """
+    Residualise `cols` on unit and year dummies (two-way fixed effects), plus a linear trend
+    per unit if `unit_trends` (Frisch-Waugh-Lovell). Regressing residual y on residual x
+    gives exactly the fixed-effects β.
+    """
+    W = pd.get_dummies(df[["unit", "year"]].astype(str), drop_first=True).astype(float)
+    W.insert(0, "const", 1.0)
+    if unit_trends:
+        t = df["year"].to_numpy(float) - df["year"].mean()
+        for u in df["unit"].unique()[1:]:
+            W[f"trend_{u}"] = t * (df["unit"] == u).to_numpy(float)
+        W["trend"] = t
+    Wm = W.to_numpy()
+    coef, *_ = np.linalg.lstsq(Wm, df[cols].to_numpy(float), rcond=None)
+    return pd.DataFrame(df[cols].to_numpy(float) - Wm @ coef, columns=cols, index=df.index)
+
+
+def wild_cluster_p(x: np.ndarray, y: np.ndarray, groups: np.ndarray, seed: int = 4033) -> tuple[float, float, float]:
+    """
+    β, CR1 cluster-robust SE and the wild cluster bootstrap-t p-value (restricted: H0 β = 0
+    imposed, Webb 6-point weights; all 6^G draws enumerated when G ≤ 5, else N_BOOT draws).
+    With few clusters, plain clustered p-values reject far too often; this bootstrap does not.
+    """
+    ug = np.unique(groups)
+    G, n = len(ug), len(y)
+    idx = [np.where(groups == g)[0] for g in ug]
+
+    def t_stat(yy: np.ndarray) -> tuple[float, float, float]:
+        b = (x @ yy) / (x @ x)
+        e = yy - b * x
+        meat = sum((x[i] @ e[i]) ** 2 for i in idx)
+        se = np.sqrt(G / (G - 1) * (n - 1) / (n - 1 - 1) * meat) / (x @ x)
+        return b, se, b / se
+
+    b, se, t0 = t_stat(y)
+    if G <= 5:
+        from itertools import product
+        draws = np.array(list(product(WEBB, repeat=G)))
+    else:
+        draws = np.random.default_rng(seed).choice(WEBB, size=(N_BOOT, G))
+    ts = np.empty(len(draws))
+    for k, w in enumerate(draws):
+        yy = np.empty(n)
+        for g, i in enumerate(idx):
+            yy[i] = y[i] * w[g]          # null model residual (y already purged of FE) × cluster weight
+        ts[k] = t_stat(yy)[2]
+    return float(b), float(se), float(np.mean(np.abs(ts) >= abs(t0)))
+
+
+def section_i5_h5a() -> None:
+    sec = "11_iteration5"
+    print("Iteration 5: H5a — pooled panel, two-way fixed effects")
+    eez = eez_full_panel().assign(log_catch=lambda d: np.log(d["catch"]))
+    eff = effort_panel()
+    # (driver column, label, panel, responses, expected sign on % overexploited)
+    specs = [("log_catch", "log catch", eez, ["mtl"]),            # catch -> stock status is circular in SAU
+             ("industrial_share_pct", "industrial share of catch (%)", eez, ["over", "mtl"]),
+             ("unreported_share_pct", "unreported share of catch (%)", eez, ["over", "mtl"]),
+             ("foreign_share_pct", "foreign-fleet share of catch (%)", eez, ["over", "mtl"]),
+             ("log_effort", "log fishing effort", eff, ["over", "mtl"])]
+    rows = []
+    for col, lbl, panel, resps in specs:
+        p = panel.sort_values(["unit", "year"]).copy()
+        # cumulative pressure: mean of the previous 5 years (t−5 … t−1)
+        p[f"{col}_ma5"] = p.groupby("unit")[col].transform(lambda s: s.shift(1).rolling(5).mean())
+        for lag_lbl, xcol in [("same year", col), ("mean of previous 5 years", f"{col}_ma5")]:
+            for resp in resps:
+                d = p.dropna(subset=[xcol, resp]).reset_index(drop=True)
+                for trends in (False, True):
+                    r = fwl_residuals(d, [xcol, resp], trends)
+                    b, se, p_boot = wild_cluster_p(r[xcol].to_numpy(), r[resp].to_numpy(), d["unit"].to_numpy())
+                    sd_x, sd_y = r[xcol].std(), r[resp].std()
+                    rows.append({"driver": lbl, "response": "% overexploited" if resp == "over" else "mean trophic level",
+                                 "timing": lag_lbl, "spec": "EEZ/country + year FE" + (" + unit trends" if trends else ""),
+                                 "units": d["unit"].nunique(), "years": f"{d['year'].min()}–{d['year'].max()}",
+                                 "n_obs": len(d), "beta": b, "cluster_se": se, "p_wild_bootstrap": p_boot,
+                                 "beta_standardised": b * sd_x / sd_y,
+                                 "worse_direction": (b > 0) if resp == "over" else (b < 0)})
+    res = pd.DataFrame(rows)
+    res["p_holm"] = holm(res["p_wild_bootstrap"])
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "11_I5_H5a_panel_fixed_effects")
+
+    sig = res[res["significant_holm"]]
+    robust = []
+    for (dn, rn, tm), g in sig.groupby(["driver", "response", "timing"]):
+        if g["spec"].nunique() == 2 and g["worse_direction"].all():
+            robust.append(f"{dn} → {rn} ({tm})")
+    reject = bool(robust)
+    decide("H5a (iteration 5: pooled panel, SEA)",
+           "Pooling all EEZs (fixed effects absorb the common trend): does a pressure measure raise % overexploited "
+           "or lower mean trophic level?",
+           f"{len(sig)} of {len(res)} coefficients significant after Holm (wild cluster bootstrap)"
+           + (": " + "; ".join(f"{r['driver']} → {r['response']}, {r['timing']}, {r['spec']}: β = {r['beta']:+.3g} "
+                                f"(Holm p {fmt_p(r['p_holm'])})" for _, r in sig.iterrows()) if len(sig) else "")
+           + f"; robust to unit trends and in the 'worse' direction: {', '.join(robust) or 'none'}; smallest raw p: "
+           + (lambda r: f"{r['driver']} → {r['response']} ({r['timing']}, {r['spec']}), standardised β = "
+              f"{r['beta_standardised']:+.2f}, raw p {fmt_p(r['p_wild_bootstrap'])}, Holm p {fmt_p(r['p_holm'])}")(
+               res.loc[res["p_wild_bootstrap"].idxmin()]),
+           reject,
+           "Catch is tested only against mean trophic level (SAU stock status is derived from catch). Effort uses the "
+           "5-country panel (1950–2017; break-adjusted), the rest the 11-EEZ panel (1950–2019). Few clusters → "
+           "wild cluster bootstrap p-values (Webb weights).",
+           verdict=None if reject or len(sig) == 0 else
+           f"Weak: {len(sig)} coefficient(s) significant, but not robust to unit trends or not in the 'worse' direction")
+
+    # Figure: standardised β (within-SD units), one row per driver × response, markers per timing/spec
+    combos = list(dict.fromkeys(zip(res["driver"], res["response"])))
+    fig, ax = plt.subplots(figsize=(12.5, 7.2))
+    offs = {("same year", False): 0.27, ("same year", True): 0.09,
+            ("mean of previous 5 years", False): -0.09, ("mean of previous 5 years", True): -0.27}
+    marks = {False: "o", True: "D"}
+    cols = {"same year": v.SERIES[0], "mean of previous 5 years": v.SERIES[1]}
+    for i, (dn, rn) in enumerate(combos):
+        y0 = len(combos) - 1 - i
+        for _, r in res[(res["driver"] == dn) & (res["response"] == rn)].iterrows():
+            tr = "unit trends" in r["spec"]
+            yp = y0 + offs[(r["timing"], tr)]
+            ci = 1.96 * r["cluster_se"] * r["beta_standardised"] / r["beta"] if r["beta"] else 0
+            ax.plot([r["beta_standardised"] - abs(ci), r["beta_standardised"] + abs(ci)], [yp, yp],
+                    color=v.GRID, lw=2, zorder=1)
+            ax.scatter(r["beta_standardised"], yp, marker=marks[tr], s=48, zorder=3, lw=1.4,
+                       edgecolor=cols[r["timing"]],
+                       color=cols[r["timing"]] if r["significant_holm"] else v.SURFACE)
+    for b in range(1, len(combos)):
+        ax.axhline(b - 0.5, color=v.GRID, lw=0.8)
+    ax.axvline(0, color=v.AXIS, lw=0.8)
+    ax.set_yticks(range(len(combos))[::-1], [f"{d} → {r}" for d, r in combos], fontsize=8.8)
+    ax.set_xlabel("Standardised effect (within-panel SD of response per SD of driver), 95% clustered CI")
+    ax.grid(axis="y", visible=False)
+    handles = [plt.Line2D([], [], marker="o", ls="", color=v.SERIES[0], label="same year, EEZ + year FE"),
+               plt.Line2D([], [], marker="D", ls="", color=v.SERIES[0], label="same year, + unit trends"),
+               plt.Line2D([], [], marker="o", ls="", color=v.SERIES[1], label="previous 5-year mean, EEZ + year FE"),
+               plt.Line2D([], [], marker="D", ls="", color=v.SERIES[1], label="previous 5-year mean, + unit trends")]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.45, -0.1), ncol=4, fontsize=8.3,
+              title="Filled = significant after Holm (wild cluster bootstrap); hollow = not", title_fontsize=8.3)
+    v.suptitle(fig, "Iteration 5 · H5a — Pooling all EEZs " + (
+        f"finds a robust pressure effect: {', '.join(robust)}" if reject else
+        "still finds no robust pressure effect on overexploitation"),
+               f"Two-way fixed effects (EEZ + year): the common trend is removed, the effect is estimated from "
+               f"differences between EEZs. {len(sig)} of {len(res)} coefficients significant after Holm")
+    fig.subplots_adjust(top=0.86, bottom=0.2, left=0.27, right=0.98)
+    save_fig(fig, sec, "I5.01_h5a_panel_fixed_effects", "Sea Around Us (11 SEA EEZs); IMAS Global Fishing Effort")
+
+
+def section_i5_h5b() -> None:
+    sec = "11_iteration5"
+    print("Iteration 5: H5b — stock rebuilding before vs after 2015")
+    p = eez_full_panel()
+    g = pd.read_csv(VAL / "sau_regions" / "stock_status" / "global.csv")
+    world = g[g["Data_Set"] == "css"].set_index("Year")["Rebuilding"].astype(float)
+    country = p.groupby(["country", "year"])["pct_rebuilding"].mean().unstack(0)
+    sea = country[SEA5].mean(axis=1)
+
+    # (1) EEZ-level paired test: 2015–19 mean vs 2010–14 mean, one-sided (did rebuilding increase?)
+    pre = p[p["year"].between(2010, 2014)].groupby("unit")["pct_rebuilding"].mean()
+    post = p[p["year"].between(2015, 2019)].groupby("unit")["pct_rebuilding"].mean()
+    diff = (post - pre)
+    w = stats.wilcoxon(post, pre, alternative="greater", zero_method="zsplit")
+    pair = pd.DataFrame({"eez": [st.eez_name(u) for u in pre.index], "rebuilding_2010_14": pre.values,
+                         "rebuilding_2015_19": post.values, "change_pp": diff.values})
+    save_table(pair, "11_I5_H5b_rebuilding_by_eez")
+
+    # (2) Trend + segmented slope change at 2015 (HAC errors) for SEA and the world, 1990–2019
+    rows = []
+    for name, s in [("World (SAU)", world.loc[1990:2019]), ("SEA, 5 countries (SAU)", sea.loc[1990:2019])] + \
+                   [(c, country[c].loc[1990:2019]) for c in SEA5]:
+        t = s.index.to_numpy(float)
+        X = np.column_stack([np.ones_like(t), t - t.min(), np.clip(t - BREAK, 0, None)])
+        _, hac = ols_hac(s.values, X, f"H5b rebuilding segmented: {name}")
+        mk_ = mann_kendall(s)
+        rows.append({"unit": name, "mean_2010_14": s.loc[2010:2014].mean(), "mean_2015_19": s.loc[2015:2019].mean(),
+                     "slope_before_2015_pp_yr": hac.params[1], "slope_change_after_2015": hac.params[2],
+                     "p_slope_change": hac.pvalues[2], "mk_p_1990_2019": mk_["p"], "mk_trend": mk_["trend"],
+                     "sen_pp_per_decade": mk_["sen_slope"] * 10})
+    seg = pd.DataFrame(rows)
+    m = seg["unit"].isin(SEA5)
+    seg["p_slope_change_holm_countries"] = np.nan
+    seg.loc[m, "p_slope_change_holm_countries"] = holm(seg.loc[m, "p_slope_change"])
+    save_table(seg, "11_I5_H5b_rebuilding_trends")
+    w_row, s_row = seg.iloc[0], seg.iloc[1]
+    up = int((diff > 0).sum())
+    reject = bool(w.pvalue < ALPHA and s_row["slope_change_after_2015"] > 0 and s_row["p_slope_change"] < ALPHA)
+    decide("H5b (iteration 5: stock rebuilding, SDG 14.4)",
+           "Has the share of rebuilding stocks increased since the SDGs were adopted (2015)?",
+           f"EEZ-level 2015–19 vs 2010–14: {up} of {len(diff)} EEZs higher, median change {diff.median():+.2f} pp, "
+           f"one-sided Wilcoxon p {fmt_p(w.pvalue)}; SEA slope change after 2015 {s_row['slope_change_after_2015']:+.2f} "
+           f"pp/yr (p {fmt_p(s_row['p_slope_change'])}); world {w_row['slope_change_after_2015']:+.2f} pp/yr "
+           f"(p {fmt_p(w_row['p_slope_change'])}); SEA level {s_row['mean_2010_14']:.1f}% → {s_row['mean_2015_19']:.1f}%",
+           reject,
+           "Sea Around Us labels a stock 'rebuilding' when its catch recovers after a collapse (catch-based, Kleisner "
+           "et al. 2013). The 'restore stocks' half of SDG 14.4 is judged on this measure only. Country slope changes "
+           "after 2015 (Holm): " + "; ".join(f"{r['unit']} {r['slope_change_after_2015']:+.2f} pp/yr "
+                                              f"(p {fmt_p(r['p_slope_change_holm_countries'])})"
+                                              for _, r in seg[m].iterrows()),
+           verdict=None if reject else (
+               "Mixed: world rebuilding accelerated after 2015, SEA's did not" if (
+                   w_row["slope_change_after_2015"] > 0 and w_row["p_slope_change"] < ALPHA) else None))
+
+    # Figure: (1) rebuilding share over time, (2) per-EEZ before/after dumbbell
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(15, 5.8), gridspec_kw={"width_ratios": [1.15, 1]})
+    for lbl, s, col, lw in [("World (SAU)", world, v.INK_2, 2.2), ("SEA, 5 countries", sea, v.SERIES[0], 2.4)]:
+        s = s.loc[1990:2019]
+        a1.plot(s.index, s.values, color=col, lw=lw, label=lbl)
+    a1.axvline(BREAK, color=v.AXIS, lw=1)
+    a1.text(BREAK - 0.3, a1.get_ylim()[0] + 0.3, "SDGs adopted", fontsize=8.5, color=v.MUTED, ha="right", va="bottom")
+    a1.set_ylabel("% of stocks rebuilding (SAU)")
+    a1.legend(loc="upper left", fontsize=8.5)
+    a1.set_title(f"1 · Share of rebuilding stocks, 1990–2019 — SEA slope change after 2015 "
+                 f"{s_row['slope_change_after_2015']:+.2f} pp/yr (p {fmt_p(s_row['p_slope_change'])})", fontsize=9.5)
+    order = pair.sort_values("change_pp").reset_index(drop=True)
+    for i, r in order.iterrows():
+        col = v.SERIES[5] if r["change_pp"] > 0 else v.SERIES[7]
+        a2.plot([r["rebuilding_2010_14"], r["rebuilding_2015_19"]], [i, i], color=v.GRID, lw=2.5, zorder=1)
+        a2.scatter(r["rebuilding_2010_14"], i, s=44, facecolor=v.SURFACE, edgecolor=v.INK_2, lw=1.4, zorder=3)
+        a2.scatter(r["rebuilding_2015_19"], i, s=50, color=col, edgecolor=v.SURFACE, lw=1, zorder=4)
+    a2.set_yticks(range(len(order)), order["eez"], fontsize=8.5)
+    a2.set_xlabel("% of stocks rebuilding: ○ 2010–14 mean → ● 2015–19 mean (green = up, red = down)")
+    a2.grid(axis="y", visible=False)
+    a2.set_title(f"2 · Per EEZ: {up} of {len(diff)} up; one-sided Wilcoxon p {fmt_p(w.pvalue)}", fontsize=9.5)
+    world_up = bool(w_row["slope_change_after_2015"] > 0 and w_row["p_slope_change"] < ALPHA)
+    v.suptitle(fig, "Iteration 5 · H5b — " + ("Stock rebuilding has increased since 2015" if reject else
+                                              "Rebuilding sped up worldwide after 2015, but not in Southeast Asia"
+                                              if world_up else "No sign that stock rebuilding increased after 2015"),
+               f"World slope change after 2015 {w_row['slope_change_after_2015']:+.2f} pp/yr (p "
+               f"{fmt_p(w_row['p_slope_change'])}). The 'restore stocks' half of SDG 14.4, on Sea Around Us stock "
+               "status (catch-based)")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I5.02_h5b_rebuilding_before_after_2015", "Sea Around Us (World; 11 SEA EEZs)")
+
+
+def fib(catch: pd.Series, mtl: pd.Series, base: int) -> pd.Series:
+    """
+    Fishing-in-Balance index (Pauly, Christensen & Walters 2000):
+        FiB_t = ln(Y_t · (1/TE)^TL_t) − ln(Y_0 · (1/TE)^TL_0),  TE = 0.1
+    = 0 when a fall in trophic level is exactly offset by the ecologically expected rise in
+    catch; > 0 = catch grows faster (often geographic expansion); < 0 = catch fails to
+    compensate (fishing beyond balance / ecosystem impaired). Natural log; the base only
+    rescales the index and does not change trend tests.
+    """
+    d = pd.concat([catch.rename("y"), mtl.rename("tl")], axis=1).dropna()
+    v_ = np.log(d["y"]) + d["tl"] * np.log(1 / TE)
+    return v_ - v_.loc[base]
+
+
+def section_i5_h5c() -> None:
+    sec = "11_iteration5"
+    print("Iteration 5: H5c — Fishing-in-Balance index")
+    sea, cs = sea_series(), country_series()
+    p = st.eez_panel()
+    units = [("World (SAU)", sau_world_catch(), sau_world_mtl()), ("SEA", sea["catch"], sea["mtl"])]
+    units += [(c, cs[c]["catch"], cs[c]["mtl"]) for c in SEA5]
+    eezs = sorted(p["eez"].unique(), key=lambda e: (SEA5.index(v.EEZ_COUNTRY[e]), st.eez_name(e)))
+    for e in eezs:
+        name = st.eez_name(e)
+        g = p[p["eez"] == e].set_index("year")
+        units.append((f"{name} (EEZ)" if name in SEA5 else name, g["catch"], g["mtl"]))
+    rows, series = [], {}
+    for name, y, tl in units:
+        f = fib(y, tl, 1950)
+        series[name] = f
+        r = mann_kendall(f.loc[1990:2019])
+        d_catch = np.log(y.loc[2015:2019].mean() / y.loc[1990:1994].mean())
+        d_tl = (tl.loc[2015:2019].mean() - tl.loc[1990:1994].mean()) * np.log(1 / TE)
+        level = "World" if name.startswith("World") else ("SEA" if name == "SEA" else ("country" if name in SEA5 else "EEZ"))
+        rows.append({"unit": name, "level": level, "fib_2019": f.loc[2019], "mk_p_1990_2019": r["p"], "trend": r["trend"],
+                     "sen_per_decade": r["sen_slope"] * 10, "sen_ci_low": r["sen_ci_low"] * 10,
+                     "sen_ci_high": r["sen_ci_high"] * 10,
+                     "change_1990_94_to_2015_19": d_catch + d_tl, "from_catch": d_catch, "from_trophic_level": d_tl})
+    res = pd.DataFrame(rows)
+    res["p_holm"] = res.groupby("level")["mk_p_1990_2019"].transform(lambda s: holm(s))
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "11_I5_H5c_fishing_in_balance")
+
+    s_row = res[res["unit"] == "SEA"].iloc[0]
+    w_row = res[res["unit"] == "World (SAU)"].iloc[0]
+    falling = res[(res["level"].isin(["country", "EEZ"])) & res["significant_holm"] & (res["trend"] == "decreasing")]["unit"].tolist()
+    rising = res[(res["level"].isin(["country", "EEZ"])) & res["significant_holm"] & (res["trend"] == "increasing")]["unit"].tolist()
+    reject = bool(s_row["trend"] == "decreasing" and s_row["mk_p_1990_2019"] < ALPHA)
+    decide("H5c (iteration 5: Fishing-in-Balance, SEA)",
+           "Since 1990, has the Fishing-in-Balance index fallen (catch no longer compensating for trophic-level change)?",
+           f"SEA FiB Sen {s_row['sen_per_decade']:+.2f}/decade (MK p {fmt_p(s_row['mk_p_1990_2019'])}); world "
+           f"{w_row['sen_per_decade']:+.2f}/decade (p {fmt_p(w_row['mk_p_1990_2019'])}); 1990–94 → 2015–19 SEA change "
+           f"{s_row['change_1990_94_to_2015_19']:+.2f} = catch {s_row['from_catch']:+.2f} + trophic level "
+           f"{s_row['from_trophic_level']:+.2f}; falling after Holm in: {', '.join(falling) or 'none'}; rising in: "
+           f"{', '.join(rising) or 'none'}",
+           reject,
+           "FiB > 0 and rising means catches grew faster than a trophic-level change alone would allow, usually through "
+           "expansion (new grounds, offshore/pelagic stocks); FiB falling means the ecosystem no longer delivers. "
+           "TE = 0.1 by convention.",
+           verdict=None if reject else
+           ("Fail to reject H0 for SEA (FiB not falling)" + (f"; falling in {', '.join(falling)}" if falling else "")))
+
+    # Figure: (1) FiB over time (World, SEA, countries), (2) decomposition 1990–94 → 2015–19
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(15.5, 5.8), gridspec_kw={"width_ratios": [1.2, 1]})
+    for name in ["World (SAU)", "SEA"] + SEA5:
+        f = series[name].loc[1950:2019]
+        col = v.INK_2 if name.startswith("World") else (v.INK if name == "SEA" else v.COUNTRY_COLOR[name])
+        a1.plot(f.index, f.values, color=col, lw=2.4 if name in ("SEA", "World (SAU)") else 1.5,
+                ls=(0, (4, 2)) if name.startswith("World") else "-", label=name)
+    a1.axhline(0, color=v.AXIS, lw=0.8)
+    a1.axvspan(1990, 2019, color=v.GRID, alpha=0.35, lw=0)
+    a1.set_ylabel("Fishing-in-Balance index (0 = 1950 balance)")
+    a1.legend(loc="upper left", fontsize=8.3, ncol=2)
+    a1.set_title("1 · FiB since 1950 (shaded = window tested)", fontsize=9.5)
+    sub = res[res["level"].isin(["World", "SEA", "country"])].reset_index(drop=True)
+    yy = np.arange(len(sub))[::-1]
+    a2.barh(yy + 0.18, sub["from_catch"], height=0.34, color=v.SERIES[0], label="from catch (Δ ln catch)")
+    a2.barh(yy - 0.18, sub["from_trophic_level"], height=0.34, color=v.SERIES[1],
+            label="from trophic level (ΔTL × ln 10)")
+    a2.scatter(sub["change_1990_94_to_2015_19"], yy, marker="|", s=260, color=v.INK, lw=2.2, zorder=4,
+               label="total FiB change")
+    a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_yticks(yy, sub["unit"], fontsize=8.8)
+    a2.grid(axis="y", visible=False)
+    a2.set_xlabel("Change in FiB, 1990–94 → 2015–19 (5-year means)")
+    a2.legend(loc="lower right", fontsize=8.3)
+    a2.set_title("2 · What moved the index: catch vs trophic level", fontsize=9.5)
+    v.suptitle(fig, "Iteration 5 · H5c — " + ("Southeast Asian fisheries have fallen out of balance since 1990" if reject
+                                              else "Southeast Asian catches still outgrow the trophic-level change: "
+                                              "expansion, not balance"),
+               f"SEA FiB {s_row['sen_per_decade']:+.2f}/decade since 1990 (p {fmt_p(s_row['mk_p_1990_2019'])}); "
+               f"falling significantly in: {', '.join(falling) or 'no country or EEZ'}")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I5.03_h5c_fishing_in_balance", "Sea Around Us (World; 11 SEA EEZs)")
+
+
+# =========================================================================== #
 # Summary across iterations — every driver, one common method (report figure)
 # =========================================================================== #
 # The per-iteration sections each use the tests that suit their driver. For the report,
@@ -2034,6 +2419,8 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             # iteration 4: shipping and built structures (new hypothesis H4)
             "i4_data": section_i4_data, "i4_h4a": section_i4_h4a, "i4_h4b": section_i4_h4b,
             "i4_h4c": section_i4_h4c, "i4_descriptive": section_i4_descriptive,
+            # iteration 5: pooled panel, stock rebuilding, Fishing-in-Balance (new hypothesis H5)
+            "i5_h5a": section_i5_h5a, "i5_h5b": section_i5_h5b, "i5_h5c": section_i5_h5c,
             # summary across iterations (report figure S.01)
             "summary": section_summary,
             "diagnostics": section_diagnostics}

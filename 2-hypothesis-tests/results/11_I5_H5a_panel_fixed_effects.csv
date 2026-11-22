@@ -1,0 +1,37 @@
+driver,response,timing,spec,units,years,n_obs,beta,cluster_se,p_wild_bootstrap,beta_standardised,worse_direction,p_holm,significant_holm
+log catch,mean trophic level,same year,EEZ/country + year FE,11,1950–2019,770,-0.034899,0.065523,0.943094,-0.128757,True,1.0,False
+log catch,mean trophic level,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,0.022802,0.023134,0.337934,0.090675,False,1.0,False
+log catch,mean trophic level,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.01884,0.054871,0.942494,-0.073112,True,1.0,False
+log catch,mean trophic level,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,0.016942,0.025873,0.506951,0.062764,False,1.0,False
+industrial share of catch (%),% overexploited,same year,EEZ/country + year FE,11,1950–2019,770,-0.165011,0.083714,0.189619,-0.299808,False,1.0,False
+industrial share of catch (%),% overexploited,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,-0.153336,0.073842,0.256126,-0.278158,False,1.0,False
+industrial share of catch (%),mean trophic level,same year,EEZ/country + year FE,11,1950–2019,770,0.000389,0.000642,0.671467,0.051547,False,1.0,False
+industrial share of catch (%),mean trophic level,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,0.000291,0.000447,0.587359,0.050586,False,1.0,False
+industrial share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.176112,0.09046,0.213121,-0.295753,False,1.0,False
+industrial share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,-0.172765,0.081369,0.269827,-0.287113,False,1.0,False
+industrial share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,0.000541,0.000539,0.40164,0.075944,False,1.0,False
+industrial share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,0.000399,0.000545,0.521552,0.067276,False,1.0,False
+unreported share of catch (%),% overexploited,same year,EEZ/country + year FE,11,1950–2019,770,-0.100106,0.043815,0.065907,-0.185409,False,1.0,False
+unreported share of catch (%),% overexploited,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,-0.079528,0.040936,0.124412,-0.156783,False,1.0,False
+unreported share of catch (%),mean trophic level,same year,EEZ/country + year FE,11,1950–2019,770,-0.003117,0.001835,0.10041,-0.420623,True,1.0,False
+unreported share of catch (%),mean trophic level,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,-0.001911,0.001326,0.20222,-0.360772,True,1.0,False
+unreported share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.135094,0.060503,0.081508,-0.2267,False,1.0,False
+unreported share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,-0.114046,0.060248,0.152415,-0.202107,False,1.0,False
+unreported share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.002922,0.00172,0.093509,-0.409576,True,1.0,False
+unreported share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,-0.001849,0.001353,0.213721,-0.332633,True,1.0,False
+foreign-fleet share of catch (%),% overexploited,same year,EEZ/country + year FE,11,1950–2019,770,-0.465673,0.153764,0.020202,-0.376589,False,0.727273,False
+foreign-fleet share of catch (%),% overexploited,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,-0.464876,0.145745,0.024702,-0.419431,False,0.839884,False
+foreign-fleet share of catch (%),mean trophic level,same year,EEZ/country + year FE,11,1950–2019,770,-0.004067,0.002373,0.105311,-0.239646,True,1.0,False
+foreign-fleet share of catch (%),mean trophic level,same year,EEZ/country + year FE + unit trends,11,1950–2019,770,-0.003866,0.001746,0.077308,-0.333935,True,1.0,False
+foreign-fleet share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.453896,0.150542,0.022402,-0.324113,False,0.784078,False
+foreign-fleet share of catch (%),% overexploited,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,-0.506762,0.157788,0.027303,-0.395986,False,0.90099,False
+foreign-fleet share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE,11,1955–2019,715,-0.002673,0.002525,0.307131,-0.159444,True,1.0,False
+foreign-fleet share of catch (%),mean trophic level,mean of previous 5 years,EEZ/country + year FE + unit trends,11,1955–2019,715,-0.003008,0.001798,0.164416,-0.238557,True,1.0,False
+log fishing effort,% overexploited,same year,EEZ/country + year FE,5,1950–2017,340,-2.72193,3.896757,0.832819,-0.091267,False,1.0,False
+log fishing effort,% overexploited,same year,EEZ/country + year FE + unit trends,5,1950–2017,340,-5.310864,3.155066,0.19573,-0.161744,False,1.0,False
+log fishing effort,mean trophic level,same year,EEZ/country + year FE,5,1950–2017,340,-0.211812,0.158695,0.366255,-0.434647,True,1.0,False
+log fishing effort,mean trophic level,same year,EEZ/country + year FE + unit trends,5,1950–2017,340,-0.061634,0.067753,0.520319,-0.160345,True,1.0,False
+log fishing effort,% overexploited,mean of previous 5 years,EEZ/country + year FE,5,1955–2017,315,0.715639,4.862489,0.889918,0.021138,True,1.0,False
+log fishing effort,% overexploited,mean of previous 5 years,EEZ/country + year FE + unit trends,5,1955–2017,315,-2.319832,3.427874,0.602109,-0.063264,False,1.0,False
+log fishing effort,mean trophic level,mean of previous 5 years,EEZ/country + year FE,5,1955–2017,315,-0.172599,0.147885,0.459619,-0.369626,True,1.0,False
+log fishing effort,mean trophic level,mean of previous 5 years,EEZ/country + year FE + unit trends,5,1955–2017,315,-0.067956,0.079796,0.48251,-0.167748,True,1.0,False
