@@ -1,0 +1,5 @@
+driver,response,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended
+SST anomaly,FAO % overexploited,48,0.861594,0.0,-0.111594,0.450173
+SST anomaly,SAU % overexploited,70,0.914162,0.0,0.439839,0.000139
+Ocean heat content,FAO % overexploited,48,0.904581,0.0,-0.536149,8.6e-05
+Ocean heat content,SAU % overexploited,65,0.923731,0.0,0.761888,0.0

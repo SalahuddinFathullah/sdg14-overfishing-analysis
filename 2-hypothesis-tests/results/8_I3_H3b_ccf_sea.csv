@@ -1,0 +1,199 @@
+unit,response,pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm,p_holm_all
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,0,69,-0.197577,0.103674,-0.228449,0.235956,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,1,68,0.106409,0.387776,0.076238,0.237685,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,2,67,-0.041038,0.741603,0.002838,0.239452,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,3,66,0.041463,0.740981,-0.021047,0.241259,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,4,65,-0.076716,0.543586,-0.04519,0.243108,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,5,64,0.036332,0.775626,0.080546,0.245,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,6,63,-0.064783,0.613957,-0.114391,0.246937,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,7,62,0.165421,0.19883,0.189643,0.24892,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,8,61,-0.147416,0.256903,-0.219384,0.250952,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,9,60,-0.165197,0.207172,0.021729,0.253035,1.0,False,1.0
+SEA,Δ % overexploited,SEA: Δ SST -> Δ % overexploited,10,59,0.43599,0.000557,0.282675,0.25517,0.006128,True,0.110304
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,0,69,-0.026621,0.828107,-0.035404,0.235956,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,1,68,-0.033342,0.787223,0.043516,0.237685,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,2,67,-0.085808,0.489925,-0.128821,0.239452,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,3,66,0.135348,0.27856,0.14677,0.241259,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,4,65,0.060383,0.632784,-0.032299,0.243108,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,5,64,0.017126,0.893153,0.128663,0.245,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,6,63,0.046334,0.718403,-0.018049,0.246937,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,7,62,-0.164324,0.201866,-0.103976,0.24892,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,8,61,0.15788,0.224284,0.11211,0.250952,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,9,60,-0.119991,0.361136,-0.129758,0.253035,1.0,False,1.0
+SEA,Δ MTL,SEA: Δ SST -> Δ MTL,10,59,0.028588,0.829819,-0.014378,0.25517,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,0,69,0.101594,0.406179,0.146366,0.235956,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,1,68,-0.170864,0.163581,-0.206589,0.237685,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,2,67,0.0005,0.996798,0.022787,0.239452,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,3,66,-0.086796,0.488329,-0.042104,0.241259,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,4,65,0.175081,0.163027,0.218007,0.243108,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,5,64,-0.116847,0.35783,-0.150733,0.245,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,6,63,-0.023213,0.856696,0.019249,0.246937,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,7,62,-0.037756,0.77079,-0.053209,0.24892,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,8,61,0.137605,0.290267,0.220254,0.250952,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,9,60,0.003218,0.980531,0.01217,0.253035,1.0,False,1.0
+SEA,Δlog catch,SEA: Δ SST -> Δlog catch,10,59,-0.116543,0.379385,-0.091175,0.25517,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,0,69,-0.033951,0.781823,-0.103522,0.235956,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,1,68,-0.123256,0.316646,-0.176224,0.237685,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,2,67,-0.123623,0.318918,-0.116314,0.239452,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,3,66,0.146985,0.238913,0.112665,0.241259,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,4,65,0.020864,0.86897,0.11644,0.243108,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,5,64,0.002029,0.987303,0.02318,0.245,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,6,63,-0.201451,0.11337,-0.11892,0.246937,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,7,62,0.139686,0.278888,0.051988,0.24892,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,8,61,0.110286,0.39748,0.271723,0.250952,1.0,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,9,60,-0.336773,0.008511,-0.199168,0.253035,0.09362,False,1.0
+Malaysia,Δ % overexploited,Malaysia: Δ SST -> Δ % overexploited,10,59,0.257975,0.048533,0.137959,0.25517,0.485325,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,0,69,0.067686,0.580535,0.093881,0.235956,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,1,68,-0.115371,0.348828,-0.066859,0.237685,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,2,67,-0.008478,0.945714,-0.0866,0.239452,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,3,66,0.125474,0.315448,0.154119,0.241259,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,4,65,0.087808,0.48672,0.136627,0.243108,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,5,64,-0.017808,0.888921,-0.135212,0.245,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,6,63,0.017168,0.893763,0.070973,0.246937,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,7,62,-0.225129,0.078534,-0.307022,0.24892,0.863874,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,8,61,0.083202,0.523803,0.140615,0.250952,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,9,60,0.055321,0.674618,-0.050654,0.253035,1.0,False,1.0
+Malaysia,Δ MTL,Malaysia: Δ SST -> Δ MTL,10,59,-0.214025,0.103588,-0.193778,0.25517,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,0,69,-0.021463,0.86104,0.004202,0.235956,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,1,68,0.048364,0.695311,0.060275,0.237685,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,2,67,0.052736,0.671684,0.031727,0.239452,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,3,66,-0.13145,0.292765,-0.14961,0.241259,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,4,65,-0.045972,0.71613,0.041762,0.243108,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,5,64,-0.05774,0.65041,-0.11589,0.245,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,6,63,0.082214,0.521801,0.091663,0.246937,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,7,62,0.077932,0.54713,0.034349,0.24892,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,8,61,-0.021268,0.870765,-0.033395,0.250952,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,9,60,0.017023,0.897281,0.00653,0.253035,1.0,False,1.0
+Malaysia,Δlog catch,Malaysia: Δ SST -> Δlog catch,10,59,-0.023868,0.857593,-0.044185,0.25517,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,0,69,-0.04062,0.740355,0.008609,0.235956,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,1,68,-0.085871,0.486258,-0.203122,0.237685,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,2,67,0.021928,0.860191,0.205043,0.239452,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,3,66,0.108374,0.386399,-0.042742,0.241259,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,4,65,-0.225469,0.070941,-0.309769,0.243108,0.709414,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,5,64,0.165829,0.19034,0.32947,0.245,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,6,63,-0.077914,0.543875,-0.114343,0.246937,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,7,62,0.094349,0.465748,0.002141,0.24892,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,8,61,-0.087954,0.500286,-0.109665,0.250952,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,9,60,-0.150275,0.251771,0.047405,0.253035,1.0,False,1.0
+Indonesia,Δ % overexploited,Indonesia: Δ SST -> Δ % overexploited,10,59,0.317747,0.014192,-0.014027,0.25517,0.156113,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,0,69,0.077025,0.529306,0.149543,0.235956,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,1,68,-0.068261,0.580193,-0.129137,0.237685,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,2,67,-0.049633,0.689996,0.022827,0.239452,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,3,66,-0.05269,0.674361,-0.04916,0.241259,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,4,65,0.363355,0.00293,0.351355,0.243108,0.032226,True,0.577135
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,5,64,-0.168038,0.184421,-0.274863,0.245,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,6,63,-0.068443,0.594037,-0.082373,0.246937,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,7,62,-0.069094,0.593608,0.017099,0.24892,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,8,61,0.030343,0.816434,0.006769,0.250952,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,9,60,-0.040112,0.760907,-0.087969,0.253035,1.0,False,1.0
+Indonesia,Δ MTL,Indonesia: Δ SST -> Δ MTL,10,59,0.127222,0.336948,0.049269,0.25517,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,0,69,-0.086884,0.477783,0.04578,0.235956,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,1,68,-0.086175,0.48471,-0.135741,0.237685,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,2,67,0.085098,0.493539,0.16821,0.239452,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,3,66,-0.167382,0.179163,-0.171777,0.241259,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,4,65,0.233228,0.061521,0.214161,0.243108,0.676728,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,5,64,-0.159531,0.207965,-0.155632,0.245,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,6,63,0.07996,0.533317,0.173003,0.246937,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,7,62,-0.080166,0.535667,-0.098688,0.24892,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,8,61,-0.022379,0.864075,0.105658,0.250952,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,9,60,0.198167,0.129064,0.096027,0.253035,1.0,False,1.0
+Indonesia,Δlog catch,Indonesia: Δ SST -> Δlog catch,10,59,-0.149969,0.256916,-0.055757,0.25517,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,0,69,0.00022,0.998571,0.067658,0.235956,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,1,68,0.208382,0.088142,0.144897,0.237685,0.969566,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,2,67,-0.127326,0.304522,-0.176507,0.239452,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,3,66,-0.013217,0.916113,0.101253,0.241259,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,4,65,-0.066853,0.596719,-0.127597,0.243108,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,5,64,-0.029716,0.815689,-0.071725,0.245,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,6,63,0.073041,0.569426,0.064344,0.246937,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,7,62,0.061324,0.635865,0.048726,0.24892,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,8,61,-0.17609,0.174625,-0.107141,0.250952,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,9,60,-0.066177,0.615407,-0.156779,0.253035,1.0,False,1.0
+Thailand,Δ % overexploited,Thailand: Δ SST -> Δ % overexploited,10,59,0.175896,0.182667,0.163835,0.25517,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,0,69,0.108301,0.375729,0.085642,0.235956,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,1,68,-0.059,0.632704,0.031321,0.237685,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,2,67,-0.16622,0.178838,-0.269458,0.239452,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,3,66,0.117679,0.346685,0.090973,0.241259,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,4,65,0.022945,0.856038,-0.010402,0.243108,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,5,64,-0.090247,0.478202,-0.010165,0.245,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,6,63,0.060019,0.640307,-0.046372,0.246937,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,7,62,0.041462,0.748993,0.017099,0.24892,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,8,61,0.106995,0.411802,-0.024167,0.250952,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,9,60,-0.155115,0.236643,-0.210728,0.253035,1.0,False,1.0
+Thailand,Δ MTL,Thailand: Δ SST -> Δ MTL,10,59,-0.038475,0.772337,-0.040445,0.25517,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,0,69,0.109122,0.3721,0.041524,0.235956,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,1,68,-0.087366,0.478676,-0.09505,0.237685,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,2,67,-0.077512,0.532979,-0.088795,0.239452,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,3,66,0.019949,0.873682,0.075671,0.241259,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,4,65,0.050602,0.688933,0.023776,0.243108,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,5,64,0.077046,0.5451,0.022734,0.245,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,6,63,-0.177642,0.163661,-0.216376,0.246937,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,7,62,0.023279,0.857472,-0.036993,0.24892,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,8,61,0.253036,0.049121,0.106532,0.250952,0.54033,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,9,60,-0.181801,0.164463,-0.131983,0.253035,1.0,False,1.0
+Thailand,Δlog catch,Thailand: Δ SST -> Δlog catch,10,59,-0.098167,0.459489,-0.050468,0.25517,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,0,69,-0.232619,0.054423,-0.250704,0.235956,0.598656,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,1,68,0.188787,0.123119,0.198717,0.237685,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,2,67,-0.062131,0.617446,-0.07099,0.239452,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,3,66,-0.045606,0.716143,-0.054632,0.241259,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,4,65,0.053894,0.669828,-0.040243,0.243108,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,5,64,-0.031928,0.802238,0.084567,0.245,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,6,63,0.018623,0.884813,-0.053525,0.246937,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,7,62,0.130167,0.313272,0.163503,0.24892,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,8,61,-0.136378,0.29463,-0.168265,0.250952,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,9,60,-0.079742,0.544746,-0.010866,0.253035,1.0,False,1.0
+Vietnam,Δ % overexploited,Vietnam: Δ SST -> Δ % overexploited,10,59,0.202845,0.123362,0.105543,0.25517,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,0,69,-0.133777,0.273137,-0.0316,0.235956,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,1,68,-0.042264,0.732195,-0.083528,0.237685,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,2,67,0.072016,0.562496,0.036783,0.239452,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,3,66,-0.096159,0.442456,-0.108431,0.241259,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,4,65,0.119981,0.341102,0.201169,0.243108,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,5,64,-0.148257,0.242341,-0.138747,0.245,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,6,63,0.183526,0.149928,0.272231,0.246937,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,7,62,-0.033,0.799015,0.068783,0.24892,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,8,61,-0.082864,0.5255,-0.099623,0.250952,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,9,60,0.161976,0.216292,0.26188,0.253035,1.0,False,1.0
+Vietnam,Δ MTL,Vietnam: Δ SST -> Δ MTL,10,59,-0.0688,0.604617,-0.151192,0.25517,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,0,69,-0.089625,0.46395,-0.083084,0.235956,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,1,68,0.035461,0.774048,-0.043822,0.237685,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,2,67,-0.036763,0.767723,-0.084485,0.239452,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,3,66,0.126342,0.312086,0.094167,0.241259,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,4,65,0.012454,0.921565,0.122007,0.243108,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,5,64,-0.103962,0.413631,-0.161746,0.245,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,6,63,0.026978,0.833762,0.082902,0.246937,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,7,62,0.071717,0.579632,0.046562,0.24892,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,8,61,-0.00321,0.980411,0.039318,0.250952,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,9,60,-0.184755,0.157597,-0.229261,0.253035,1.0,False,1.0
+Vietnam,Δlog catch,Vietnam: Δ SST -> Δlog catch,10,59,0.112772,0.395104,0.118061,0.25517,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,0,69,-0.085742,0.483611,-0.100843,0.235956,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,1,68,-0.007865,0.949248,0.029863,0.237685,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,2,67,0.017802,0.886302,0.005251,0.239452,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,3,66,-0.086795,0.488332,-0.064581,0.241259,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,4,65,0.077801,0.537884,0.04697,0.243108,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,5,64,0.0826,0.516409,0.154354,0.245,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,6,63,-0.070449,0.583239,-0.193136,0.246937,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,7,62,0.053924,0.677219,0.15165,0.24892,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,8,61,-0.009872,0.939807,0.012677,0.250952,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,9,60,0.011299,0.93172,0.057959,0.253035,1.0,False,1.0
+Philippines,Δ % overexploited,Philippines: Δ SST -> Δ % overexploited,10,59,-0.003832,0.977023,-0.118115,0.25517,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,0,69,0.138715,0.255659,0.151048,0.235956,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,1,68,-0.041722,0.735504,0.090925,0.237685,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,2,67,-0.085065,0.493706,-0.130575,0.239452,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,3,66,0.156315,0.210073,0.132172,0.241259,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,4,65,-0.103693,0.411076,-0.068367,0.243108,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,5,64,0.002255,0.985891,-0.002686,0.245,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,6,63,0.108532,0.397161,0.119206,0.246937,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,7,62,-0.082926,0.521668,-0.090208,0.24892,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,8,61,0.091456,0.48331,0.123458,0.250952,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,9,60,0.121773,0.354,0.154367,0.253035,1.0,False,1.0
+Philippines,Δ MTL,Philippines: Δ SST -> Δ MTL,10,59,-0.080035,0.546792,-0.11859,0.25517,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,0,69,0.044421,0.717034,0.064105,0.235956,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,1,68,-0.046115,0.708836,-0.075221,0.237685,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,2,67,0.042246,0.734277,0.064034,0.239452,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,3,66,-0.105216,0.400469,-0.059495,0.241259,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,4,65,0.09126,0.469682,0.054329,0.243108,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,5,64,-0.090386,0.477521,-0.103529,0.245,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,6,63,0.014073,0.912829,0.048941,0.246937,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,7,62,-0.220724,0.084718,-0.231179,0.24892,0.931901,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,8,61,0.138093,0.288544,0.099738,0.250952,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,9,60,-0.010304,0.937719,0.032843,0.253035,1.0,False,1.0
+Philippines,Δlog catch,Philippines: Δ SST -> Δlog catch,10,59,-0.062348,0.63899,-0.036851,0.25517,1.0,False,1.0

@@ -6,6 +6,7 @@
 python 2-hypothesis-tests/hypothesis_tests.py                 # everything (~10 s)
 python 2-hypothesis-tests/hypothesis_tests.py --only h1a h2c
 python 2-hypothesis-tests/hypothesis_tests.py --only i2_cpue i2_h1b i2_h2b   # iteration 2 (effort)
+python 2-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # iteration 3 (warming)
 ```
 
 Outputs:
@@ -59,6 +60,36 @@ Iteration 1 found no link between **catch** and overexploitation (H1b, H2b). Cat
 | ![](figures/7_iteration2_effort/I2.01_cpue_effort_catch_index.png) | ![](figures/7_iteration2_effort/I2.02_h1b_ccf_effort.png) | ![](figures/7_iteration2_effort/I2.03_h2b_ccf_effort_heatmap.png) |
 
 Tables: `7_I2_stationarity_effort.csv`, `7_I2_cpue_trends.csv`, `7_I2_H1b_ccf_effort.csv`, `7_I2_H1b_granger_effort.csv`, `7_I2_H1b_cointegration_effort.csv`, `7_I2_H2b_ccf_effort.csv`. Verdicts are rows in `decisions.csv`.
+
+## Iteration 3 — ocean warming as an alternative driver (new hypothesis H3)
+
+Neither catch nor effort explained the year-to-year pattern, so iteration 3 tests whether **ocean warming** lines up with overexploitation instead.
+- **H3a (global):** world SST anomaly (HadSST) and upper-700 m ocean heat content (NOAA) vs world % overexploited (FAO, SAU).
+- **H3b (SEA):** annual SST over each SEA5 EEZ (NOAA ERSST v5, area-weighted) vs SAU % overexploited, mean trophic level and catch.
+
+| Test | Result |
+|---|---|
+| **Warming itself** (Mann-Kendall) | Every EEZ warms significantly (p < 0.001): SEA +0.12 °C/decade, range Vietnam +0.10 to Philippines +0.13. Months with unusually warm SST rose from 0.2/yr (1950–89) to 5.6/yr (1990–2025). |
+| **H3a levels vs detrended** | Levels correlate strongly (ρ = +0.86 with FAO), but only because both rise. After removing linear trends: FAO ρ = −0.11 (p = 0.45) and SAU ρ = +0.44. The two sources disagree in sign. The SAU series is S-shaped, so a straight-line detrend leaves curvature that happens to match accelerating warming. |
+| **H3a long run** (cointegration) | With a constant only: p = 0.051 (FAO), 0.033 (SAU). With a trend term: p = 0.36 (FAO). With SST and log effort together: p = 0.19 (FAO). The long-run "link" is the shared trend. |
+| **H3a short run** (CCF lags 0–10, Granger 1–4) | Nothing significant: CCF min Holm p = 0.56 across SST and ocean heat content; Granger all Holm p = 1.00. **Fail to reject H₀.** |
+| **H3b SEA CCF** (Δ SST → Δ% overexploited, ΔMTL, Δlog catch; 6 units × 3 responses × 11 lags = 198 tests) | **Weak.** 2 tests are significant within their row: SEA Δ% overexploited at lag 10 (r = +0.44, the edge of the tested range) and Indonesia ΔMTL at lag 4 (r = +0.36). Neither survives correction across all 198 tests (min p = 0.11). |
+
+**What the third iteration adds:**
+- The oceans in our region are warming clearly and measurably.
+- But warming, effort and overexploitation all rise steadily, so these yearly series cannot tell them apart. A trend-on-trend correlation is expected whatever the true cause.
+- Separating them would need stock-level data, e.g. species range shifts or recruitment vs temperature, or experiments. That is beyond an EDA assignment and belongs in the report's limitations.
+
+**Method choices:**
+- **Levels vs detrended:** shown side by side, to demonstrate why a raw correlation (ρ = 0.86) is not evidence.
+- **Cointegration three ways** (with and without a trend term, and jointly with effort): this separates "they share a trend" from "they share a trend beyond time and fishing pressure".
+- **SST per EEZ:** EEZ SST is weighted by the EEZ area inside each grid cell, not by a lat/lon box, so it covers the same sea area as the Sea Around Us data.
+
+| | |
+|---|---|
+| ![](figures/8_iteration3_warming/I3.01_h3a_warming_levels_detrended_ccf.png) | ![](figures/8_iteration3_warming/I3.02_h3b_sea_sst_ccf.png) |
+
+Tables: `8_I3_stationarity_warming.csv`, `8_I3_H3a_levels_vs_detrended.csv`, `8_I3_H3a_cointegration.csv`, `8_I3_H3a_ccf.csv`, `8_I3_H3a_granger.csv`, `8_I3_H3b_ccf_sea.csv`, `8_I3_H3b_sst_trends.csv`. Verdicts are rows in `decisions.csv`.
 
 ## Sections
 

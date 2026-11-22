@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a, H1b, H2a, H2b, H2c (2 iterations)
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3), in 3 iterations
 =========================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -36,6 +36,13 @@ Runs the analysis pipeline in README §4 on the raw data:
                      cointegration (constant and constant + trend)
     i2_h2b           H2b repeated with SEA EEZ effort, responses % overexploited
                      (no longer circular) and mean trophic level
+
+  Iteration 3 (ocean warming as an alternative driver, new hypothesis H3):
+    i3_stationarity  ADF + KPSS on world SST anomaly, ocean heat content, SEA EEZ SST
+    i3_h3a           global: levels vs detrended correlation, cointegration (with and
+                     without trend, and jointly with effort), CCF, Granger
+    i3_h3b           SEA: SST trends (Mann-Kendall), CCF of Δ SST vs Δ % overexploited,
+                     Δ MTL and Δlog catch per EEZ group, Holm-corrected
 
     python 2-hypothesis-tests/hypothesis_tests.py               # everything
     python 2-hypothesis-tests/hypothesis_tests.py --only h1a h1b
@@ -1015,6 +1022,260 @@ def section_i2_cpue() -> None:
 
 
 # =========================================================================== #
+# ITERATION 3 — ocean warming as an alternative driver
+# =========================================================================== #
+# Iterations 1–2 found no short-run link between fishing pressure (catch, effort)
+# and % stocks overexploited. Iteration 3 asks whether ocean warming lines up with
+# overexploitation instead (new hypothesis H3):
+#   H3a (global) world sea-surface temperature anomaly (HadSST, via OWID) and upper-
+#       700 m ocean heat content (NOAA, via OWID) vs world % overexploited (FAO, SAU)
+#   H3b (SEA)    annual SST inside each SEA5 EEZ (NOAA ERSST v5, area-weighted over the
+#       EEZ's grid cells) vs SAU % overexploited, mean trophic level and catch
+# Both warming and overexploitation trend upward, so a level correlation is expected
+# whatever the cause. The tests therefore separate (1) a shared trend, (2) a long-run
+# link beyond the trend (cointegration with and without a trend term, and jointly
+# with effort), and (3) a year-to-year link (CCF of the stationary series).
+
+CLIMATE = VAL / "climate"
+
+
+def world_sst() -> pd.Series:
+    """World sea-surface temperature anomaly (°C vs 1961–1990), HadSST via OWID; 1950–2025 (2026 is partial)."""
+    d = v.owid("sea-surface-temperature-anomaly")
+    return d[d["Entity"] == "World"].set_index("Year")["Average"].loc[1950:2025]
+
+
+def world_ohc() -> pd.Series:
+    """Upper-700 m ocean heat content anomaly (10^22 J), NOAA series via OWID; 1955–2025."""
+    d = v.owid("ocean-heat-content-upper")
+    return d[d["Entity"] == "World"].set_index("Year")["NOAA"].dropna()
+
+
+def sea_sst() -> dict[str, pd.DataFrame]:
+    """Annual mean SST (°C), anomaly vs 1971–2000 and hot-month count per SEA5 EEZ and 'SEA', 1950–2025."""
+    d = pd.read_csv(CLIMATE / "sea_eez_sst_ersst.csv")
+    d["region"] = d["region"].replace({"Viet Nam": "Vietnam"})
+    return {r: g.set_index("year").drop(columns="region") for r, g in d.groupby("region")}
+
+
+def detrended_corr(x: pd.Series, y: pd.Series) -> tuple[float, float, float, float, int]:
+    """Spearman ρ of the levels and of the linear-trend residuals (common years)."""
+    d = pd.concat([x.rename("x"), y.rename("y")], axis=1).dropna()
+    rx, ry = detrend(d["x"]), detrend(d["y"])
+    r1 = stats.spearmanr(d["x"], d["y"])
+    r2 = stats.spearmanr(rx, ry)
+    return r1[0], r1[1], r2[0], r2[1], len(d)
+
+
+def section_i3_stationarity() -> None:
+    print("Iteration 3: warming series stationarity")
+    rows = []
+    specs = [("World SST anomaly (HadSST)", world_sst()), ("World ocean heat content 0–700 m (NOAA)", world_ohc())]
+    specs += [(f"{r} EEZ SST (ERSST v5)", s["sst_mean_c"]) for r, s in sea_sst().items()]
+    for name, s in specs:
+        label, d, a, k = make_stationary(s, log=False)
+        rows.append({"series": name, "first": int(s.index.min()), "last": int(s.index.max()),
+                     "level_adf_p": adf_p(s, "ct"), "level_kpss_p": kpss_p(s, "ct"),
+                     "transformation_used": label, "transformed_adf_p": a, "transformed_kpss_p": k,
+                     "stationary_after": "yes" if a < ALPHA and k >= ALPHA else ("ADF yes, KPSS no" if a < ALPHA else "no"),
+                     "trend_per_decade": np.polyfit(s.index, s.values, 1)[0] * 10})
+    save_table(pd.DataFrame(rows), "8_I3_stationarity_warming")
+
+
+def section_i3_h3a() -> None:
+    sec = "8_iteration3_warming"
+    print("Iteration 3: H3a — global warming vs % overexploited")
+    sst, ohc = world_sst(), world_ohc()
+    wf, ws = st.world_fao(), st.world_sau()
+    we = world_effort()
+    responses = [("FAO % overexploited", wf), ("SAU % overexploited", ws)]
+    drivers = [("SST anomaly", sst), ("Ocean heat content", ohc)]
+
+    # (1) shared trend vs beyond-trend association
+    rows = []
+    for dn, x in drivers:
+        for rn, y in responses:
+            r_lv, p_lv, r_dt, p_dt, n = detrended_corr(x, y)
+            rows.append({"driver": dn, "response": rn, "n_years": n, "spearman_levels": r_lv, "p_levels": p_lv,
+                         "spearman_detrended": r_dt, "p_detrended": p_dt})
+    trend = pd.DataFrame(rows)
+    save_table(trend, "8_I3_H3a_levels_vs_detrended")
+
+    # (2) long run: cointegration, alone and jointly with effort
+    rows = []
+    for dn, x in drivers:
+        for rn, y in responses:
+            lv = pd.concat([y, x], axis=1).dropna()
+            for tr in ("c", "ct"):
+                t_c, p_c, _ = coint(lv.iloc[:, 0], lv.iloc[:, 1], trend=tr)
+                rows.append({"response": rn, "drivers": dn, "trend_term": tr,
+                             "years": f"{lv.index.min()}–{lv.index.max()}", "t_stat": t_c, "p": p_c})
+    for rn, y in responses:
+        lv = pd.concat([y, sst, np.log(we["nom_kwdays"])], axis=1).dropna()
+        t_c, p_c, _ = coint(lv.iloc[:, 0], lv.iloc[:, 1:], trend="c")
+        rows.append({"response": rn, "drivers": "SST anomaly + log effort", "trend_term": "c",
+                     "years": f"{lv.index.min()}–{lv.index.max()}", "t_stat": t_c, "p": p_c})
+    co = pd.DataFrame(rows)
+    save_table(co, "8_I3_H3a_cointegration")
+
+    # (3) short run: CCF of first differences, Holm across lags
+    tabs = []
+    for dn, x in drivers:
+        for rn, y in responses:
+            tabs.append(ccf_table(x.diff().dropna(), y.diff().dropna(), f"Δ {dn} -> Δ {rn}"))
+    ccf = pd.concat(tabs, ignore_index=True)
+    save_table(ccf, "8_I3_H3a_ccf")
+    g = granger(sst.diff().dropna(), wf.diff().dropna())
+    g.insert(0, "pair", "Δ SST anomaly -> Δ FAO % overexploited")
+    save_table(g, "8_I3_H3a_granger")
+
+    sig = bool(ccf["significant_holm"].any())
+    main = trend[(trend["driver"] == "SST anomaly") & (trend["response"] == "FAO % overexploited")].iloc[0]
+    c_c = co[(co["response"] == "FAO % overexploited") & (co["drivers"] == "SST anomaly") & (co["trend_term"] == "c")].iloc[0]
+    c_ct = co[(co["response"] == "FAO % overexploited") & (co["drivers"] == "SST anomaly") & (co["trend_term"] == "ct")].iloc[0]
+    c_sau = co[(co["response"] == "SAU % overexploited") & (co["drivers"] == "SST anomaly") & (co["trend_term"] == "c")].iloc[0]
+    c_joint = co[(co["response"] == "FAO % overexploited") & (co["drivers"] == "SST anomaly + log effort")].iloc[0]
+    sau_dt = trend[(trend["driver"] == "SST anomaly") & (trend["response"] == "SAU % overexploited")].iloc[0]
+    ohc_ct = co[(co["response"] == "FAO % overexploited") & (co["drivers"] == "Ocean heat content")
+                & (co["trend_term"] == "ct")].iloc[0]
+    decide("H3a (iteration 3: warming, global)",
+           "Does ocean warming correlate with world % stocks overexploited beyond their shared upward trend?",
+           f"Levels ρ = {main['spearman_levels']:+.2f}; after removing linear trends ρ = "
+           f"{main['spearman_detrended']:+.2f} with FAO (p {fmt_p(main['p_detrended'])}) but "
+           f"{sau_dt['spearman_detrended']:+.2f} with SAU (p {fmt_p(sau_dt['p_detrended'])}); cointegration with "
+           f"constant p {fmt_p(c_c['p'])} (FAO), {fmt_p(c_sau['p'])} (SAU), with trend p {fmt_p(c_ct['p'])} (FAO; "
+           f"ocean heat content {fmt_p(ohc_ct['p'])}), jointly with effort p {fmt_p(c_joint['p'])}; CCF min Holm p "
+           f"{fmt_p(ccf['p_holm'].min())}; Granger min Holm p {fmt_p(g['p_holm'].min())}",
+           sig,
+           "Warming and overexploitation share an upward trend; beyond it the two sources disagree in sign (the SAU "
+           "series is S-shaped, so a straight-line detrend leaves curvature that matches accelerating warming) and no "
+           "year-to-year link exists. The data cannot separate warming from other steadily rising drivers.",
+           verdict=None if sig else "Fail to reject H0 (shared trend only; no consistent link beyond it)")
+
+    # Figure: levels vs detrended vs CCF
+    d = pd.concat([sst.rename("sst"), wf.rename("over")], axis=1).dropna()
+    rx, ry = detrend(d["sst"]), detrend(d["over"])
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(15.5, 5), gridspec_kw={"width_ratios": [1, 1, 1.1]})
+    sc = a1.scatter(d["sst"], d["over"], c=d.index,
+                    cmap=matplotlib.colors.LinearSegmentedColormap.from_list("years", ["#cde2fb", "#184f95"]),
+                    s=34, edgecolor=v.SURFACE, linewidth=1, zorder=3)
+    cb = fig.colorbar(sc, ax=a1, fraction=0.05, pad=0.02)
+    cb.outline.set_visible(False)
+    cb.set_label("Year", color=v.INK_2)
+    a1.set_xlabel("World SST anomaly (°C vs 1961–90)")
+    a1.set_ylabel("% of stocks overexploited (FAO)")
+    a1.set_title(f"1 · Levels: ρ = {main['spearman_levels']:+.2f} — both simply rise over time", fontsize=9.5)
+    a2.scatter(rx, ry, s=34, color=v.SERIES[0], edgecolor=v.SURFACE, linewidth=1, zorder=3)
+    a2.axhline(0, color=v.AXIS, lw=0.8)
+    a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_xlabel("SST anomaly, deviation from its trend (°C)")
+    a2.set_ylabel("% overexploited, deviation from its trend (pp)")
+    a2.set_title(f"2 · Trend removed: ρ = {main['spearman_detrended']:+.2f} (p {fmt_p(main['p_detrended'])})",
+                 fontsize=9.5)
+    t = ccf[ccf["pair"] == "Δ SST anomaly -> Δ FAO % overexploited"]
+    a3.bar(t["lag"], t["r"], color=[v.SERIES[0] if s else v.NEUTRAL for s in t["significant_holm"]], width=0.6)
+    a3.plot(t["lag"], t["band_95"], color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a3.plot(t["lag"], -t["band_95"], color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a3.axhline(0, color=v.AXIS, lw=0.8)
+    a3.set_xticks(range(0, MAX_LAG + 1, 2))
+    a3.set_xlabel("Lag k (years warming leads)")
+    a3.set_ylabel("Correlation r")
+    a3.grid(axis="x", visible=False)
+    a3.set_title(f"3 · Year-to-year changes: min Holm p {fmt_p(t['p_holm'].min())}", fontsize=9.5)
+    v.suptitle(fig, "Iteration 3 · H3a — Warming and overexploitation rise together, but only through a shared trend",
+               f"Long run: cointegrated with a constant (p {fmt_p(c_c['p'])}) but not once a trend is allowed "
+               f"(p {fmt_p(c_ct['p'])}) or effort is added (p {fmt_p(c_joint['p'])}). Sea Around Us detrended "
+               f"ρ = {sau_dt['spearman_detrended']:+.2f} has the opposite sign (curvature, see README)")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I3.01_h3a_warming_levels_detrended_ccf", "HadSST via OWID; FAO via OWID")
+
+
+def section_i3_h3b() -> None:
+    sec = "8_iteration3_warming"
+    print("Iteration 3: H3b — SEA warming vs overexploitation, MTL, catch")
+    ss = sea_sst()
+    sea, cs = sea_series(), country_series()
+    tabs = []
+    for n in ["SEA"] + SEA5:
+        x = ss[n]["sst_mean_c"].diff().dropna()
+        src = sea if n == "SEA" else cs[n]
+        for resp, lbl in [("over", "Δ % overexploited"), ("mtl", "Δ MTL"), ("catch", "Δlog catch")]:
+            y = (np.log(src[resp]) if resp == "catch" else src[resp]).diff().dropna()
+            t = ccf_table(x, y, f"{n}: Δ SST -> {lbl}")
+            t.insert(0, "unit", n)
+            t.insert(1, "response", lbl)
+            tabs.append(t)
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    save_table(ccf, "8_I3_H3b_ccf_sea")
+    trend = pd.DataFrame([{"unit": n, **{k: val for k, val in mann_kendall(ss[n]["sst_mean_c"]).items()
+                                          if k in ("n", "p", "trend", "sen_slope", "sen_ci_low", "sen_ci_high")},
+                           "hot_months_1950_1989": ss[n]["hot_months"].loc[:1989].mean(),
+                           "hot_months_1990_2025": ss[n]["hot_months"].loc[1990:].mean()} for n in ["SEA"] + SEA5])
+    save_table(trend, "8_I3_H3b_sst_trends")
+    sig = ccf[ccf["significant_holm"]]
+    w = trend.iloc[0]
+    decide("H3b (iteration 3: warming, SEA)",
+           "Do changes in SEA sea temperature cross-correlate with % overexploited, mean trophic level or catch?",
+           f"SEA SST +{w['sen_slope'] * 10:.2f} °C/decade (MK p {fmt_p(w['p'])}); {len(sig)} of {len(ccf)} lag tests "
+           "significant after Holm within unit and response"
+           + (": " + "; ".join(f"{r['unit']} {r['response']} lag {int(r['lag'])} r = {r['r']:+.2f} "
+                                 f"(Holm p {fmt_p(r['p_holm'])})" for _, r in sig.iterrows()) if len(sig) else "")
+           + f"; across all {len(ccf)} tests min Holm p {fmt_p(ccf['p_holm_all'].min())}",
+           len(sig) > 0,
+           "Significant lags sit at the edge of the tested range or in a single country and vanish under the "
+           "all-test correction, so they are treated as chance findings unless replicated.",
+           verdict=None if len(sig) == 0 else
+           f"Weak: {len(sig)} isolated lag(s) significant within unit; none across all {len(ccf)} tests")
+
+    # Figure: (a) SST anomaly per unit with Sen slope, (b) CCF heatmap
+    fig = plt.figure(figsize=(16, 7.6))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.45], wspace=0.28)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    for n in ["SEA"] + SEA5:
+        s = ss[n]["sst_anom_c"].rolling(5, center=True).mean()
+        r = trend[trend["unit"] == n].iloc[0]
+        colour = v.INK_2 if n == "SEA" else v.COUNTRY_COLOR[n]
+        a1.plot(s.index, s.values, color=colour, lw=2.6 if n == "SEA" else 1.5,
+                label=f"{n} (+{r['sen_slope'] * 10:.2f} °C/decade)")
+    a1.axhline(0, color=v.AXIS, lw=0.8)
+    a1.set_ylabel("SST anomaly vs 1971–2000 (°C), 5-yr mean")
+    a1.legend(loc="upper left", fontsize=8.5)
+    a1.set_title("EEZ sea-surface temperature (ERSST v5, area-weighted)", fontsize=9.5)
+    rows = [(u, r) for u in ["SEA"] + SEA5 for r in ["Δ % overexploited", "Δ MTL", "Δlog catch"]]
+    mat = np.array([[ccf[(ccf["unit"] == u) & (ccf["response"] == r) & (ccf["lag"] == k)]["r"].iloc[0]
+                     for k in range(MAX_LAG + 1)] for u, r in rows])
+    sigm = np.array([[bool(ccf[(ccf["unit"] == u) & (ccf["response"] == r) & (ccf["lag"] == k)]["significant_holm"].iloc[0])
+                      for k in range(MAX_LAG + 1)] for u, r in rows])
+    im = a2.imshow(mat, cmap=v.DIVERGING, vmin=-0.5, vmax=0.5, aspect="auto")
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            a2.text(j, i, f"{mat[i, j]:+.2f}", ha="center", va="center", fontsize=7.5,
+                    color="#ffffff" if abs(mat[i, j]) > 0.35 else v.INK, fontweight="bold" if sigm[i, j] else "normal")
+            if sigm[i, j]:
+                a2.add_patch(plt.Rectangle((j - 0.48, i - 0.48), 0.96, 0.96, fill=False, ec=v.INK, lw=1.6))
+    for b in range(3, len(rows), 3):
+        a2.axhline(b - 0.5, color=v.SURFACE, lw=3)
+    a2.set_xticks(range(MAX_LAG + 1), range(MAX_LAG + 1))
+    a2.set_yticks(range(len(rows)), [f"{u} · {r}" for u, r in rows], fontsize=8.5)
+    a2.set_xlabel("Lag k (years warming leads)")
+    a2.grid(False)
+    for spn in a2.spines.values():
+        spn.set_visible(False)
+    cb = fig.colorbar(im, ax=a2, fraction=0.03, pad=0.02)
+    cb.set_label("Correlation r", color=v.INK_2)
+    cb.outline.set_visible(False)
+    a2.set_title("Δ SST vs later change in each response (outlined = significant after Holm within row)", fontsize=9.5)
+    v.suptitle(fig, "Iteration 3 · H3b — Southeast Asian seas are warming, but warming does not track the fisheries "
+               "indicators year to year",
+               f"SEA +{w['sen_slope'] * 10:.2f} °C/decade; warm-anomaly months per year "
+               f"{w['hot_months_1950_1989']:.1f} (1950–89) → {w['hot_months_1990_2025']:.1f} (1990–2025). "
+               f"{len(sig)} of {len(ccf)} lag tests significant within row, none across all tests")
+    fig.subplots_adjust(top=0.8, bottom=0.08, left=0.05, right=0.97)
+    save_fig(fig, sec, "I3.02_h3b_sea_sst_ccf", "NOAA ERSST v5 (PSL); Sea Around Us")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -1054,6 +1315,8 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             # iteration 2: fishing effort replaces catch as the pressure variable
             "i2_stationarity": section_i2_stationarity, "i2_cpue": section_i2_cpue,
             "i2_h1b": section_i2_h1b, "i2_h2b": section_i2_h2b,
+            # iteration 3: ocean warming as an alternative driver (new hypothesis H3)
+            "i3_stationarity": section_i3_stationarity, "i3_h3a": section_i3_h3a, "i3_h3b": section_i3_h3b,
             "diagnostics": section_diagnostics}
 
 

@@ -1,0 +1,5 @@
+pair,lag_order,F,p,p_holm
+Δ SST anomaly -> Δ FAO % overexploited,1,0.090023,0.765593,1.0
+Δ SST anomaly -> Δ FAO % overexploited,2,0.119178,0.887963,1.0
+Δ SST anomaly -> Δ FAO % overexploited,3,0.663489,0.579793,1.0
+Δ SST anomaly -> Δ FAO % overexploited,4,0.528596,0.71546,1.0

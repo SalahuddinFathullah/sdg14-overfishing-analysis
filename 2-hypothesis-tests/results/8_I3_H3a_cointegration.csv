@@ -1,0 +1,11 @@
+response,drivers,trend_term,years,t_stat,p
+FAO % overexploited,SST anomaly,c,1974–2021,-3.327767,0.051031
+FAO % overexploited,SST anomaly,ct,1974–2021,-2.798329,0.359334
+SAU % overexploited,SST anomaly,c,1950–2019,-3.497142,0.03265
+SAU % overexploited,SST anomaly,ct,1950–2019,-1.943803,0.794228
+FAO % overexploited,Ocean heat content,c,1974–2021,-2.425445,0.3129
+FAO % overexploited,Ocean heat content,ct,1974–2021,-3.885279,0.037873
+SAU % overexploited,Ocean heat content,c,1955–2019,-2.267672,0.38979
+SAU % overexploited,Ocean heat content,ct,1955–2019,-3.164073,0.198516
+FAO % overexploited,SST anomaly + log effort,c,1974–2017,-3.129249,0.193044
+SAU % overexploited,SST anomaly + log effort,c,1950–2017,-2.035365,0.71867

@@ -1,0 +1,7 @@
+unit,n,p,trend,sen_slope,sen_ci_low,sen_ci_high,hot_months_1950_1989,hot_months_1990_2025
+SEA,76,0.0,increasing,0.012176,0.010346,0.014333,0.225,5.611111
+Malaysia,76,0.0,increasing,0.01165,0.009552,0.013813,0.425,3.5
+Indonesia,76,0.0,increasing,0.012467,0.010183,0.01458,0.3,5.055556
+Thailand,76,0.0,increasing,0.0129,0.010804,0.015,0.45,3.111111
+Vietnam,76,0.0,increasing,0.010101,0.0074,0.012516,0.875,2.805556
+Philippines,76,0.0,increasing,0.013263,0.011316,0.015373,0.4,5.222222

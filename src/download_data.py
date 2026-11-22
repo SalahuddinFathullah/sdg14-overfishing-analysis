@@ -45,6 +45,15 @@ Sources
    Effort = active vessels x engine power (kW) x days at sea. "Nominal" has no
    technological creep; "effective" adds the database's creep factor.
 
+6. Ocean warming (iteration 3 of the analysis)
+   - owid/sea-surface-temperature-anomaly.csv   World SST anomaly (HadSST), World rows
+   - owid/ocean-heat-content-upper.csv           upper-700 m ocean heat content, World rows
+   - validation/climate/eez_ersst_cell_weights.csv  EEZ area (km2) of each SEA5 EEZ inside
+                                                each 2-degree ERSST grid cell (from the IMAS
+                                                CellstoLME_EEZ 0.5-degree cell list)
+   - validation/climate/sea_eez_sst_ersst.csv   annual EEZ-mean SST per SEA5 country and 'SEA'
+                                                from NOAA ERSST v5 (PSL OPeNDAP), 1950-2025
+
 Usage
 -----
     python src/download_data.py                   # download everything
@@ -53,6 +62,7 @@ Usage
     python src/download_data.py --only validation
     python src/download_data.py --only integrity    # SDG 14.7.1/GDP, Comtrade, Benford (slow)
     python src/download_data.py --only effort       # streams ~110 MB of IMAS CSVs
+    python src/download_data.py --only climate      # OWID SST/ocean heat + NOAA ERSST v5 for SEA EEZs
 
 Notes
 -----
@@ -509,6 +519,86 @@ def download_effort() -> None:
     (out / "sea_eez_effort.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+ERSST_ASCII = "https://psl.noaa.gov/thredds/dodsC/Datasets/noaa.ersst.v5/sst.mnmean.nc.ascii?"
+ERSST_T0 = 1152            # time index of 1950-01 (the file starts at 1854-01)
+ERSST_BOX = (33, 51, 46, 71)   # lat index 33..51 = 22N..14S, lon index 46..71 = 92E..142E (2-degree grid)
+OWID_CLIMATE = ["sea-surface-temperature-anomaly", "ocean-heat-content-upper"]
+
+
+def download_climate() -> None:
+    """
+    1) OWID World SST anomaly and upper-ocean heat content (World rows only).
+    2) EEZ weights: every 0.5-degree IMAS cell of a SEA5 EEZ is assigned to the
+       2-degree ERSST cell containing it; weight = summed cell area (km2).
+    3) NOAA ERSST v5 monthly SST for the SEA box, 1950-01 to the last complete year,
+       averaged per EEZ with those area weights (land cells skipped), then per year:
+       mean SST, anomaly vs the 1971-2000 mean, and 'hot months' = months whose
+       anomaly vs the 1971-2000 same-month mean exceeds that month's 90th percentile.
+    """
+    for slug in OWID_CLIMATE:
+        lines = get(OWID_BASE.format(slug=slug)).decode("utf-8").strip().split("\n")
+        keep = [lines[0]] + [ln for ln in lines[1:] if ln.startswith("World,")]
+        (RAW_DIR / "owid" / f"{slug}.csv").write_text("\n".join(keep) + "\n", encoding="utf-8")
+
+    out = RAW_DIR / "validation" / "climate"
+    out.mkdir(parents=True, exist_ok=True)
+    cells = get(IMAS_EFFORT + "CellstoLME_EEZ.csv").decode("utf-8").splitlines()
+    weights: dict = {}
+    for row in csv.reader(cells[1:]):
+        if len(row) < 6 or row[5] not in EFFORT_EEZS:
+            continue
+        lon, lat, area = float(row[1]), float(row[2]), float(row[3])
+        glon = round(lon / 2) * 2 % 360
+        glat = round(lat / 2) * 2
+        k = (row[5], glat, glon)
+        weights[k] = weights.get(k, 0.0) + area
+    lines = ["eez,lat,lon,area_km2"] + [f"{e},{la},{lo},{round(a)}" for (e, la, lo), a in
+                                        sorted(weights.items(), key=lambda kv: (kv[0][0], str(kv[0][1]), str(kv[0][2])))]
+    (out / "eez_ersst_cell_weights.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    la0, la1, lo0, lo1 = ERSST_BOX
+    t_last = len(re.findall(r"[\d.]+", get(ERSST_ASCII + "time").decode().split("time[")[-1].split("\n", 1)[1])) - 1
+    n_years = (t_last - ERSST_T0 + 1) // 12
+    grid: dict = {}
+    for s in range(ERSST_T0, ERSST_T0 + 12 * n_years, 120):
+        e = min(ERSST_T0 + 12 * n_years - 1, s + 119)
+        text = get(ERSST_ASCII + f"sst[{s}:1:{e}][{la0}:1:{la1}][{lo0}:1:{lo1}]").decode()
+        for m in re.finditer(r"^\[(\d+)\]\[(\d+)\], (.*)$", text, re.M):
+            grid[(s + int(m.group(1)) - ERSST_T0, int(m.group(2)))] = [float(x) for x in m.group(3).split(",")]
+
+    def monthly(cell_list) -> list[float]:
+        series = []
+        for k in range(12 * n_years):
+            sw = sv = 0.0
+            for la, lo, a in cell_list:
+                val = grid[(k, (88 - la) // 2 - la0)][lo // 2 - lo0]
+                if val > -100:          # land / missing = -9.97e36
+                    sw, sv = sw + a, sv + a * val
+            series.append(sv / sw)
+        return series
+
+    by_eez: dict = {}
+    for (e, la, lo), a in weights.items():
+        by_eez.setdefault(e, []).append((la, lo, a))
+    regions = {"SEA": [c for v in by_eez.values() for c in v], **by_eez}
+    rows = ["region,year,sst_mean_c,sst_anom_c,hot_months"]
+    for reg in ["SEA", "Indonesia", "Malaysia", "Philippines", "Thailand", "Viet Nam"]:
+        a = monthly(regions[reg])
+        clim, p90 = [], []
+        for m in range(12):
+            base = [a[(y - 1950) * 12 + m] for y in range(1971, 2001)]
+            clim.append(sum(base) / len(base))
+            an = sorted(x - clim[m] for x in base)
+            p90.append(an[int(0.9 * (len(an) - 1))])
+        ann_base = sum(clim) / 12
+        for i in range(n_years):
+            vals = a[12 * i: 12 * i + 12]
+            mean = sum(vals) / 12
+            hot = sum(v - clim[m] > p90[m] for m, v in enumerate(vals))
+            rows.append(f"{reg},{1950 + i},{mean:.3f},{mean - ann_base:.3f},{hot}")
+    (out / "sea_eez_sst_ersst.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -522,11 +612,11 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort"],
+    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate"],
                         help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
@@ -537,6 +627,8 @@ def main() -> None:
         download_integrity()
     if "effort" in parts:
         download_effort()
+    if "climate" in parts:
+        download_climate()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

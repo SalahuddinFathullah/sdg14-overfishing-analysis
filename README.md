@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟢 Analysis — data collected, 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; cleaning to `data/processed/` and the report remain. See [Progress](#progress).
+> **Status:** 🟢 Analysis — data collected, 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in three iterations — catch, fishing effort, ocean warming ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; cleaning to `data/processed/` and the report remain. See [Progress](#progress).
 
 ---
 
@@ -87,6 +87,7 @@ SDG target **14.4** calls for ending overfishing and restoring stocks to sustain
 | Sea Around Us via OWID — catch by gear, discards | Context for EDA (trawling share, waste) | SEA5 + World, 1950–2018 | `owid/fish-catch-gear-type.csv`, `owid/fish-discards.csv` |
 | FAO/World Bank via OWID — aquaculture | Context: farmed fish growth while wild catch plateaus | SEA5 + World, 1960–2024 | `owid/aquaculture-farmed-fish-production.csv` |
 
+| **Ocean warming** — *added in iteration 3*: HadSST world SST anomaly and NOAA upper-ocean heat content (via OWID); NOAA ERSST v5 SST averaged over each SEA5 EEZ | °C anomaly, 10²² J, annual EEZ SST, warm-month count | World 1950–2025; 5 SEA EEZs 1950–2025 | `owid/sea-surface-temperature-anomaly.csv`, `owid/ocean-heat-content-upper.csv`, `validation/climate/` |
 | **IMAS Global Fishing Effort (Rousseau et al.)** — *added in iteration 2* | Fishing effort (kW × days at sea), vessels, engine power; world and inside each SEA5 EEZ | World + 5 SEA EEZs, 1950–2017 | `validation/effort/` |
 
 **Why Sea Around Us became the main SEA source:** FAO publishes stock status only by large fishing area, and the OWID series for Areas 71/57 has just 10 uneven points — fine for a Mann-Kendall test but too short for ACF/CCF. Sea Around Us gives an annual 70-year series per EEZ, which supports the full pipeline and lets us compare the 5 countries (Kruskal-Wallis + Dunn).
@@ -281,6 +282,7 @@ jupyter lab
 | H2a / H2b tests on SEA | 2 | ✅ Done — H2a reject H₀, H2b fail to reject | `2-hypothesis-tests/` |
 | H2c SEA vs global comparison | 2 | ✅ Done — SEA = world; Indonesia, Thailand, Malaysia worse | `2-hypothesis-tests/` |
 | **Iteration 2:** fishing effort replaces catch as the pressure variable (H1b, H2b re-tested; CPUE) | 1–2 | ✅ Done — CPUE falling; short-run links still not significant | `2-hypothesis-tests/` §7, `data/raw/validation/effort/` |
+| **Iteration 3:** ocean warming as an alternative driver (new H3a global, H3b SEA) | 1–2 | ✅ Done — shared trend only; no link beyond it | `2-hypothesis-tests/` §8, `data/raw/validation/climate/` |
 | Final figures & write-up | — | ⬜ Not started | — |
 
 ### Findings so far
@@ -300,9 +302,13 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 | *Iteration 2* H1b with effort | ❌ Fail to reject | Effort growth vs Δ% overexploited: max r = +0.35 (lag 3), Holm p = 0.29; Granger min Holm p = 0.07; long-run cointegration p = 0.078 (10% level only) |
 | *Iteration 2* H2b with effort | ➖ Weak | 1 of 132 lag tests significant (Indonesia, same-year, ΔMTL, r = +0.35); none after correcting all 132 together. Stock status is now testable (effort is not catch-based) |
 | *Iteration 2* CPUE (explanation) | 📉 Falling | Catch per kW-day 1990–94 → 2013–17: world −35% (effort +44%, catch −6%), SEA −50%; significant in Malaysia (−68%), Indonesia (−54%), Philippines (−43%) |
+| *Iteration 3* H3a warming (global) | ❌ Fail to reject | SST anomaly vs % overexploited: levels ρ = +0.86, but detrended ρ = −0.11 (FAO) / +0.44 (SAU, curvature artefact); cointegrated only without a trend term (p = 0.05) and not jointly with effort (p = 0.19); year-to-year CCF and Granger all Holm p ≥ 0.56 |
+| *Iteration 3* H3b warming (SEA) | ➖ Weak | SEA seas warm +0.12 °C/decade (p < 0.001); warm-anomaly months 0.2/yr (1950–89) → 5.6/yr (1990–2025). 2 of 198 lag tests significant within row (SEA Δ% overexploited at lag 10, Indonesia ΔMTL at lag 4); none across all tests |
 | Stage rule (both iterations) | ⚠️ Not met | Stage 2 stays exploratory |
 
 **Why iteration 2:** iteration 1 found no link between catch and overexploitation. Catch is a weak measure of pressure, because it can stay flat while fishing intensifies if each trip lands less. Effort measures pressure directly. Result: effort rose 44% worldwide and ~170% in SEA since the early 1990s while catch per unit effort fell. That is the long-run explanation (depletion). Year-to-year effort changes still don't predict year-to-year stock-status changes, which fits stock status being a slow, cumulative indicator.
+
+**Why iteration 3:** with fishing pressure not explaining the short-run pattern, we tested whether ocean warming does. The oceans are clearly warming, worldwide and in every SEA EEZ. But warming and overexploitation are only linked through a shared upward trend. Once the trend is removed, or effort is added to the model, the link disappears. So the data cannot attribute the rise in overexploitation to warming any more than to effort. Both are steadily rising, and so are demand and fleet technology.
 
 
 
@@ -326,6 +332,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-22 | Salah | Iteration 3: added ocean-warming data (OWID HadSST + ocean heat content; NOAA ERSST v5 averaged over SEA EEZs; `download_data.py --only climate`); `hypothesis_tests.py` sections i3_stationarity, i3_h3a, i3_h3b (2 figures, 8 tables, H3 decision rows); iterations 1–2 kept |
 | 2026-11-22 | Salah | Iteration 2: added IMAS fishing-effort data (`data/raw/validation/effort/`, `download_data.py --only effort`); `hypothesis_tests.py` sections i2_stationarity, i2_cpue, i2_h1b, i2_h2b (3 figures, 6 tables, decisions rows); iteration-1 results kept. Fixed undefined `RAW` in `download_integrity()` |
 | 2026-11-22 | Salah | Added `2-hypothesis-tests/` (hypothesis_tests.py + 6 figures + 12 result tables + README): ADF/KPSS stationarity, H1a Mann-Kendall/Sen/segmented/Chow, H1b CCF/prewhitening/Granger/cointegration, H2a SEA trends, H2b SEA CCF, H2c interaction regression, residual diagnostics, decisions table; README status, progress, verdicts |
 | 2026-11-22 | Salah | Added `1-statistical-tests/` (stat_tests.py + 8 figures + 13 result tables + README): EDA profiling and missing-value map, Shapiro/Levene-gated t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square independence with Cramér's V, k-means + hierarchical clustering; added scikit-learn to requirements |

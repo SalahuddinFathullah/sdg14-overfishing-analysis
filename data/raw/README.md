@@ -216,6 +216,21 @@ Transfer check: the two files were aggregated in the browser and transferred wit
 
 ---
 
+## 6. Ocean warming — `owid/` + `validation/climate/` (added for iteration 3 of the analysis)
+
+| File | Source | Coverage | Columns |
+|---|---|---|---|
+| `owid/sea-surface-temperature-anomaly.csv` | Met Office HadSST via OWID, World rows | 1850–2026 (2026 partial; analysis uses ≤ 2025) | `Average` = anomaly (°C) vs 1961–1990, plus 95% bounds |
+| `owid/ocean-heat-content-upper.csv` | NOAA / IAP / MRI-JMA / CSIRO via OWID, World rows | 1955–2025 (NOAA complete) | upper-700 m ocean heat content anomaly (10²² J); analysis uses `NOAA` |
+| `validation/climate/eez_ersst_cell_weights.csv` | built from IMAS `CellstoLME_EEZ.csv` | 5 SEA EEZs | `eez`, `lat`, `lon` (centre of a 2° ERSST cell), `area_km2` of the EEZ inside it |
+| `validation/climate/sea_eez_sst_ersst.csv` | NOAA ERSST v5 monthly SST (PSL OPeNDAP) | SEA + 5 EEZs, 1950–2025 | `sst_mean_c` (annual mean, °C), `sst_anom_c` (vs 1971–2000 mean), `hot_months` (months above that calendar month's 1971–2000 90th-percentile anomaly) |
+
+The EEZ SST is an **area-weighted** mean. Every 0.5° cell of a country's EEZ (IMAS cell list) is assigned to the 2° ERSST cell that contains it, and its area becomes that cell's weight. Land cells are skipped. "SEA" pools all 5 EEZs. Re-create with `python src/download_data.py --only climate`.
+
+Transfer check (SHA-256, all matched): `sea-surface-temperature-anomaly.csv` `3bfbc754…`, `ocean-heat-content-upper.csv` `f9c6d6c3…`, `eez_ersst_cell_weights.csv` `8bd4d24c…`, `sea_eez_sst_ersst.csv` `3234e8ba…`.
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -228,6 +243,10 @@ Transfer check: the two files were aggregated in the browser and transferred wit
 8. **SAU discard series start late** for some countries in OWID (Malaysia/Thailand 1961, Vietnam 1987) — missing ≠ zero.
 9. **Effort source breaks:** single-year jumps of more than 65% in EEZ effort mark changes in the national statistics, not in fishing. They occur in Thailand 2002 (+75%) and 2011 (−52%), and in Malaysia 1965 (+67%). `2-hypothesis-tests` drops these years from the effort growth series. Thailand's catch-per-unit-effort dip in 2002–2010 is an artefact of the same breaks.
 10. **Effort ends in 2017**, two years before Sea Around Us (2019) and four before FAO stock status (2021). Iteration-2 tests use the common window.
+11. **Warming data:**
+    - **Two products:** the global SST (HadSST) and the SEA SST (ERSST v5) come from different products. They are never compared directly; each is only correlated with the fisheries series at its own scale.
+    - **Coarse grid:** ERSST's 2° grid is coarse, so coastal EEZ cells are partly land, and narrow seas (e.g. the Malacca Strait) are smoothed.
+    - **Short ocean-heat series:** NOAA ocean heat content starts in 1955.
 
 ---
 
@@ -252,4 +271,7 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - World Bank. *World Development Indicators*, NY.GDP.MKTP.CD — GDP (current US$), last updated 11 Nov 2026.
 - United Nations. *UN Comtrade Database*, HS chapter 03 (fish, crustaceans, molluscs), annual, 2011–2023. https://comtradeplus.un.org, accessed 22 Nov 2026.
 - Rousseau, Y., Blanchard, J., Novaglio, C., Pinnell, K., Tittensor, D., Watson, R. & Ye, Y. (2022). *Global Fishing Effort* [dataset]. Institute for Marine and Antarctic Studies, University of Tasmania. https://doi.org/10.25959/MNGY-0Q43, accessed 22 Nov 2026. Method: Rousseau et al. (2024), A database of mapped global fishing activity 1950–2017, *Scientific Data* 11, 48.
+- Kennedy, J. J. et al. (2019). An ensemble data set of sea surface temperature change from 1850: the Met Office Hadley Centre HadSST.4.0.0.0 data set. *JGR Atmospheres*, 124. Via Our World in Data, "Sea surface temperature anomaly" [dataset], accessed 22 Nov 2026.
+- NOAA NCEI / IAP / MRI-JMA / CSIRO ocean heat content (0–700 m), via Our World in Data, "Ocean heat content in the upper 700 m" [dataset], accessed 22 Nov 2026.
+- Huang, B. et al. (2017). Extended Reconstructed Sea Surface Temperature, Version 5 (ERSSTv5). *Journal of Climate*, 30, 8179–8205. Data: NOAA PSL, https://psl.noaa.gov/data/gridded/data.noaa.ersst.v5.html, accessed 22 Nov 2026.
 - Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley. (MAD conformity thresholds)

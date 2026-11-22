@@ -1,0 +1,9 @@
+series,first,last,level_adf_p,level_kpss_p,transformation_used,transformed_adf_p,transformed_kpss_p,stationary_after,trend_per_decade
+World SST anomaly (HadSST),1950,2025,0.134659,0.01,first difference,0.0,0.097874,yes,0.130304
+World ocean heat content 0–700 m (NOAA),1955,2025,0.904117,0.01,first difference,0.034288,0.038588,"ADF yes, KPSS no",3.536988
+Indonesia EEZ SST (ERSST v5),1950,2025,0.0,0.1,first difference,0.0,0.1,yes,0.127961
+Malaysia EEZ SST (ERSST v5),1950,2025,0.0,0.1,first difference,0.0,0.1,yes,0.119726
+Philippines EEZ SST (ERSST v5),1950,2025,0.0,0.019272,first difference,0.0,0.1,yes,0.134867
+SEA EEZ SST (ERSST v5),1950,2025,0.0,0.1,first difference,0.0,0.092389,yes,0.127704
+Thailand EEZ SST (ERSST v5),1950,2025,0.0,0.077756,first difference,5e-06,0.1,yes,0.130472
+Vietnam EEZ SST (ERSST v5),1950,2025,0.0,0.1,first difference,0.0,0.1,yes,0.100409
