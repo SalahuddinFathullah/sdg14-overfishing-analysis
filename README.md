@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟡 Exploration — data collected, data-integrity checks added, 34 exploratory figures in [`0-visualisation/`](0-visualisation/); cleaning & formal tests not started yet. See [Progress](#progress).
+> **Status:** 🟢 Analysis — data collected, 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; cleaning to `data/processed/` and the report remain. See [Progress](#progress).
 
 ---
 
@@ -22,7 +22,7 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
 | Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`1-statistical-tests/`](1-statistical-tests/) §A (summary stats, outliers, missing-value map), `notebooks/01_*` |
 | EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`0-visualisation/`](0-visualisation/) |
-| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`1-statistical-tests/`](1-statistical-tests/) §B–E, `notebooks/03_*` |
+| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`1-statistical-tests/`](1-statistical-tests/) §B–E, [`2-hypothesis-tests/`](2-hypothesis-tests/) |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
 | Conclusion (5%) | Direct answer to each hypothesis + SDG 14.4 relevance | [Findings](#findings-so-far) |
 | Code quality & references (5%) | Commented, reproducible code; all sources cited | `src/`, `requirements.txt`, [§3](#3-datasets) |
@@ -216,6 +216,11 @@ sdg14-overfishing-analysis/
 │   ├── README.md        ← method ↔ course-topic map, results tables and interpretation
 │   ├── results/         ← one CSV per test + test_summary.csv
 │   └── figures/         ← 8 PNGs in 5 sections (A profile … E clustering)
+├── 2-hypothesis-tests/
+│   ├── hypothesis_tests.py ← stationarity, H1a, H1b, H2a, H2b, H2c, residual diagnostics
+│   ├── README.md        ← verdicts, method per hypothesis, notes for the report
+│   ├── results/         ← one CSV per test family + decisions.csv
+│   └── figures/         ← 6 PNGs (one per hypothesis + diagnostics)
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
@@ -245,6 +250,8 @@ python src/download_data.py
 python 0-visualisation/visualise.py
 # run the course-method statistical tests (tables + figures):
 python 1-statistical-tests/stat_tests.py
+# run the formal hypothesis tests (H1a–H2c):
+python 2-hypothesis-tests/hypothesis_tests.py
 jupyter lab
 ```
 
@@ -263,19 +270,31 @@ jupyter lab
 | Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
 | Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/5_integrity/` |
 | Exploratory plots + ACF | 1 | ✅ Done | `0-visualisation/figures/1_global/` |
-| ADF + differencing | 1 | ⬜ Not started | — |
-| H1a trend tests (Mann-Kendall, segmented regression) | 1 | ⬜ Not started | — |
-| H1b cross-correlation (CCF) | 1 | ⬜ Not started | — |
-| **Stage 1 decision** | 1 | ⬜ Pending | — |
+| ADF + KPSS + differencing | 1–2 | ✅ Done | `2-hypothesis-tests/` (stationarity) |
+| H1a trend tests (Mann-Kendall, Sen, segmented regression, Chow) | 1 | ✅ Done — reject H₀ | `2-hypothesis-tests/` |
+| H1b cross-correlation (CCF, prewhitening, Granger, cointegration) | 1 | ✅ Done — fail to reject H₀ | `2-hypothesis-tests/` |
+| **Stage 1 decision** | 1 | ⚠️ Rule not met (H1a yes, H1b no) → Stage 2 reported as exploratory | `2-hypothesis-tests/results/decisions.csv` |
 | Download SEA datasets | 2 | ✅ Done | `data/raw/sau/`, `data/raw/owid/` |
 | Clean SEA datasets | 2 | ⬜ Not started | — |
-| H2a / H2b tests on SEA | 2 | ⬜ Not started | — |
-| H2c SEA vs global comparison | 2 | ⬜ Not started | — |
+| H2a / H2b tests on SEA | 2 | ✅ Done — H2a reject H₀, H2b fail to reject | `2-hypothesis-tests/` |
+| H2c SEA vs global comparison | 2 | ✅ Done — SEA = world; Indonesia, Thailand, Malaysia worse | `2-hypothesis-tests/` |
 | Final figures & write-up | — | ⬜ Not started | — |
 
 ### Findings so far
 
-_Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method tests: [`1-statistical-tests/`](1-statistical-tests/). Trend/CCF tests (Mann-Kendall, ADF, CCF) still pending._
+_Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method tests: [`1-statistical-tests/`](1-statistical-tests/). Hypothesis tests: [`2-hypothesis-tests/`](2-hypothesis-tests/)._
+
+**Hypothesis verdicts**
+
+| | Verdict | Evidence |
+|---|---|---|
+| H1a World trend | ✅ Reject H₀ | Hamed-Rao Mann-Kendall p < 0.001, Sen +0.55 pp/yr [0.50, 0.59]; holds without interpolated years and in Sea Around Us; no slowdown after 2015 (slope change p = 0.49, Chow p = 0.89) |
+| H1b World catch → overexploitation | ❌ Fail to reject | No lag 0–10 significant after Holm (max \|r\| 0.23); prewhitened, Granger and cointegration (p = 0.20) agree — catch has been flat since the 1990s |
+| Stage rule | ⚠️ Not met | Stage 2 reported as exploratory |
+| H2a SEA trend | ✅ Reject H₀ | SEA % overexploited +7.4 pp/decade (p < 0.001); every country and EEZ rises 1950–2019; mean trophic level falls only in the Philippines (1990–2019) |
+| H2b SEA catch → MTL | ❌ Fail to reject | 0 of 66 lag tests significant after Holm |
+| H2c SEA vs world | ➖ Mixed | SEA as a whole = world pace since 1990 (difference 0.00 pp/yr, p = 0.91); Indonesia (+0.97), Thailand (+0.42), Malaysia (+0.26 pp/yr) significantly faster; Vietnam slower |
+
 
 - **World:** % of stocks overexploited rose from ~10% (1974) to 35.5% (2021); the fitted slope is +0.55 pp/yr before 2015 and +0.48 pp/yr after — little sign of SDG-era improvement (fig 1.01).
 - **Catch vs overexploitation:** world wild catch plateaued at ~90–95 Mt from the mid-1990s while overexploitation kept rising (figs 1.03–1.04).
@@ -297,6 +316,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-22 | Salah | Added `2-hypothesis-tests/` (hypothesis_tests.py + 6 figures + 12 result tables + README): ADF/KPSS stationarity, H1a Mann-Kendall/Sen/segmented/Chow, H1b CCF/prewhitening/Granger/cointegration, H2a SEA trends, H2b SEA CCF, H2c interaction regression, residual diagnostics, decisions table; README status, progress, verdicts |
 | 2026-11-22 | Salah | Added `1-statistical-tests/` (stat_tests.py + 8 figures + 13 result tables + README): EDA profiling and missing-value map, Shapiro/Levene-gated t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square independence with Cramér's V, k-means + hierarchical clustering; added scikit-learn to requirements |
 | 2026-11-22 | Salah | Filled Philippines 2014–2023 Comtrade mirror-trade data (previously blocked by the API rate limit); re-rendered figs 5.04 and 5.06 |
 | 2026-11-22 | Salah | Added data-integrity sources recommended for validation (SDG 14.7.1 + World Bank GDP/capture, UN Comtrade mirror trade, Benford digit counts from SAU records), `download_data.py --only integrity`, and visualisation section 5 (6 figures) |

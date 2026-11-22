@@ -1,0 +1,6 @@
+model,term,coef,hac_se,p,r2
+Linear trend,slope (pp/yr),0.538239,0.039724,0.0,0.899993
+Segmented (break 2015),slope before 2015 (pp/yr),0.545835,0.047613,0.0,0.900456
+Segmented (break 2015),change in slope after 2015 (pp/yr),-0.152609,0.218651,0.488796,0.900456
+Segmented (break 2015),slope after 2015 (pp/yr),0.393226,,,0.900456
+Chow test at 2015,F,0.114531,,0.892049,

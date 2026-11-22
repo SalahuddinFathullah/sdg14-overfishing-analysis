@@ -1,0 +1,69 @@
+variable,window,unit,level,n,first,last,mk_variant,tau,z,p,trend,sen_slope,sen_ci_low,sen_ci_high,p_holm,significant_holm
+% overexploited,1950–2019,SEA (5 countries),SEA,70,1950,2019,Hamed-Rao,0.935404,4.169293,3.1e-05,increasing,0.742488,0.678583,0.799125,3.1e-05,True
+% overexploited,1950–2019,Malaysia,country,70,1950,2019,Hamed-Rao,0.879503,3.967143,7.3e-05,increasing,0.782786,0.6805,0.866563,0.000218,True
+% overexploited,1950–2019,Indonesia,country,70,1950,2019,Hamed-Rao,0.855487,3.604589,0.000313,increasing,0.501626,0.389733,0.676042,0.000625,True
+% overexploited,1950–2019,Thailand,country,70,1950,2019,Hamed-Rao,0.857557,4.460256,8e-06,increasing,0.841538,0.767,0.913816,3.3e-05,True
+% overexploited,1950–2019,Vietnam,country,70,1950,2019,Hamed-Rao,0.556108,3.290508,0.001,increasing,0.2775,0.218448,0.33375,0.001,True
+% overexploited,1950–2019,Philippines,country,70,1950,2019,Hamed-Rao,0.833126,4.554985,5e-06,increasing,0.854792,0.766,0.935161,2.6e-05,True
+% overexploited,1950–2019,Malaysia – Peninsula East,EEZ,70,1950,2019,Hamed-Rao,0.858385,4.615953,4e-06,increasing,0.82125,0.751111,0.891698,3.9e-05,True
+% overexploited,1950–2019,Malaysia – Peninsula West,EEZ,70,1950,2019,Hamed-Rao,0.831884,4.483,7e-06,increasing,0.725185,0.6595,0.7972,5.9e-05,True
+% overexploited,1950–2019,Malaysia – Sabah,EEZ,70,1950,2019,Hamed-Rao,0.752381,3.276589,0.001051,increasing,0.564423,0.4272,0.76625,0.002194,True
+% overexploited,1950–2019,Malaysia – Sarawak,EEZ,70,1950,2019,Hamed-Rao,0.82236,3.604216,0.000313,increasing,0.656452,0.55,0.772857,0.001252,True
+% overexploited,1950–2019,Indonesia – Central,EEZ,70,1950,2019,Hamed-Rao,0.818634,3.831721,0.000127,increasing,0.2385,0.174848,0.3715,0.000764,True
+% overexploited,1950–2019,Indonesia – Eastern,EEZ,70,1950,2019,Hamed-Rao,0.811594,3.810053,0.000139,increasing,0.625405,0.536429,0.813548,0.000764,True
+% overexploited,1950–2019,Indonesia – Indian Ocean,EEZ,70,1950,2019,Hamed-Rao,0.795445,3.377574,0.000731,increasing,0.6125,0.436889,0.766981,0.002194,True
+% overexploited,1950–2019,Thailand – Andaman Sea,EEZ,70,1950,2019,Hamed-Rao,0.828571,3.900102,9.6e-05,increasing,0.662667,0.556,0.801944,0.000673,True
+% overexploited,1950–2019,Thailand – Gulf of Thailand,EEZ,70,1950,2019,Hamed-Rao,0.823602,6.497042,0.0,increasing,0.935625,0.867077,1.008387,0.0,True
+% overexploited,1950–2019,Vietnam (EEZ),EEZ,70,1950,2019,Hamed-Rao,0.556108,3.290508,0.001,increasing,0.2775,0.218448,0.33375,0.002194,True
+% overexploited,1950–2019,Philippines (EEZ),EEZ,70,1950,2019,Hamed-Rao,0.833126,4.554985,5e-06,increasing,0.854792,0.766,0.935161,4.7e-05,True
+% overexploited,1990–2019,SEA (5 countries),SEA,30,1990,2019,Hamed-Rao,0.894253,5.697549,0.0,increasing,0.907571,0.861403,1.013987,0.0,True
+% overexploited,1990–2019,Malaysia,country,30,1990,2019,Hamed-Rao,0.793103,3.97394,7.1e-05,increasing,1.132045,0.935357,1.34375,0.000283,True
+% overexploited,1990–2019,Indonesia,country,30,1990,2019,Hamed-Rao,0.802299,3.573556,0.000352,increasing,1.68537,1.18,2.01386,0.000704,True
+% overexploited,1990–2019,Thailand,country,30,1990,2019,Hamed-Rao,0.742529,5.11066,0.0,increasing,1.422273,1.149,1.65,2e-06,True
+% overexploited,1990–2019,Vietnam,country,30,1990,2019,Hamed-Rao,-0.501149,-3.878712,0.000105,decreasing,-0.460667,-0.657273,-0.28087,0.000315,True
+% overexploited,1990–2019,Philippines,country,30,1990,2019,Hamed-Rao,0.478161,2.920197,0.003498,increasing,0.85,0.432941,0.998261,0.003498,True
+% overexploited,1990–2019,Malaysia – Peninsula East,EEZ,30,1990,2019,Hamed-Rao,0.744828,4.086273,4.4e-05,increasing,0.666538,0.512,0.823684,0.000395,True
+% overexploited,1990–2019,Malaysia – Peninsula West,EEZ,30,1990,2019,Hamed-Rao,0.590805,3.964729,7.3e-05,increasing,0.523571,0.3745,0.705,0.000514,True
+% overexploited,1990–2019,Malaysia – Sabah,EEZ,30,1990,2019,Hamed-Rao,0.777011,4.479406,7e-06,increasing,1.706111,1.402857,1.966,7.5e-05,True
+% overexploited,1990–2019,Malaysia – Sarawak,EEZ,30,1990,2019,Hamed-Rao,0.756322,3.513403,0.000442,increasing,1.827222,1.399167,2.133913,0.00177,True
+% overexploited,1990–2019,Indonesia – Central,EEZ,30,1990,2019,Hamed-Rao,0.850575,3.620152,0.000294,increasing,1.9976,1.12,2.5165,0.001472,True
+% overexploited,1990–2019,Indonesia – Eastern,EEZ,30,1990,2019,Hamed-Rao,0.809195,4.012578,6e-05,increasing,1.692857,1.1725,2.030667,0.00048,True
+% overexploited,1990–2019,Indonesia – Indian Ocean,EEZ,30,1990,2019,Hamed-Rao,0.717241,3.433529,0.000596,increasing,1.60125,1.3745,1.943846,0.001787,True
+% overexploited,1990–2019,Thailand – Andaman Sea,EEZ,30,1990,2019,Hamed-Rao,0.781609,4.50835,7e-06,increasing,1.915217,1.661176,2.205294,7.2e-05,True
+% overexploited,1990–2019,Thailand – Gulf of Thailand,EEZ,30,1990,2019,Hamed-Rao,0.537931,3.415994,0.000635,increasing,0.879167,0.493333,1.197647,0.001787,True
+% overexploited,1990–2019,Vietnam (EEZ),EEZ,30,1990,2019,Hamed-Rao,-0.501149,-3.878712,0.000105,decreasing,-0.460667,-0.657273,-0.28087,0.00063,True
+% overexploited,1990–2019,Philippines (EEZ),EEZ,30,1990,2019,Hamed-Rao,0.478161,2.920197,0.003498,increasing,0.85,0.432941,0.998261,0.003498,True
+mean trophic level,1950–2019,SEA (5 countries),SEA,70,1950,2019,Hamed-Rao,0.584265,3.596796,0.000322,increasing,0.001566,0.001266,0.001964,0.000322,True
+mean trophic level,1950–2019,Malaysia,country,70,1950,2019,Hamed-Rao,0.213251,1.120012,0.262708,no trend,0.000276,8.2e-05,0.000481,0.525417,False
+mean trophic level,1950–2019,Indonesia,country,70,1950,2019,Hamed-Rao,0.040994,0.247417,0.804585,no trend,6.9e-05,-0.000222,0.000343,0.804585,False
+mean trophic level,1950–2019,Thailand,country,70,1950,2019,Hamed-Rao,0.706004,3.254737,0.001135,increasing,0.006183,0.004828,0.008719,0.003405,True
+mean trophic level,1950–2019,Vietnam,country,70,1950,2019,Hamed-Rao,-0.571014,-3.899065,9.7e-05,decreasing,-0.002,-0.002424,-0.001613,0.000483,True
+mean trophic level,1950–2019,Philippines,country,70,1950,2019,Hamed-Rao,-0.592547,-3.372492,0.000745,decreasing,-0.001944,-0.002727,-0.001364,0.00298,True
+mean trophic level,1950–2019,Malaysia – Peninsula East,EEZ,70,1950,2019,Hamed-Rao,0.362733,2.099545,0.035769,increasing,0.001692,0.000476,0.002115,0.178844,False
+mean trophic level,1950–2019,Malaysia – Peninsula West,EEZ,70,1950,2019,Hamed-Rao,-0.589234,-4.109665,4e-05,decreasing,-0.001795,-0.002037,-0.001493,0.000436,True
+mean trophic level,1950–2019,Malaysia – Sabah,EEZ,70,1950,2019,Hamed-Rao,-0.058799,-0.262834,0.792679,no trend,-0.0,-0.000196,-0.0,1.0,False
+mean trophic level,1950–2019,Malaysia – Sarawak,EEZ,70,1950,2019,Hamed-Rao,0.619048,3.343483,0.000827,increasing,0.00359,0.002619,0.004286,0.006619,True
+mean trophic level,1950–2019,Indonesia – Central,EEZ,70,1950,2019,Hamed-Rao,-0.286542,-1.500634,0.13345,no trend,-0.000455,-0.001026,-0.000182,0.533801,False
+mean trophic level,1950–2019,Indonesia – Eastern,EEZ,70,1950,2019,Hamed-Rao,0.163561,1.386364,0.165636,no trend,0.000217,-0.0,0.000526,0.533801,False
+mean trophic level,1950–2019,Indonesia – Indian Ocean,EEZ,70,1950,2019,Hamed-Rao,0.079089,0.488615,0.625115,no trend,0.000312,-0.000303,0.001132,1.0,False
+mean trophic level,1950–2019,Thailand – Andaman Sea,EEZ,70,1950,2019,Hamed-Rao,0.52588,3.255239,0.001133,increasing,0.004231,0.003077,0.005152,0.007931,True
+mean trophic level,1950–2019,Thailand – Gulf of Thailand,EEZ,70,1950,2019,Hamed-Rao,0.61118,2.847847,0.004402,increasing,0.005769,0.004348,0.00875,0.02641,True
+mean trophic level,1950–2019,Vietnam (EEZ),EEZ,70,1950,2019,Hamed-Rao,-0.568116,-3.862288,0.000112,decreasing,-0.002,-0.002424,-0.001613,0.001123,True
+mean trophic level,1950–2019,Philippines (EEZ),EEZ,70,1950,2019,Hamed-Rao,-0.59793,-3.412839,0.000643,decreasing,-0.001944,-0.002727,-0.001364,0.005786,True
+mean trophic level,1990–2019,SEA (5 countries),SEA,30,1990,2019,Hamed-Rao,0.6,5.468367,0.0,increasing,0.001389,0.001025,0.001861,0.0,True
+mean trophic level,1990–2019,Malaysia,country,30,1990,2019,Hamed-Rao,0.177011,1.0432,0.296856,no trend,0.000524,-0.000149,0.000869,0.593712,False
+mean trophic level,1990–2019,Indonesia,country,30,1990,2019,Hamed-Rao,0.544828,2.929305,0.003397,increasing,0.002152,0.001174,0.002851,0.013589,True
+mean trophic level,1990–2019,Thailand,country,30,1990,2019,Hamed-Rao,0.365517,2.314534,0.020638,increasing,0.00161,0.000453,0.003023,0.061915,False
+mean trophic level,1990–2019,Vietnam,country,30,1990,2019,Hamed-Rao,0.006897,0.026027,0.979236,no trend,-0.0,-0.000909,0.001176,0.979236,False
+mean trophic level,1990–2019,Philippines,country,30,1990,2019,Hamed-Rao,-0.524138,-3.182932,0.001458,decreasing,-0.006111,-0.007727,-0.003889,0.00729,True
+mean trophic level,1990–2019,Malaysia – Peninsula East,EEZ,30,1990,2019,Hamed-Rao,0.16092,1.20422,0.228504,no trend,-0.0,-0.0,0.001111,0.685513,False
+mean trophic level,1990–2019,Malaysia – Peninsula West,EEZ,30,1990,2019,Hamed-Rao,-0.482759,-2.683004,0.007296,decreasing,-0.00125,-0.001818,-0.000625,0.051075,False
+mean trophic level,1990–2019,Malaysia – Sabah,EEZ,30,1990,2019,Hamed-Rao,0.554023,4.49798,7e-06,increasing,0.002,0.001304,0.0025,6.9e-05,True
+mean trophic level,1990–2019,Malaysia – Sarawak,EEZ,30,1990,2019,Hamed-Rao,0.843678,5.263066,0.0,increasing,0.008889,0.007647,0.01,2e-06,True
+mean trophic level,1990–2019,Indonesia – Central,EEZ,30,1990,2019,Hamed-Rao,0.510345,3.211812,0.001319,increasing,0.002105,0.001333,0.002727,0.011871,True
+mean trophic level,1990–2019,Indonesia – Eastern,EEZ,30,1990,2019,Hamed-Rao,0.393103,2.349262,0.018811,increasing,0.001053,-0.0,0.001818,0.112864,False
+mean trophic level,1990–2019,Indonesia – Indian Ocean,EEZ,30,1990,2019,Hamed-Rao,0.271264,1.155306,0.247965,no trend,0.0025,-0.0,0.005,0.685513,False
+mean trophic level,1990–2019,Thailand – Andaman Sea,EEZ,30,1990,2019,Hamed-Rao,0.289655,1.608028,0.107829,no trend,0.001579,-0.0,0.003333,0.539145,False
+mean trophic level,1990–2019,Thailand – Gulf of Thailand,EEZ,30,1990,2019,Hamed-Rao,0.232184,1.509477,0.131177,no trend,0.001333,-0.0,0.003333,0.539145,False
+mean trophic level,1990–2019,Vietnam (EEZ),EEZ,30,1990,2019,Hamed-Rao,0.022989,0.116577,0.907195,no trend,-0.0,-0.000909,0.001176,0.907195,False
+mean trophic level,1990–2019,Philippines (EEZ),EEZ,30,1990,2019,Hamed-Rao,-0.521839,-3.17417,0.001503,decreasing,-0.006111,-0.007727,-0.003889,0.012021,True

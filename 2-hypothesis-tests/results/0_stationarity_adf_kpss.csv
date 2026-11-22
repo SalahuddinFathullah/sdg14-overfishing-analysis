@@ -1,0 +1,18 @@
+series,first,last,n,level_adf_p,level_kpss_p,transformation_used,transformed_adf_p,transformed_kpss_p,stationary_after
+World % overexploited (FAO),1974,2021,48,0.107074,0.043322,first difference,4e-06,0.1,yes
+World % overexploited (SAU),1950,2019,70,0.381446,0.01,first difference,0.0,0.020567,"ADF yes, KPSS no"
+"World capture, t (FAO)",1960,2024,65,0.391641,0.01,Δlog (growth rate),0.0,0.01,"ADF yes, KPSS no"
+"World catch, t (SAU)",1950,2019,70,0.443764,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+SEA % overexploited (SAU),1950,2019,70,0.377396,0.01,first difference,0.0,0.041667,"ADF yes, KPSS no"
+SEA mean trophic level (SAU),1950,2019,70,0.056954,0.025414,first difference,0.0,0.036167,"ADF yes, KPSS no"
+"SEA catch, t (SAU)",1950,2019,70,0.361158,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+Malaysia mean trophic level (SAU),1950,2019,70,0.708779,0.022326,first difference,0.0,0.1,yes
+"Malaysia catch, t (SAU)",1950,2019,70,0.994736,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+Indonesia mean trophic level (SAU),1950,2019,70,0.086047,0.096808,first difference,0.0,0.1,yes
+"Indonesia catch, t (SAU)",1950,2019,70,0.972231,0.01,Δlog (growth rate),0.0,0.016939,"ADF yes, KPSS no"
+Thailand mean trophic level (SAU),1950,2019,70,0.900028,0.01,first difference,0.0,0.042377,"ADF yes, KPSS no"
+"Thailand catch, t (SAU)",1950,2019,70,0.799255,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+Vietnam mean trophic level (SAU),1950,2019,70,0.554327,0.053691,first difference,0.0,0.1,yes
+"Vietnam catch, t (SAU)",1950,2019,70,0.001399,0.1,Δlog (growth rate),0.0,0.1,yes
+Philippines mean trophic level (SAU),1950,2019,70,0.994092,0.01,first difference,0.001368,0.1,yes
+"Philippines catch, t (SAU)",1950,2019,70,0.959999,0.01,Δlog (growth rate),0.03773,0.01,"ADF yes, KPSS no"

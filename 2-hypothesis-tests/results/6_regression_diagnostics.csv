@@ -1,0 +1,14 @@
+model,n,r2,shapiro_p,durbin_watson,ljung_box_lag,ljung_box_p,breusch_pagan_p,hac_maxlags
+"H1a linear trend, FAO world",48,0.899993,0.025169,0.584247,9,3e-06,0.025945,3
+"H1a segmented trend (break 2015), FAO world",48,0.900456,0.025772,0.586296,9,3e-06,0.098639,3
+"H2c gap: SEA vs world, % overexploited (SAU)",30,0.000332,0.001323,0.910179,6,0.004664,0.748668,3
+"H2c gap: SEA vs world, % overexploited (SAU)",70,0.247331,0.001628,0.905909,10,0.0,0.001866,3
+"H2c gap: Malaysia vs world, % overexploited (SAU)",30,0.256031,0.205615,0.673425,6,0.000868,0.753984,3
+"H2c gap: Indonesia vs world, % overexploited (SAU)",30,0.618847,0.468343,0.532148,6,1.2e-05,0.271625,3
+"H2c gap: Thailand vs world, % overexploited (SAU)",30,0.383083,0.246118,0.948852,6,0.199881,0.146428,3
+"H2c gap: Vietnam vs world, % overexploited (SAU)",30,0.852419,0.446439,0.713865,6,0.004564,0.341718,3
+"H2c gap: Philippines vs world, % overexploited (SAU)",30,0.106865,0.444444,0.633573,6,0.00179,0.651273,3
+"H2c gap: SEA vs world, mean trophic level (SAU)",30,0.303917,0.066311,1.430628,6,0.196969,0.664089,3
+"H2c gap: Area 71 vs world, % overexploited (FAO)",10,0.403238,0.752841,2.0567,2,0.59666,0.028792,2
+"H2c gap: Area 57 vs world, % overexploited (FAO)",10,0.147759,0.230305,1.240572,2,0.326297,0.806136,2
+"H2c gap: Area 71 vs world, without 2021 (FAO)",9,0.170902,0.793257,2.851917,1,0.10236,0.365851,2

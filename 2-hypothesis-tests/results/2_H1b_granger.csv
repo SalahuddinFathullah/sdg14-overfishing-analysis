@@ -1,0 +1,5 @@
+pair,lag_order,F,p,p_holm
+FAO capture growth -> Δ FAO % overexploited,1,1.090512,0.302193,1.0
+FAO capture growth -> Δ FAO % overexploited,2,0.717543,0.494123,1.0
+FAO capture growth -> Δ FAO % overexploited,3,1.060115,0.37773,1.0
+FAO capture growth -> Δ FAO % overexploited,4,1.247287,0.309664,1.0

@@ -1,0 +1,2 @@
+test,series,n,t_stat,p
+"Engle-Granger cointegration (levels, with trend)",FAO % overexploited ~ log FAO capture,48,-3.16269,0.199015

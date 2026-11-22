@@ -1,0 +1,7 @@
+series,n,first,last,mk_variant,tau,z,p,trend,sen_slope,sen_ci_low,sen_ci_high
+"FAO world, all years 1974–2021",48,1974,2021,Hamed-Rao,0.838652,5.539309,0.0,increasing,0.54746,0.498824,0.590769
+"FAO world, assessment years only (interpolated years removed)",43,1974,2021,Hamed-Rao,0.844961,5.756526,0.0,increasing,0.558235,0.511,0.602
+"FAO world, before SDGs 1974–2015",42,1974,2015,Hamed-Rao,0.790941,4.8941,1e-06,increasing,0.555172,0.484616,0.619524
+"FAO world, after SDGs 2015–2021",7,2015,2021,original,0.904762,2.703381,0.006864,increasing,0.525,0.3375,0.7025
+"SAU world, 1974–2019 (same window as FAO)",46,1974,2019,Hamed-Rao,0.975845,5.194076,0.0,increasing,0.978571,0.935333,1.02
+"SAU world, 1950–2019",70,1950,2019,Hamed-Rao,0.987578,4.265258,2e-05,increasing,0.78,0.720357,0.842564
