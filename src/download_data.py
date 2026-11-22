@@ -37,6 +37,14 @@ Sources
    - comtrade/   UN Comtrade mirror trade statistics for fish (HS 03)
    - benford/    leading-digit counts of SAU taxon-level catch values
 
+5. Fishing effort (iteration 2 of the analysis)  ->  data/raw/validation/effort/
+   Rousseau et al. Global Fishing Effort database, IMAS (University of Tasmania),
+   1950-2017, CC BY 4.0, https://doi.org/10.25959/MNGY-0Q43
+   - world_effort.csv     world total effort by year (all fishing countries)
+   - sea_eez_effort.csv   effort inside each SEA5 country's EEZ by year (all fleets)
+   Effort = active vessels x engine power (kW) x days at sea. "Nominal" has no
+   technological creep; "effective" adds the database's creep factor.
+
 Usage
 -----
     python src/download_data.py                   # download everything
@@ -44,6 +52,7 @@ Usage
     python src/download_data.py --only sau
     python src/download_data.py --only validation
     python src/download_data.py --only integrity    # SDG 14.7.1/GDP, Comtrade, Benford (slow)
+    python src/download_data.py --only effort       # streams ~110 MB of IMAS CSVs
 
 Notes
 -----
@@ -355,7 +364,7 @@ def download_integrity() -> None:
        Leading-digit counts (1-9) of every taxon-level catch value in the full SAU
        EEZ catch export, split into Reported and Unreported (reconstructed) catch.
     """
-    root = RAW / "validation"
+    root = RAW_DIR / "validation"
 
     # 1) economic table -----------------------------------------------------
     print("OWID SDG 14.7.1 + World Bank GDP and capture")
@@ -441,6 +450,65 @@ def download_integrity() -> None:
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+IMAS_EFFORT = "https://data.imas.utas.edu.au/attachments/1241a51d-c8c2-4432-aa68-3d2bae142794/"
+EFFORT_EEZS = {"Malaysia": "Malaysia", "Indonesia": "Indonesia", "Thailand": "Thailand",
+               "Viet Nam": "Viet Nam", "Philippines": "Philippines"}   # EEZ names as written in the IMAS file
+
+
+def sig6(x: float) -> str:
+    """6 significant digits in plain (non-scientific) notation, e.g. 4577500000 or 59007.2."""
+    r = float(f"{x:.6g}")
+    return str(int(r)) if r == int(r) else repr(r)
+
+
+def download_effort() -> None:
+    """
+    Stream two aggregated IMAS files and sum them by year:
+    1) TotalEffortby_FGroup_FishingCountry_Sector.csv (42 MB) -> world_effort.csv
+       (all fishing countries = world fishing effort, incl. high seas)
+    2) TotalEffortby_FGroup_EEZ_Sector.csv (69 MB) -> sea_eez_effort.csv
+       (effort by all fleets inside each SEA5 EEZ, matching the SAU EEZ catch data)
+    Columns kept: nominal and effective effort (kW x days at sea), nominal effort of
+    the industrial sector, number of active vessels and engine power (kW).
+    """
+    out = RAW_DIR / "validation" / "effort"
+    out.mkdir(parents=True, exist_ok=True)
+
+    def stream(name: str, key_col: str, keep) -> dict:
+        totals: dict = {}
+        with requests.get(IMAS_EFFORT + name, headers=HEADERS, stream=True, timeout=600) as r:
+            r.raise_for_status()
+            reader = csv.DictReader(line.decode("utf-8") for line in r.iter_lines() if line)
+            for row in reader:
+                if row["Year"] == "NA" or not keep(row[key_col]):
+                    continue
+                k = (row[key_col], int(row["Year"]))
+                t = totals.setdefault(k, [0.0] * 5)
+                nom = float(row["NomActive"])
+                t[0] += nom
+                t[1] += float(row["EffActive"])
+                t[2] += nom if row["Sector"] == "I" else 0.0
+                t[3] += float(row["NV"])
+                t[4] += float(row["P"])
+        return totals
+
+    print("IMAS effort by fishing country -> world totals")
+    world: dict = {}
+    for (_, year), t in stream("TotalEffortby_FGroup_FishingCountry_Sector.csv", "Country", lambda c: True).items():
+        w = world.setdefault(year, [0.0] * 5)
+        for i in range(5):
+            w[i] += t[i]
+    lines = ["year,nom_kwdays,eff_kwdays,nom_kwdays_industrial,vessels,power_kw"]
+    lines += [",".join([str(y)] + [sig6(v) for v in world[y]]) for y in sorted(world)]
+    (out / "world_effort.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    print("IMAS effort by EEZ -> SEA5 EEZs")
+    sea = stream("TotalEffortby_FGroup_EEZ_Sector.csv", "EEZ", lambda e: e in EFFORT_EEZS)
+    lines = ["eez,year,nom_kwdays,eff_kwdays,nom_kwdays_industrial,vessels,power_kw"]
+    lines += [",".join([z, str(y)] + [sig6(v) for v in sea[(z, y)]]) for z, y in sorted(sea)]
+    (out / "sea_eez_effort.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -454,10 +522,11 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity"], help="download one part only")
+    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort"],
+                        help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
@@ -466,6 +535,8 @@ def main() -> None:
         download_validation()
     if "integrity" in parts:
         download_integrity()
+    if "effort" in parts:
+        download_effort()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

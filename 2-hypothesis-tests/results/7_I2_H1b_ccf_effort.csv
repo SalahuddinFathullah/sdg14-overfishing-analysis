@@ -1,0 +1,45 @@
+pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm
+World effort growth -> Δ FAO % overexploited,0,43,-0.190396,0.221351,-0.185416,0.298897,1.0,False
+World effort growth -> Δ FAO % overexploited,1,42,-0.342316,0.026484,-0.321054,0.302435,0.290557,False
+World effort growth -> Δ FAO % overexploited,2,41,-0.221593,0.163805,-0.170784,0.306101,1.0,False
+World effort growth -> Δ FAO % overexploited,3,40,0.350904,0.026414,0.286304,0.309903,0.290557,False
+World effort growth -> Δ FAO % overexploited,4,39,0.092619,0.574938,0.050828,0.313851,1.0,False
+World effort growth -> Δ FAO % overexploited,5,38,0.236407,0.153011,0.162772,0.317954,1.0,False
+World effort growth -> Δ FAO % overexploited,6,37,0.013957,0.934657,-0.058227,0.322222,1.0,False
+World effort growth -> Δ FAO % overexploited,7,36,-0.17517,0.30685,-0.241293,0.326667,1.0,False
+World effort growth -> Δ FAO % overexploited,8,35,-0.235478,0.173275,-0.245639,0.3313,1.0,False
+World effort growth -> Δ FAO % overexploited,9,34,0.056628,0.75041,0.048766,0.336137,1.0,False
+World effort growth -> Δ FAO % overexploited,10,33,0.264486,0.136907,0.409999,0.341192,1.0,False
+"same, prewhitened (AR(0))",0,43,-0.190396,0.221351,-0.185416,0.298897,1.0,False
+"same, prewhitened (AR(0))",1,42,-0.342316,0.026484,-0.321054,0.302435,0.290557,False
+"same, prewhitened (AR(0))",2,41,-0.221593,0.163805,-0.170784,0.306101,1.0,False
+"same, prewhitened (AR(0))",3,40,0.350904,0.026414,0.286304,0.309903,0.290557,False
+"same, prewhitened (AR(0))",4,39,0.092619,0.574938,0.050828,0.313851,1.0,False
+"same, prewhitened (AR(0))",5,38,0.236407,0.153011,0.162772,0.317954,1.0,False
+"same, prewhitened (AR(0))",6,37,0.013957,0.934657,-0.058227,0.322222,1.0,False
+"same, prewhitened (AR(0))",7,36,-0.17517,0.30685,-0.241293,0.326667,1.0,False
+"same, prewhitened (AR(0))",8,35,-0.235478,0.173275,-0.245639,0.3313,1.0,False
+"same, prewhitened (AR(0))",9,34,0.056628,0.75041,0.048766,0.336137,1.0,False
+"same, prewhitened (AR(0))",10,33,0.264486,0.136907,0.409999,0.341192,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),0,67,0.106529,0.390887,0.118315,0.239452,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),1,66,0.277247,0.024214,0.247176,0.241259,0.266357,False
+World effort growth -> Δ SAU % overexploited (1951–2017),2,65,-0.042843,0.734709,-0.068186,0.243108,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),3,64,-0.056923,0.655038,0.078804,0.245,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),4,63,0.18705,0.142125,0.192622,0.246937,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),5,62,0.134153,0.298558,0.199778,0.24892,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),6,61,-0.049386,0.705457,0.002036,0.250952,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),7,60,-0.103134,0.432945,-0.008225,0.253035,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),8,59,0.044712,0.736677,-0.072708,0.25517,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),9,58,0.069669,0.603297,0.156362,0.257361,1.0,False
+World effort growth -> Δ SAU % overexploited (1951–2017),10,57,0.239133,0.073212,0.271204,0.259608,0.732123,False
+Effective effort (with technological creep) -> Δ FAO %,0,43,0.043712,0.780765,0.068502,0.298897,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,1,42,-0.21152,0.178719,-0.116717,0.302435,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,2,41,-0.269915,0.08788,-0.144295,0.306101,0.878801,False
+Effective effort (with technological creep) -> Δ FAO %,3,40,0.017689,0.913728,0.082485,0.309903,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,4,39,0.143428,0.383708,0.119071,0.313851,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,5,38,0.072243,0.666452,0.068852,0.317954,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,6,37,0.038658,0.820297,-0.092974,0.322222,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,7,36,-0.195004,0.254406,-0.329106,0.326667,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,8,35,-0.359897,0.033704,-0.261333,0.3313,0.370749,False
+Effective effort (with technological creep) -> Δ FAO %,9,34,-0.041061,0.817651,-0.053963,0.336137,1.0,False
+Effective effort (with technological creep) -> Δ FAO %,10,33,0.149634,0.4059,0.141293,0.341192,1.0,False

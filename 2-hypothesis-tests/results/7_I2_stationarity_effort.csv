@@ -1,0 +1,9 @@
+series,first,last,level_adf_p,level_kpss_p,transformation_used,breaks_removed,transformed_adf_p,transformed_kpss_p,stationary_after
+World nominal effort,1950,2017,1.0,0.01,detrended Δlog (growth rate),none,0.0,0.1,yes
+World effective effort,1950,2017,0.596721,0.01,detrended Δlog (growth rate),none,0.100265,0.1,no — CCF results for this series are unreliable
+SEA EEZ nominal effort,1950,2017,0.97522,0.1,Δlog (growth rate),none,0.0,0.047035,"ADF yes, KPSS no"
+Malaysia EEZ nominal effort,1950,2017,0.014533,0.01,"Δlog (growth rate), source breaks removed",1965,8.3e-05,0.1,yes
+Indonesia EEZ nominal effort,1950,2017,0.416761,0.1,Δlog (growth rate),none,0.000165,0.0932,yes
+Thailand EEZ nominal effort,1950,2017,0.430763,0.1,"detrended Δlog (growth rate), source breaks removed",2002 2011,0.122508,0.1,no — CCF results for this series are unreliable
+Vietnam EEZ nominal effort,1950,2017,0.315624,0.1,Δlog (growth rate),none,0.001062,0.1,yes
+Philippines EEZ nominal effort,1950,2017,0.985004,0.01,Δlog (growth rate),none,0.0,0.01,"ADF yes, KPSS no"

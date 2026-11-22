@@ -196,6 +196,26 @@ These test whether the officially **reported** catch of each SEA country is beli
 
 ---
 
+## 5. Fishing effort — `validation/effort/` (added for iteration 2 of the analysis)
+
+Source: **Rousseau et al., Global Fishing Effort database** (IMAS, University of Tasmania), 1950–2017, CC BY 4.0, https://doi.org/10.25959/MNGY-0Q43. Effort is reconstructed from national fleet statistics (vessel numbers, engine power, days at sea). Re-create with `python src/download_data.py --only effort`, which streams two of the database's aggregated CSVs and sums them by year.
+
+| File | Rows | Columns |
+|---|---|---|
+| `world_effort.csv` | 1950–2017 | `year`, `nom_kwdays`, `eff_kwdays`, `nom_kwdays_industrial`, `vessels`, `power_kw` |
+| `sea_eez_effort.csv` | 5 EEZs × 1950–2017 | `eez` (Indonesia, Malaysia, Philippines, Thailand, Viet Nam), then the same columns |
+
+- `nom_kwdays`: **nominal effort**, active vessels × engine power (kW) × days at sea. This is the main pressure variable.
+- `eff_kwdays`: **effective effort**, nominal effort plus the database's technological-creep factor. It grows several hundred-fold over 1950–2017, so use it for sensitivity checks only.
+- `nom_kwdays_industrial`: nominal effort of the industrial sector (sector `I`). The remainder is artisanal (powered and unpowered).
+- `vessels`, `power_kw`: active vessels and their total engine power.
+- `world_effort.csv` sums all fishing countries (`TotalEffortby_FGroup_FishingCountry_Sector.csv`), including the high seas.
+- `sea_eez_effort.csv` is the effort by **all fleets inside each country's EEZ** (`TotalEffortby_FGroup_EEZ_Sector.csv`). That matches the Sea Around Us EEZ catch data. The database gives one EEZ per country, so Malaysia's 4 and Indonesia's 3 Sea Around Us EEZs are combined here.
+
+Transfer check: the two files were aggregated in the browser and transferred with SHA-256 checksums. Both matched (`world_effort.csv` `1b79710a…`, `sea_eez_effort.csv` `1f3a24d8…`).
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -206,6 +226,8 @@ These test whether the officially **reported** catch of each SEA country is beli
 6. **Name mismatch:** OWID uses `Vietnam`, SAU uses `Viet Nam`.
 7. **Fixed 2026-11-21:** the first version of `catch_summary/` labelled all catch in the 9 split EEZs (Malaysia, Indonesia, Thailand) as `foreign` because the fishing country was compared with the full EEZ name. Files were rebuilt; totals are unchanged, only the domestic/foreign split.
 8. **SAU discard series start late** for some countries in OWID (Malaysia/Thailand 1961, Vietnam 1987) — missing ≠ zero.
+9. **Effort source breaks:** single-year jumps of more than 65% in EEZ effort mark changes in the national statistics, not in fishing. They occur in Thailand 2002 (+75%) and 2011 (−52%), and in Malaysia 1965 (+67%). `2-hypothesis-tests` drops these years from the effort growth series. Thailand's catch-per-unit-effort dip in 2002–2010 is an artefact of the same breaks.
+10. **Effort ends in 2017**, two years before Sea Around Us (2019) and four before FAO stock status (2021). Iteration-2 tests use the common window.
 
 ---
 
@@ -229,4 +251,5 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - FAO (2025) – processed by Our World in Data. "Sustainable fisheries as a proportion of GDP" (SDG 14.7.1, series EN_SCP_FSHGDP) [dataset]. https://ourworldindata.org/grapher/sustainable-fisheries-as-a-proportion-of-gdp, accessed 22 Nov 2026.
 - World Bank. *World Development Indicators*, NY.GDP.MKTP.CD — GDP (current US$), last updated 11 Nov 2026.
 - United Nations. *UN Comtrade Database*, HS chapter 03 (fish, crustaceans, molluscs), annual, 2011–2023. https://comtradeplus.un.org, accessed 22 Nov 2026.
+- Rousseau, Y., Blanchard, J., Novaglio, C., Pinnell, K., Tittensor, D., Watson, R. & Ye, Y. (2022). *Global Fishing Effort* [dataset]. Institute for Marine and Antarctic Studies, University of Tasmania. https://doi.org/10.25959/MNGY-0Q43, accessed 22 Nov 2026. Method: Rousseau et al. (2024), A database of mapped global fishing activity 1950–2017, *Scientific Data* 11, 48.
 - Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley. (MAD conformity thresholds)

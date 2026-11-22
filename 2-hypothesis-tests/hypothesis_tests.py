@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a, H1b, H2a, H2b, H2c
+hypothesis_tests.py — Formal tests of hypotheses H1a, H1b, H2a, H2b, H2c (2 iterations)
 =========================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -27,6 +27,15 @@ Runs the analysis pipeline in README §4 on the raw data:
                   (SEA − World) with HAC errors; SAU % overexploited, SAU MTL, FAO areas
     diagnostics   Shapiro-Wilk, Durbin-Watson, Ljung-Box, Breusch-Pagan on every
                   regression's residuals; residual plots for the H1a trend model
+
+  Iteration 2 (fishing effort instead of catch as the pressure variable; iteration-1
+  results above are kept so the analysis history stays visible):
+    i2_stationarity  ADF + KPSS on log effort and effort growth
+    i2_cpue          catch per unit effort (CPUE) trends, Mann-Kendall on log CPUE
+    i2_h1b           H1b repeated with world effort: CCF, prewhitening, Granger,
+                     cointegration (constant and constant + trend)
+    i2_h2b           H2b repeated with SEA EEZ effort, responses % overexploited
+                     (no longer circular) and mean trophic level
 
     python 2-hypothesis-tests/hypothesis_tests.py               # everything
     python 2-hypothesis-tests/hypothesis_tests.py --only h1a h1b
@@ -728,6 +737,284 @@ def section_h2c() -> None:
 
 
 # =========================================================================== #
+# ITERATION 2 — fishing effort as the pressure variable
+# =========================================================================== #
+# Iteration 1 (above) used catch as the measure of fishing pressure and found no
+# link (H1b, H2b). Catch is a weak proxy: it can stay flat while pressure rises,
+# because each unit of effort catches less as stocks are depleted. Iteration 2
+# repeats H1b and H2b with fishing EFFORT (IMAS Global Fishing Effort database:
+# active vessels x engine power x days at sea), and adds catch per unit effort
+# (CPUE) as an explanatory check. Iteration-1 results are kept unchanged.
+# Effort is also independent of Sea Around Us stock status, so — unlike catch —
+# stock status can be used as a response here without circularity.
+
+EFFORT = VAL / "effort"
+BREAK_DLOG = 0.5   # |Δlog effort| > 0.5 (a >65% jump in one year) = break in the source data
+
+
+def world_effort() -> pd.DataFrame:
+    """World fishing effort 1950–2017 (kW × days at sea; nominal and with technological creep)."""
+    return pd.read_csv(EFFORT / "world_effort.csv").set_index("year")
+
+
+def sea_effort() -> dict[str, pd.DataFrame]:
+    """Effort by all fleets inside each SEA5 EEZ, 1950–2017; 'SEA' = sum of the five."""
+    d = pd.read_csv(EFFORT / "sea_eez_effort.csv")
+    d["eez"] = d["eez"].replace({"Viet Nam": "Vietnam"})
+    out = {c: d[d["eez"] == c].set_index("year").drop(columns="eez") for c in SEA5}
+    out["SEA"] = sum(out[c] for c in SEA5)
+    return out
+
+
+def effort_growth(e: pd.Series) -> tuple[pd.Series, list[int], str]:
+    """
+    Stationary effort series = Δlog effort (growth rate), with single-year jumps above
+    BREAK_DLOG removed: those are changes of source/method in the national statistics
+    behind the database (e.g. Thailand 2002 and 2011), not real changes in fishing.
+    Detrended if ADF still finds a unit root.
+    """
+    d = np.log(e).diff().dropna()
+    breaks = [int(y) for y in d.index[d.abs() > BREAK_DLOG]]
+    d = d.drop(breaks)
+    label = "Δlog (growth rate)" + (", source breaks removed" if breaks else "")
+    if adf_p(d, "c") >= ALPHA:
+        d = detrend(d)
+        label = "detrended " + label
+    return d, breaks, label
+
+
+def section_i2_stationarity() -> None:
+    print("Iteration 2: effort stationarity")
+    rows = []
+    we, se = world_effort(), sea_effort()
+    specs = [("World nominal effort", we["nom_kwdays"]), ("World effective effort", we["eff_kwdays"])]
+    specs += [(f"{n} EEZ nominal effort", se[n]["nom_kwdays"]) for n in ["SEA"] + SEA5]
+    for name, s in specs:
+        d, breaks, label = effort_growth(s)
+        a, k = adf_p(d, "c"), kpss_p(d, "c")
+        rows.append({"series": name, "first": int(s.index.min()), "last": int(s.index.max()),
+                     "level_adf_p": adf_p(np.log(s), "ct"), "level_kpss_p": kpss_p(np.log(s), "ct"),
+                     "transformation_used": label, "breaks_removed": " ".join(map(str, breaks)) or "none",
+                     "transformed_adf_p": a, "transformed_kpss_p": k,
+                     "stationary_after": "yes" if a < ALPHA and k >= ALPHA else
+                     ("ADF yes, KPSS no" if a < ALPHA else "no — CCF results for this series are unreliable")})
+    save_table(pd.DataFrame(rows), "7_I2_stationarity_effort")
+
+
+def section_i2_h1b() -> None:
+    sec = "7_iteration2_effort"
+    print("Iteration 2: H1b with fishing effort")
+    we = world_effort()
+    x = effort_growth(we["nom_kwdays"])[0]
+    xe = effort_growth(we["eff_kwdays"])[0]
+    yf = st.world_fao().diff().dropna()
+    ys = st.world_sau().diff().dropna().loc[:2017]
+    raw = ccf_table(x.loc[1975:], yf, "World effort growth -> Δ FAO % overexploited")
+    pwx, pwy, p_ar = prewhiten(x.loc[1975:], yf)
+    pw = ccf_table(pwx, pwy, f"same, prewhitened (AR({p_ar}))")
+    sau = ccf_table(x, ys, "World effort growth -> Δ SAU % overexploited (1951–2017)")
+    eff = ccf_table(xe.loc[1975:], yf, "Effective effort (with technological creep) -> Δ FAO %")
+    ccf = pd.concat([raw, pw, sau, eff], ignore_index=True)
+    save_table(ccf, "7_I2_H1b_ccf_effort")
+    g = granger(x.loc[1975:], yf)
+    g.insert(0, "pair", "World effort growth -> Δ FAO % overexploited")
+    save_table(g, "7_I2_H1b_granger_effort")
+    rows = []
+    for name, y in [("FAO % overexploited", st.world_fao()), ("SAU % overexploited", st.world_sau())]:
+        lv = pd.concat([y, np.log(we["nom_kwdays"])], axis=1).dropna()
+        for tr in ("c", "ct"):
+            t_c, p_c, _ = coint(lv.iloc[:, 0], lv.iloc[:, 1], trend=tr)
+            rows.append({"response": name, "driver": "log world nominal effort", "trend_term": tr,
+                         "years": f"{lv.index.min()}–{lv.index.max()}", "t_stat": t_c, "p": p_c})
+    co = pd.DataFrame(rows)
+    save_table(co, "7_I2_H1b_cointegration_effort")
+    sig = bool(raw["significant_holm"].any() or pw["significant_holm"].any() or sau["significant_holm"].any())
+    best = raw.loc[raw["p"].idxmin()]
+    c_fao = co[(co["response"] == "FAO % overexploited") & (co["trend_term"] == "c")].iloc[0]
+    decide("H1b (iteration 2: effort)", "Does world fishing effort cross-correlate with % stocks overexploited at some lag?",
+           f"Largest effect r = {best['r']:+.2f} at lag {int(best['lag'])} (raw p {fmt_p(best['p'])}, "
+           f"Holm p {fmt_p(best['p_holm'])}); SAU min Holm p {fmt_p(sau['p_holm'].min())}; "
+           f"Granger min Holm p {fmt_p(g['p_holm'].min())}; cointegration with FAO p {fmt_p(c_fao['p'])}",
+           sig,
+           "Short-run (year-to-year) changes in effort do not line up with changes in stock status; the long-run "
+           f"level link is weak (cointegration p {fmt_p(c_fao['p'])}, 10% level only). See CPUE for the long-run story.")
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4.6), sharey=True)
+    for ax, tab, title in zip(axes, [raw, sau, eff], ["Effort → FAO stocks (1975–2017)",
+                                                      "Effort → SAU stocks (1951–2017)",
+                                                      "Effective effort → FAO stocks\n(non-stationary: indicative only)"]):
+        cols = [v.SERIES[0] if s else v.NEUTRAL for s in tab["significant_holm"]]
+        ax.bar(tab["lag"], tab["r"], color=cols, width=0.6)
+        ax.plot(tab["lag"], tab["band_95"], color=v.INK_2, lw=1, ls=(0, (3, 3)))
+        ax.plot(tab["lag"], -tab["band_95"], color=v.INK_2, lw=1, ls=(0, (3, 3)))
+        ax.axhline(0, color=v.AXIS, lw=0.8)
+        ax.set_xticks(range(0, MAX_LAG + 1, 2))
+        ax.set_xlabel("Lag k (years effort leads)")
+        ax.set_title(f"{title}\nmin Holm p {fmt_p(tab['p_holm'].min())}", fontsize=9.5)
+        ax.grid(axis="x", visible=False)
+    axes[0].set_ylabel("Correlation r")
+    v.suptitle(fig, "Iteration 2 · H1b with fishing effort — " + (
+        "significant lag found" if sig else "still no significant short-run link"),
+               "Effort growth vs change in % overexploited k years later; dashed = ±1.96/√n; blue = significant "
+               f"after Holm. Long-run (cointegration) p {fmt_p(c_fao['p'])} for FAO")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I2.02_h1b_ccf_effort", "IMAS Global Fishing Effort (Rousseau et al.); FAO via OWID; Sea Around Us")
+
+
+def section_i2_h2b() -> None:
+    sec = "7_iteration2_effort"
+    print("Iteration 2: H2b with fishing effort")
+    se = sea_effort()
+    sea, cs = sea_series(), country_series()
+    tabs = []
+    for n in ["SEA"] + SEA5:
+        x = effort_growth(se[n]["nom_kwdays"])[0]
+        src = sea if n == "SEA" else cs[n]
+        for resp, lbl in [("over", "Δ % overexploited"), ("mtl", "Δ MTL")]:
+            t = ccf_table(x, src[resp].diff().dropna().loc[:2017], f"{n}: effort growth -> {lbl}")
+            t.insert(0, "unit", n)
+            t.insert(1, "response", lbl)
+            tabs.append(t)
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    save_table(ccf, "7_I2_H2b_ccf_effort")
+    sig = ccf[ccf["significant_holm"]]
+    decide("H2b (iteration 2: effort)",
+           "Does SEA fishing effort cross-correlate with % overexploited or mean trophic level at some lag?",
+           f"{len(sig)} of {len(ccf)} lag tests significant after Holm within unit"
+           + (": " + "; ".join(f"{r['unit']} {r['response']} lag {int(r['lag'])} r = {r['r']:+.2f} "
+                                 f"(Holm p {fmt_p(r['p_holm'])})" for _, r in sig.iterrows()) if len(sig) else "")
+           + f"; across all {len(ccf)} tests min Holm p {fmt_p(ccf['p_holm_all'].min())}",
+           len(sig) > 0,
+           "Stock status can be tested here (effort is independent of SAU's catch-based status). "
+           "Thailand's effort series stays non-stationary (source breaks), so its lags are unreliable.",
+           verdict=None if len(sig) != 1 else
+           (f"Weak: reject H0 only for {sig.iloc[0]['unit']} {sig.iloc[0]['response']} at lag "
+            f"{int(sig.iloc[0]['lag'])} (r = {sig.iloc[0]['r']:+.2f}); not significant once all "
+            f"{len(ccf)} tests are corrected together"))
+
+    # Heatmap: rows = unit × response, columns = lag, colour = r, ring = significant after Holm
+    rows = [(u, r) for u in ["SEA"] + SEA5 for r in ["Δ % overexploited", "Δ MTL"]]
+    mat = np.array([[ccf[(ccf["unit"] == u) & (ccf["response"] == r) & (ccf["lag"] == k)]["r"].iloc[0]
+                     for k in range(MAX_LAG + 1)] for u, r in rows])
+    sigm = np.array([[ccf[(ccf["unit"] == u) & (ccf["response"] == r) & (ccf["lag"] == k)]["significant_holm"].iloc[0]
+                      for k in range(MAX_LAG + 1)] for u, r in rows])
+    fig, ax = plt.subplots(figsize=(13, 6.6))
+    im = ax.imshow(mat, cmap=v.DIVERGING, vmin=-0.5, vmax=0.5, aspect="auto")
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            ax.text(j, i, f"{mat[i, j]:+.2f}", ha="center", va="center", fontsize=8,
+                    color="#ffffff" if abs(mat[i, j]) > 0.35 else v.INK,
+                    fontweight="bold" if sigm[i, j] else "normal")
+            if sigm[i, j]:
+                ax.add_patch(plt.Rectangle((j - 0.48, i - 0.48), 0.96, 0.96, fill=False, ec=v.INK, lw=1.6))
+    for b in range(2, len(rows), 2):
+        ax.axhline(b - 0.5, color=v.SURFACE, lw=3)
+    ax.set_xticks(range(MAX_LAG + 1), range(MAX_LAG + 1))
+    ax.set_yticks(range(len(rows)), [f"{u} · {r}" for u, r in rows], fontsize=9)
+    ax.set_xlabel("Lag k (years effort leads)")
+    ax.grid(False)
+    for spn in ax.spines.values():
+        spn.set_visible(False)
+    cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+    cb.set_label("Correlation r", color=v.INK_2)
+    cb.outline.set_visible(False)
+    v.suptitle(fig, "Iteration 2 · H2b with fishing effort — " + (
+        f"{len(sig)} of {len(ccf)} lag tests significant after Holm (outlined)" if len(sig)
+        else "no significant lag after Holm correction"),
+               "Correlation of effort growth with the change in each response k years later, per EEZ group; "
+               "red = positive, blue = negative")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I2.03_h2b_ccf_effort_heatmap", "IMAS Global Fishing Effort (Rousseau et al.); Sea Around Us")
+
+
+def section_i2_cpue() -> None:
+    """
+    Catch per unit effort (CPUE) = catch ÷ nominal effort. A falling CPUE means each
+    kW-day of fishing lands less fish — the classic sign of a shrinking stock. It
+    explains how catch can stay flat while overexploitation rises (iteration-1 H1b).
+    """
+    sec = "7_iteration2_effort"
+    print("Iteration 2: catch per unit effort")
+    we, se = world_effort(), sea_effort()
+    sea, cs = sea_series(), country_series()
+    units = {"World": (sau_world_catch().loc[:2017], we["nom_kwdays"])}
+    units["SEA"] = (sea["catch"].loc[:2017], se["SEA"]["nom_kwdays"])
+    units.update({c: (cs[c]["catch"].loc[:2017], se[c]["nom_kwdays"]) for c in SEA5})
+    rows, cpue = [], {}
+    for n, (c, e) in units.items():
+        cp = (c / e * 1000).dropna()                      # kg of catch per kW-day... t × 1000 = kg
+        cpue[n] = cp
+        r = mann_kendall(np.log(cp.loc[1990:2017]))
+        def chg(x: pd.Series) -> float:
+            """% change between 5-year means 1990–94 and 2013–17 (robust to single noisy years)."""
+            return (x.loc[2013:2017].mean() / x.loc[1990:1994].mean() - 1) * 100
+
+        rows.append({"unit": n, "cpue_1990_94_kg_per_kwday": cp.loc[1990:1994].mean(),
+                     "cpue_2013_17_kg_per_kwday": cp.loc[2013:2017].mean(),
+                     "change_1990_2017_pct": chg(cp), "catch_change_1990_2017_pct": chg(c),
+                     "effort_change_1990_2017_pct": chg(e),
+                     "mk_p_log_cpue_1990_2017": r["p"], "trend": r["trend"],
+                     "sen_pct_per_year": (np.exp(r["sen_slope"]) - 1) * 100,
+                     "sen_ci_low_pct": (np.exp(r["sen_ci_low"]) - 1) * 100,
+                     "sen_ci_high_pct": (np.exp(r["sen_ci_high"]) - 1) * 100})
+    res = pd.DataFrame(rows)
+    res["p_holm_countries"] = np.nan
+    m = res["unit"].isin(SEA5)
+    res.loc[m, "p_holm_countries"] = holm(res.loc[m, "mk_p_log_cpue_1990_2017"])
+    save_table(res, "7_I2_cpue_trends")
+    w, s_ = res.iloc[0], res.iloc[1]
+    falling = res[m & (res["trend"] == "decreasing") & (res["p_holm_countries"] < ALPHA)]["unit"].tolist()
+    decide("Explanation (iteration 2: CPUE)", "Is catch per unit effort falling (more effort for the same fish)?",
+           f"World CPUE {w['change_1990_2017_pct']:+.0f}% 1990–94 → 2013–17 (catch {w['catch_change_1990_2017_pct']:+.0f}%, "
+           f"effort {w['effort_change_1990_2017_pct']:+.0f}%), Sen {w['sen_pct_per_year']:+.1f}%/yr, p "
+           f"{fmt_p(w['mk_p_log_cpue_1990_2017'])}; SEA {s_['change_1990_2017_pct']:+.0f}% (Sen "
+           f"{s_['sen_pct_per_year']:+.1f}%/yr, p {fmt_p(s_['mk_p_log_cpue_1990_2017'])}); falling significantly in "
+           f"{', '.join(falling) or 'none'}",
+           bool(w["mk_p_log_cpue_1990_2017"] < ALPHA and w["trend"] == "decreasing"),
+           "Not a hypothesis from the plan; supports the depletion explanation for flat catch + rising overexploitation",
+           verdict=("CPUE falling" if w["trend"] == "decreasing" and w["mk_p_log_cpue_1990_2017"] < ALPHA
+                    else "No clear CPUE trend"))
+
+    # Figure: (a) world index 1990 = 100, (b) CPUE by SEA unit, index 1990 = 100
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(15, 5.4))
+    wf = st.world_fao()
+    lines = [("Fishing effort", we["nom_kwdays"], v.SERIES[1]),
+             ("Catch (Sea Around Us)", sau_world_catch(), v.SERIES[0]),
+             ("Catch per unit effort", cpue["World"], v.SERIES[3]),
+             ("% stocks overexploited (FAO)", wf, v.SERIES[7])]
+    items = []
+    for lbl, s, colour in lines:
+        s = s.loc[1974:2017]
+        idx = s / s.loc[1990:1994].mean() * 100
+        a1.plot(idx.index, idx.values, color=colour, lw=2, label=lbl)
+        items.append((idx.index[-1], idx.values[-1], f"{idx.values[-1]:.0f}"))
+    v.end_labels(a1, items)
+    a1.axhline(100, color=v.AXIS, lw=0.8)
+    a1.axvspan(1990, 1994, color=v.GRID, alpha=0.5, lw=0)
+    a1.set_ylabel("Index, 1990–94 average = 100")
+    a1.legend(loc="upper left", fontsize=8.5)
+    a1.set_title("World: effort and overexploitation up, catch flat → catch per unit effort down", fontsize=9.5)
+    items = []
+    for n in ["SEA"] + SEA5:
+        s = cpue[n].loc[1974:2017]
+        idx = s / s.loc[1990:1994].mean() * 100
+        colour = v.INK_2 if n == "SEA" else v.COUNTRY_COLOR[n]
+        a2.plot(idx.index, idx.values, color=colour, lw=2.4 if n == "SEA" else 1.6, label=n)
+    a2.axhline(100, color=v.AXIS, lw=0.8)
+    a2.axvspan(1990, 1994, color=v.GRID, alpha=0.5, lw=0)
+    a2.legend(loc="upper right", fontsize=8.5, ncol=2)
+    a2.set_ylabel("Catch per unit effort, index 1990–94 = 100")
+    a2.set_title(f"Southeast Asia: CPUE falls in {', '.join(falling) or 'no country'} (Holm-corrected Mann-Kendall)",
+                 fontsize=9.5)
+    v.suptitle(fig, "Iteration 2 · Why overexploitation rises while catch stays flat: each unit of effort catches less",
+               f"Catch per kW-day, 1990–94 → 2013–17: world {w['change_1990_2017_pct']:+.0f}%, SEA "
+               f"{s_['change_1990_2017_pct']:+.0f}% — more fishing for the same catch, the signature of depleted stocks")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I2.01_cpue_effort_catch_index", "IMAS Global Fishing Effort (Rousseau et al.); Sea Around Us; FAO via OWID")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -763,7 +1050,11 @@ def section_diagnostics() -> None:
 
 
 SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": section_h1b,
-            "h2a": section_h2a, "h2b": section_h2b, "h2c": section_h2c, "diagnostics": section_diagnostics}
+            "h2a": section_h2a, "h2b": section_h2b, "h2c": section_h2c,
+            # iteration 2: fishing effort replaces catch as the pressure variable
+            "i2_stationarity": section_i2_stationarity, "i2_cpue": section_i2_cpue,
+            "i2_h1b": section_i2_h1b, "i2_h2b": section_i2_h2b,
+            "diagnostics": section_diagnostics}
 
 
 def main() -> None:
@@ -776,12 +1067,17 @@ def main() -> None:
     if not args.only:
         save_table(pd.DataFrame(DIAGNOSTICS), "6_regression_diagnostics")
         dec = pd.DataFrame(DECISIONS)
-        h1 = dec[dec["hypothesis"].isin(["H1a", "H1b"])]["decision"].eq("Reject H0").all()
-        dec.loc[len(dec)] = {"hypothesis": "Stage rule", "question": "Reject H0 for both H1a and H1b?",
-                             "evidence": "; ".join(f"{h}: {d}" for h, d in zip(dec["hypothesis"], dec["decision"])
-                                                   if h in ("H1a", "H1b")),
-                             "decision": "Proceed to Stage 2" if h1 else "Rule not met",
-                             "note": "" if h1 else "Stage 2 results are reported as exploratory/conditional"}
+
+        def stage(label: str, h1b_name: str) -> None:
+            ok = dec[dec["hypothesis"].isin(["H1a", h1b_name])]["decision"].eq("Reject H0").all()
+            dec.loc[len(dec)] = {"hypothesis": label, "question": f"Reject H0 for both H1a and {h1b_name}?",
+                                 "evidence": "; ".join(f"{h}: {d}" for h, d in zip(dec["hypothesis"], dec["decision"])
+                                                       if h in ("H1a", h1b_name)),
+                                 "decision": "Proceed to Stage 2" if ok else "Rule not met",
+                                 "note": "" if ok else "Stage 2 results are reported as exploratory/conditional"}
+
+        stage("Stage rule (iteration 1: catch)", "H1b")
+        stage("Stage rule (iteration 2: effort)", "H1b (iteration 2: effort)")
         save_table(dec, "decisions")
         print(dec[["hypothesis", "decision"]].to_string(index=False))
 
