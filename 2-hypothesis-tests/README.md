@@ -8,12 +8,13 @@ python 2-hypothesis-tests/hypothesis_tests.py --only h1a h2c
 python 2-hypothesis-tests/hypothesis_tests.py --only i2_cpue i2_h1b i2_h2b   # iteration 2 (effort)
 python 2-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # iteration 3 (warming)
 python 2-hypothesis-tests/hypothesis_tests.py --only i4_data i4_h4a i4_h4b i4_h4c i4_descriptive   # iteration 4
+python 2-hypothesis-tests/hypothesis_tests.py --only summary                  # all drivers, one figure
 ```
 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 15 figures (6 for iteration 1, 3 + 2 + 4 for iterations 2–4).
+- `figures/<section>/*.png`: 16 figures (6 for iteration 1, 3 + 2 + 4 for iterations 2–4, 1 summary).
 
 ## Verdicts
 
@@ -133,6 +134,20 @@ None of catch, effort or warming linked to overexploitation beyond the shared up
 | ![](figures/9_iteration4_human_use/I4.03_h4c_island_building_did.png) | ![](figures/9_iteration4_human_use/I4.04_structures_descriptive.png) |
 
 Tables: `9_I4_container_splice.csv`, `9_I4_driver_coverage.csv`, `9_I4_stationarity.csv`, `9_I4_H4a_levels_vs_detrended.csv`, `9_I4_H4a_cointegration.csv`, `9_I4_H4a_ccf.csv`, `9_I4_H4b_ccf_sea.csv`, `9_I4_H4b_levels_vs_detrended.csv`, `9_I4_H4c_did.csv`, `9_I4_H4c_event_study.csv`, `9_I4_structures_descriptive.csv`. Verdicts are rows in `decisions.csv`.
+
+## Summary across iterations — all drivers on one method
+
+For the report, `summary` puts the 8 world drivers from iterations 1–4 (catch, effort, sea-surface temperature, ocean heat content, container traffic, seaborne trade, dams, aquaculture) through the same tests: Spearman ρ in levels, after a linear and a quadratic detrend (Holm across all 16 driver × source pairs), and the CCF of growth rates vs Δ% overexploited (lags 0 to n/3, Holm within pair and across all 162 lag tests).
+
+- **Levels:** ρ = +0.71 to +1.00 for every driver — the shared upward trend.
+- **Beyond the trend:** no driver is significant with the same sign in both FAO and Sea Around Us under both detrends. Catch and dams hold up in FAO but reverse or vanish in Sea Around Us (dams +0.56 vs −0.65).
+- **Year to year:** 0 of 162 lag tests significant across all; the strongest within-pair hit (aquaculture → SAU, Holm p = 0.044) falls away under the full correction (p = 0.65).
+
+Values can differ slightly from the per-iteration tables, which use driver-specific transformations (e.g. source-break removal for effort). Figure S.01 replaces I3.01 and I4.01 in the report's main body.
+
+![](figures/10_summary_all_drivers/S.01_all_drivers_levels_vs_beyond_trend.png)
+
+Tables: `10_summary_all_drivers.csv`, `10_summary_all_drivers_ccf.csv`.
 
 ## Sections
 

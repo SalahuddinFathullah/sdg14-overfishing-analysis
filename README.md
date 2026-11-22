@@ -233,7 +233,7 @@ sdg14-overfishing-analysis/
 │   │                         iterations 2 (effort), 3 (warming, H3), 4 (shipping & structures, H4)
 │   ├── README.md        ← verdicts, method per hypothesis, notes for the report
 │   ├── results/         ← one CSV per test family + decisions.csv
-│   └── figures/         ← 15 PNGs (iteration 1: 6; iterations 2–4: 3 + 2 + 4)
+│   └── figures/         ← 16 PNGs (iteration 1: 6; iterations 2–4: 3 + 2 + 4; summary S.01)
 ├── 3-data-quality/
 │   ├── clean_data.py    ← builds data/processed/ (rules R1–R6, cleaning_log.csv)
 │   ├── quality_tests.py ← formal validation (21 source pairs) and integrity tests (Benford,
@@ -305,7 +305,7 @@ jupyter lab
 | **Iteration 2:** fishing effort replaces catch as the pressure variable (H1b, H2b re-tested; CPUE) | 1–2 | ✅ Done — CPUE falling; short-run links still not significant | `2-hypothesis-tests/` §7, `data/raw/validation/effort/` |
 | **Iteration 3:** ocean warming as an alternative driver (new H3a global, H3b SEA) | 1–2 | ✅ Done — shared trend only; no link beyond it | `2-hypothesis-tests/` §8, `data/raw/validation/climate/` |
 | **Iteration 4:** shipping and built structures — ports, seaborne trade, liner connectivity, dams, aquaculture, offshore platforms & wind, artificial islands (new H4a global, H4b SEA, H4c island-building DiD) | 1–2 | ✅ Done — shared trend only; island building shows no effect; platforms/wind too recent to test | `2-hypothesis-tests/` §9, `data/raw/validation/human_use/` |
-| Final figure selection (16 figures mapped to report sections) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
+| Final figure selection (15 figures mapped to report sections; report outline drafted) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
 | Report write-up (~10 pages) | — | ⬜ Team task | — |
 
 ### Findings so far
@@ -361,6 +361,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
 | 2026-11-22 | Salah | Completed remaining steps: `3-data-quality/` (clean_data.py → `data/processed/` with cleaning log; quality_tests.py → formal validation of 21 source pairs and integrity tests, 2 figures, 6 tables); final figure set in `figures/README.md`; README progress/status/findings updated |
+| 2026-11-23 | Salah | Added `summary` section to `hypothesis_tests.py`: all 8 world drivers from iterations 1–4 on one common method (levels vs linear/quadratic-detrended ρ, CCF), figure S.01 and 2 tables; S.01 replaces I3.01 + I4.01 in the report figure set |
 | 2026-11-22 | Salah | Iteration 4: added shipping and structure data (`data/raw/validation/human_use/`: WDI container traffic + liner connectivity incl. Dec-2020 archive, UNCTADstat seaborne trade, GDAT dams, DeepOWT offshore wind, OOGP platforms; `download_data.py --only human_use`); `hypothesis_tests.py` sections i4_data, i4_h4a, i4_h4b, i4_h4c (island-building DiD with randomization inference), i4_descriptive (4 figures, 11 tables, H4 decision rows); `ccf_table` takes an optional `max_lag`; iterations 1–3 kept |
 | 2026-11-22 | Salah | Iteration 3: added ocean-warming data (OWID HadSST + ocean heat content; NOAA ERSST v5 averaged over SEA EEZs; `download_data.py --only climate`); `hypothesis_tests.py` sections i3_stationarity, i3_h3a, i3_h3b (2 figures, 8 tables, H3 decision rows); iterations 1–2 kept |
 | 2026-11-22 | Salah | Iteration 2: added IMAS fishing-effort data (`data/raw/validation/effort/`, `download_data.py --only effort`); `hypothesis_tests.py` sections i2_stationarity, i2_cpue, i2_h1b, i2_h2b (3 figures, 6 tables, decisions rows); iteration-1 results kept. Fixed undefined `RAW` in `download_integrity()` |

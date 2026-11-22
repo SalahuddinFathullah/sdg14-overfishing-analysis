@@ -56,6 +56,10 @@ Runs the analysis pipeline in README §4 on the raw data:
     i4_descriptive   offshore oil & gas platforms (2017–23) and wind turbines (2016–21): too
                      short to test, summarised and plotted
 
+  Summary (report figure):
+    summary          all 8 world drivers from iterations 1–4 on one common method:
+                     levels vs linear/quadratic-detrended ρ and CCF, one figure (S.01)
+
     python 2-hypothesis-tests/hypothesis_tests.py               # everything
     python 2-hypothesis-tests/hypothesis_tests.py --only h1a h1b
 
@@ -1865,6 +1869,127 @@ def section_i4_descriptive() -> None:
 
 
 # =========================================================================== #
+# Summary across iterations — every driver, one common method (report figure)
+# =========================================================================== #
+# The per-iteration sections each use the tests that suit their driver. For the report,
+# one figure compares ALL drivers on the same footing, so the reader sees in one place
+# that every driver shares the upward trend and none is linked beyond it:
+#   levels ρ · linear-detrended ρ · quadratic-detrended ρ (Holm across all driver ×
+#   source pairs) and the year-to-year CCF (growth / first difference vs Δ response,
+#   lags 0 to n/3, Holm within pair and across all lag tests).
+# Values can differ slightly from the per-iteration tables, which use driver-specific
+# transformations (e.g. source-break removal for effort).
+
+def summary_drivers() -> list[tuple[str, str, pd.Series, bool]]:
+    """(iteration label, driver name, world level series, log?) for every driver tested on world data."""
+    c, s, d, a = container_teu(), seaborne(), dams(), aquaculture()
+    return [("1", "Catch (FAO capture)", st.capture("World").loc[1960:], True),
+            ("2", "Fishing effort (nominal)", world_effort()["nom_kwdays"], True),
+            ("3", "Sea-surface temperature", world_sst(), False),
+            ("3", "Ocean heat content", world_ohc(), False),
+            ("4", "Container port traffic", c["World"].dropna(), True),
+            ("4", "Seaborne trade volume", s["World"].dropna(), True),
+            ("4", "Dams completed (cumulative)", d["World"], True),
+            ("4", "Aquaculture production", a["World"].dropna(), True)]
+
+
+def section_summary() -> None:
+    sec = "10_summary_all_drivers"
+    print("Summary: every driver, levels vs beyond-trend, one common method")
+    responses = [("FAO", st.world_fao()), ("SAU", st.world_sau())]
+    rows, tabs = [], []
+    for it, dn, x, log in summary_drivers():
+        xl = np.log(x) if log else x
+        dx = i4_change(x, log)
+        for rn, y in responses:
+            r_lv, p_lv, r_dt, p_dt, n = detrended_corr(xl, y)
+            r_q, p_q = quad_detrended_corr(xl, y)
+            n_ch = len(pd.concat([dx, y.diff()], axis=1).dropna())
+            t = ccf_table(dx, y.diff().dropna(), f"{dn} -> Δ {rn} % overexploited", i4_max_lag(n_ch))
+            t.insert(0, "iteration", it)
+            t.insert(1, "driver", dn)
+            t.insert(2, "response", rn)
+            tabs.append(t)
+            rows.append({"iteration": it, "driver": dn, "response": f"{rn} % overexploited",
+                         "years": f"{pd.concat([xl, y], axis=1).dropna().index.min()}–"
+                                  f"{pd.concat([xl, y], axis=1).dropna().index.max()}", "n_years": n,
+                         "spearman_levels": r_lv, "p_levels": p_lv, "spearman_detrended": r_dt, "p_detrended": p_dt,
+                         "spearman_quad_detrended": r_q, "p_quad_detrended": p_q,
+                         "ccf_max_lag": int(t["lag"].max()), "ccf_min_p_holm_within_pair": t["p_holm"].min()})
+    res = pd.DataFrame(rows)
+    res["p_detrended_holm"] = holm(res["p_detrended"])
+    res["p_quad_holm"] = holm(res["p_quad_detrended"])
+    res["consistent_beyond_trend"] = i4_consistent(res)
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    res["ccf_min_p_holm_all"] = res.apply(lambda r: ccf[(ccf["driver"] == r["driver"]) & (
+        ccf["response"] == r["response"].split()[0])]["p_holm_all"].min(), axis=1)
+    save_table(res, "10_summary_all_drivers")
+    save_table(ccf, "10_summary_all_drivers_ccf")
+
+    both = [d for d, g in res[res["consistent_beyond_trend"]].groupby("driver")
+            if len(g) == 2 and g["spearman_detrended"].apply(np.sign).nunique() == 1]
+    n_ccf_sig = int((ccf["p_holm_all"] < ALPHA).sum())
+
+    # Figure: rows = driver × source grouped by iteration; (1) ρ in levels vs after detrending,
+    # (2) strongest year-to-year link (−log10 of the smallest Holm p across lags, within pair).
+    fig = plt.figure(figsize=(15, 9.2))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.55, 0.75], wspace=0.08)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    ypos, labels, y = [], [], 0.0
+    group_edges = []
+    for it in ["1", "2", "3", "4"]:
+        sub = res[res["iteration"] == it]
+        if y:
+            y += 0.7
+            group_edges.append(y - 0.85)
+        for _, r in sub.iterrows():
+            ypos.append(y)
+            labels.append(f"{r['driver']} × {r['response'].split()[0]}")
+            y += 1
+    ypos = np.array(ypos)
+    yplot = ypos.max() - ypos
+    for yp, (_, r) in zip(yplot, res.iterrows()):
+        a1.plot([r["spearman_levels"], r["spearman_detrended"]], [yp, yp], color=v.GRID, lw=2.5, zorder=1)
+        a1.scatter(r["spearman_levels"], yp, s=46, facecolor=v.SURFACE, edgecolor=v.INK_2, lw=1.4, zorder=3)
+        a1.scatter(r["spearman_detrended"], yp, s=52, zorder=4, edgecolor=v.SURFACE, lw=1,
+                   color=v.SERIES[0] if r["p_detrended_holm"] < ALPHA else v.NEUTRAL)
+        a1.scatter(r["spearman_quad_detrended"], yp, s=46, marker="D", zorder=4, edgecolor=v.SURFACE, lw=1,
+                   color=v.SERIES[1] if r["p_quad_holm"] < ALPHA else v.NEUTRAL)
+    for e in group_edges:
+        a1.axhline(ypos.max() - e, color=v.AXIS, lw=0.8)
+        a2.axhline(ypos.max() - e, color=v.AXIS, lw=0.8)
+    a1.axvline(0, color=v.AXIS, lw=0.8)
+    a1.set_yticks(yplot, labels, fontsize=8.5)
+    a1.set_xlim(-1.05, 1.05)
+    a1.set_xlabel("Spearman ρ with world % overexploited: ○ levels, ● linear detrend, ◆ quadratic detrend\n"
+                  "(coloured = Holm p < 0.05 across all 16 pairs, grey = not)")
+    a1.grid(axis="y", visible=False)
+    a1.set_title("1 · Levels: every driver ρ ≥ 0.7 — the shared upward trend", fontsize=9.5)
+    for it in ["1", "2", "3", "4"]:
+        top = yplot[res["iteration"].to_numpy() == it].max()
+        a1.text(-1.03, top + 0.45, f"Iteration {it}", fontsize=8.5, color=v.INK_2, fontweight="bold", va="bottom")
+    best = -np.log10(res["ccf_min_p_holm_within_pair"].clip(lower=1e-6))
+    a2.barh(yplot, best, height=0.6,
+            color=[v.SERIES[0] if p < ALPHA else v.NEUTRAL for p in res["ccf_min_p_holm_all"]])
+    a2.axvline(-np.log10(ALPHA), color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a2.text(-np.log10(ALPHA), yplot.max() + 0.6, " p = 0.05", color=v.INK_2, fontsize=8, va="bottom")
+    a2.set_yticks(yplot, [""] * len(yplot))
+    a2.set_ylim(a1.get_ylim())
+    a2.set_xlabel("−log10(smallest Holm p across lags, within pair)\n(blue = significant across all lag tests)")
+    a2.grid(axis="y", visible=False)
+    a2.set_title("2 · Year-to-year changes: no driver leads", fontsize=9.5)
+    v.suptitle(fig, "Every driver tested rises with overexploitation, but none is linked to it beyond the shared trend"
+               if not both and n_ccf_sig == 0 else
+               "Summary — a driver is linked to overexploitation beyond the shared trend",
+               f"8 drivers from 4 iterations, world data. Linked beyond the trend in both sources and both detrends: "
+               f"{', '.join(both) or 'none'}. Year-to-year lag tests significant across all {len(ccf)}: {n_ccf_sig}")
+    fig.subplots_adjust(top=0.88, bottom=0.12, left=0.19, right=0.98)
+    save_fig(fig, sec, "S.01_all_drivers_levels_vs_beyond_trend",
+             "FAO via OWID; Sea Around Us; IMAS effort; HadSST & NOAA via OWID; World Bank WDI; UNCTADstat; GDAT")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -1909,6 +2034,8 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             # iteration 4: shipping and built structures (new hypothesis H4)
             "i4_data": section_i4_data, "i4_h4a": section_i4_h4a, "i4_h4b": section_i4_h4b,
             "i4_h4c": section_i4_h4c, "i4_descriptive": section_i4_descriptive,
+            # summary across iterations (report figure S.01)
+            "summary": section_summary,
             "diagnostics": section_diagnostics}
 
 

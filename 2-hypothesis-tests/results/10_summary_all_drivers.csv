@@ -1,0 +1,17 @@
+iteration,driver,response,years,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,ccf_max_lag,ccf_min_p_holm_within_pair,p_detrended_holm,p_quad_holm,consistent_beyond_trend,ccf_min_p_holm_all
+1,Catch (FAO capture),FAO % overexploited,1974–2021,48,0.707121,0.0,0.499132,0.000305,0.405667,0.004229,10,1.0,0.002438,0.046516,True,1.0
+1,Catch (FAO capture),SAU % overexploited,1960–2019,60,0.900318,0.0,-0.520922,2e-05,-0.019728,0.881072,10,1.0,0.000238,1.0,False,1.0
+2,Fishing effort (nominal),FAO % overexploited,1974–2017,44,0.926709,0.0,0.190275,0.216033,-0.600141,1.7e-05,10,0.229758,1.0,0.000233,False,1.0
+2,Fishing effort (nominal),SAU % overexploited,1950–2017,68,0.999179,0.0,-0.81914,0.0,0.447914,0.000128,10,1.0,0.0,0.001537,False,1.0
+3,Sea-surface temperature,FAO % overexploited,1974–2021,48,0.861594,0.0,-0.111594,0.450173,-0.172818,0.240146,10,1.0,1.0,1.0,False,1.0
+3,Sea-surface temperature,SAU % overexploited,1950–2019,70,0.914162,0.0,0.439839,0.000139,0.108879,0.369602,10,1.0,0.001252,1.0,False,1.0
+3,Ocean heat content,FAO % overexploited,1974–2021,48,0.904581,0.0,-0.536149,8.6e-05,-0.361376,0.011615,10,0.776819,0.000858,0.116154,False,1.0
+3,Ocean heat content,SAU % overexploited,1955–2019,65,0.923731,0.0,0.761888,0.0,0.200044,0.110108,10,0.563241,0.0,0.921141,False,1.0
+4,Container port traffic,FAO % overexploited,2000–2021,22,0.931112,0.0,-0.129305,0.566299,-0.009599,0.966183,7,1.0,1.0,1.0,False,1.0
+4,Container port traffic,SAU % overexploited,2000–2019,20,0.981955,0.0,0.852632,2e-06,0.37594,0.102349,6,0.129055,2.3e-05,0.921141,False,1.0
+4,Seaborne trade volume,FAO % overexploited,2000–2021,22,0.929983,0.0,-0.080745,0.720938,0.102202,0.650853,7,0.088892,1.0,1.0,False,1.0
+4,Seaborne trade volume,SAU % overexploited,2000–2019,20,0.97594,0.0,0.652632,0.001814,0.291729,0.212026,6,0.678119,0.012695,1.0,False,1.0
+4,Dams completed (cumulative),FAO % overexploited,1974–2019,46,0.941042,0.0,0.555103,6.2e-05,0.555967,6e-05,10,1.0,0.000686,0.000785,True,1.0
+4,Dams completed (cumulative),SAU % overexploited,1950–2019,70,0.999283,0.0,-0.904715,0.0,-0.651649,0.0,10,0.272773,0.0,0.0,True,1.0
+4,Aquaculture production,FAO % overexploited,1974–2021,48,0.948003,0.0,0.322188,0.025531,-0.223838,0.126166,10,0.712603,0.153187,0.921141,False,1.0
+4,Aquaculture production,SAU % overexploited,1960–2019,60,0.998708,0.0,0.138705,0.290546,0.60628,0.0,10,0.044441,1.0,4e-06,False,0.654496
