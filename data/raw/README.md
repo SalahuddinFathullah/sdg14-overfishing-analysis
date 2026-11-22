@@ -187,7 +187,6 @@ These test whether the officially **reported** catch of each SEA country is beli
 ### `validation/comtrade/fish_hs03_mirror_trade.csv`
 
 `country, m49, year, reported_exports_usd, partner_imports_usd, n_partners` — SEA5, 2011–2023. Values are annual totals (all partners, all transport modes) in current USD. Source: UN Comtrade public API (preview endpoint).
-- ⚠️ **Philippines 2014–2023 partner imports are blank**: the free Comtrade quota ran out during download (HTTP 403). Re-run `python src/download_data.py --only integrity` on another day to fill them.
 
 ### `validation/benford/sau_catch_leading_digits.csv`
 
