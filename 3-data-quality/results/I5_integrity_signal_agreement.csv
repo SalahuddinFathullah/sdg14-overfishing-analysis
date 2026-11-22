@@ -1,0 +1,5 @@
+signal_a,signal_b,n,spearman,p_exact_n5
+unreported share,median mirror gap,5,0.3,0.623838
+unreported share,peer z (2021),5,-0.2,0.74706
+median mirror gap,peer z (2021),5,0.7,0.18812
+Benford MAD,unreported share,5,-0.1,0.872889

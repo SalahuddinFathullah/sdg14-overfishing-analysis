@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟢 Analysis — data collected, 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in three iterations — catch, fishing effort, ocean warming ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; cleaning to `data/processed/` and the report remain. See [Progress](#progress).
+> **Status:** 🟢 Analysis complete — data collected and cleaned ([`data/processed/`](data/processed/)), validation and integrity formally tested ([`3-data-quality/`](3-data-quality/)), 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in three iterations — catch, fishing effort, ocean warming ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
 
 ---
 
@@ -20,7 +20,7 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 | Report section (weight) | What we produce | Where in this repo |
 |---|---|---|
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
-| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`1-statistical-tests/`](1-statistical-tests/) §A (summary stats, outliers, missing-value map), `notebooks/01_*` |
+| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`1-statistical-tests/`](1-statistical-tests/) §A (summary stats, outliers, missing-value map), [`3-data-quality/`](3-data-quality/) (cleaning → `data/processed/`, formal validation and integrity tests) |
 | EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`0-visualisation/`](0-visualisation/) |
 | Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`1-statistical-tests/`](1-statistical-tests/) §B–E, [`2-hypothesis-tests/`](2-hypothesis-tests/) |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
@@ -224,17 +224,24 @@ sdg14-overfishing-analysis/
 │   ├── README.md        ← verdicts, method per hypothesis, notes for the report
 │   ├── results/         ← one CSV per test family + decisions.csv
 │   └── figures/         ← 6 PNGs (one per hypothesis + diagnostics)
+├── 3-data-quality/
+│   ├── clean_data.py    ← builds data/processed/ (rules R1–R6, cleaning_log.csv)
+│   ├── quality_tests.py ← formal validation (21 source pairs) and integrity tests (Benford,
+│   │                      mirror trade, peer outliers, unreported share)
+│   ├── README.md        ← cleaning rules, validation and integrity results
+│   ├── results/         ← one CSV per test
+│   └── figures/         ← V.01 validation summary, I.01 integrity summary
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
 │   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md
 │   │   └── validation/  ← alternative sources for cross-checking (UN SDG, World Bank, SAU regions)
 │   │                      and data-integrity sources (economic/, comtrade/, benford/)
-│   └── processed/       ← cleaned, analysis-ready CSVs
-├── notebooks/           ← Jupyter notebooks (stage1_global, stage2_sea, …)
+│   └── processed/       ← cleaned, analysis-ready CSVs + cleaning_log.csv (see its README)
+├── notebooks/           ← (unused placeholder — the analysis lives in the numbered script folders)
 ├── src/
 │   └── download_data.py ← re-downloads everything in data/raw/
-└── figures/             ← exported charts for the report
+└── figures/README.md    ← final figure set for the report (links to the generated figures)
 ```
 
 ---
@@ -255,6 +262,9 @@ python 0-visualisation/visualise.py
 python 1-statistical-tests/stat_tests.py
 # run the formal hypothesis tests (H1a–H2c):
 python 2-hypothesis-tests/hypothesis_tests.py
+# build the cleaned tables and run the validation / integrity tests:
+python 3-data-quality/clean_data.py
+python 3-data-quality/quality_tests.py
 jupyter lab
 ```
 
@@ -267,23 +277,24 @@ jupyter lab
 | Repo & plan set up | — | ✅ Done | `README.md` |
 | Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
 | Download alternative sources for validation | 1–2 | ✅ Done | `data/raw/validation/` |
-| Clean global datasets | 1 | 🟡 Profiling done (descriptives, IQR outliers, missing-value map); cleaning to `data/processed/` pending | `1-statistical-tests/` §A |
+| Clean global datasets | 1 | ✅ Done — `data/processed/global_annual.csv`, rules R1–R6 logged, 0 range/duplicate violations | `3-data-quality/clean_data.py` |
 | Course-method tests: assumption checks, t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square, k-means + hierarchical clustering | 1–2 | ✅ Done | `1-statistical-tests/stat_tests.py` |
-| Validate main data vs alternative sources | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/4_validation/` |
+| Validate main data vs alternative sources | 1–2 | ✅ Done — 21 pairs: 7 identical, 10 of 14 others agree on trend, 4 on direction | `3-data-quality/quality_tests.py` §V |
 | Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
-| Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/5_integrity/` |
+| Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | ✅ Done — digits genuine, no peer outliers; Vietnam re-export gap, Malaysia gap widening; unreported share falling in 3 countries | `3-data-quality/quality_tests.py` §I |
 | Exploratory plots + ACF | 1 | ✅ Done | `0-visualisation/figures/1_global/` |
 | ADF + KPSS + differencing | 1–2 | ✅ Done | `2-hypothesis-tests/` (stationarity) |
 | H1a trend tests (Mann-Kendall, Sen, segmented regression, Chow) | 1 | ✅ Done — reject H₀ | `2-hypothesis-tests/` |
 | H1b cross-correlation (CCF, prewhitening, Granger, cointegration) | 1 | ✅ Done — fail to reject H₀ | `2-hypothesis-tests/` |
 | **Stage 1 decision** | 1 | ⚠️ Rule not met (H1a yes, H1b no) → Stage 2 reported as exploratory | `2-hypothesis-tests/results/decisions.csv` |
 | Download SEA datasets | 2 | ✅ Done | `data/raw/sau/`, `data/raw/owid/` |
-| Clean SEA datasets | 2 | ⬜ Not started | — |
+| Clean SEA datasets | 2 | ✅ Done — `sea_country_annual.csv`, `sea_eez_annual.csv` | `3-data-quality/clean_data.py` |
 | H2a / H2b tests on SEA | 2 | ✅ Done — H2a reject H₀, H2b fail to reject | `2-hypothesis-tests/` |
 | H2c SEA vs global comparison | 2 | ✅ Done — SEA = world; Indonesia, Thailand, Malaysia worse | `2-hypothesis-tests/` |
 | **Iteration 2:** fishing effort replaces catch as the pressure variable (H1b, H2b re-tested; CPUE) | 1–2 | ✅ Done — CPUE falling; short-run links still not significant | `2-hypothesis-tests/` §7, `data/raw/validation/effort/` |
 | **Iteration 3:** ocean warming as an alternative driver (new H3a global, H3b SEA) | 1–2 | ✅ Done — shared trend only; no link beyond it | `2-hypothesis-tests/` §8, `data/raw/validation/climate/` |
-| Final figures & write-up | — | ⬜ Not started | — |
+| Final figure selection (15 figures mapped to report sections) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
+| Report write-up (~10 pages) | — | ⬜ Team task | — |
 
 ### Findings so far
 
@@ -316,13 +327,13 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 - **Catch vs overexploitation:** world wild catch plateaued at ~90–95 Mt from the mid-1990s while overexploitation kept rising (figs 1.03–1.04).
 - **ACF:** both series are strongly autocorrelated in levels and close to white noise after differencing → correlation tests must use differenced series (fig 1.05).
 - **SEA:** FAO Area 71 (South China Sea etc.) went from ~6% to 47% overexploited between 2004 and 2021, the largest rise of any FAO area (fig 1.07). In Sea Around Us data, ~50% of stocks in most SEA EEZs are collapsed or over-exploited by 2019, tracking or exceeding the world level; Vietnam is the exception (~20%) (figs 3.01–3.03).
-- **Validation:** OWID matches the UN SDG database exactly; FAO and Sea Around Us agree on the long-run trend but Sea Around Us shows a steeper rise after 2000 (Bland-Altman bias −4 pp, widening) (figs 4.01–4.03).
+- **Validation (formal, `3-data-quality`):** 7 source pairs are identical (same data, two publishers); of 14 pairs from different sources, 10 agree on trend (overlapping Sen's-slope CIs) and 4 on direction only — none disagrees. Level gaps have known causes (FAO capture includes inland catch; Sea Around Us stock status is catch-based and sits higher, bias −4.1 pp, CCC 0.74) (figs 4.01–4.06, V.01).
 - **Missing values:** no data loss — the only gaps are reporting cycles (FAO areas 71/57 assessed ~every 2 years, SDG 14.7.1 published every 2 years); 5 FAO world years look linearly interpolated (fig A.01).
 - **Test choice:** normality fails for most series (Shapiro-Wilk), so non-parametric tests are used. FAO is systematically 4.1 pp below Sea Around Us (Wilcoxon p < 0.001, r = −0.58). Countries' yearly MTL changes do not differ (Kruskal-Wallis p = 0.32); a plain ANOVA would have wrongly said they do (p = 0.033, unequal variances) (fig B.01).
 - **SDG effect:** no indicator changed significantly after 2015 (rank-sum / Welch, all p ≥ 0.22); the world rise looks slower (median +1.1 → +0.5 pp/yr) but 6 post-2015 years are too few (fig C.01).
 - **Chi-square:** SEA overexploitation class depends strongly on period (Cramér's V = 0.68; 28% of EEZ-years ≥ 50% overexploited in 2000–19 vs 0% before 1980) and on country in 2010–19 (V = 0.51; Indonesia and Thailand highest, Vietnam lowest) (fig D.01). Chi-square rejects Benford only because N is huge — MAD confirms conformity (fig D.02).
 - **Clustering:** globally, Area 71 (SEA) sits with the lower-level FAO areas but has one of the steepest trends (+1.6 pp/yr). Among SEA EEZs, Vietnam is an outlier; the rest form 3 groups that cut across borders — Indonesia (fast-rising overexploitation, little unreported catch), Malaysia Peninsula/Sabah + Philippines (high unreported share), Sarawak + Thailand (most overexploited, catch ~40% below peak) (figs E.01–E.03).
-- **Data integrity (SEA5):** no sign of fabricated catch figures — leading digits of reported catch follow Benford's law closely for every country (MAD 0.0007–0.0028, Nigrini "close conformity"), and no country's fisheries value-vs-catch is a peer outlier (|z| ≤ 1.4). The real gap is **under-reporting**: Sea Around Us estimates 45% (Philippines), 39% (Malaysia), 28% (Vietnam), 24% (Thailand) and 10% (Indonesia) of 2015–19 catch is missing from official statistics. Mirror trade: partners record clearly more fish imports than the country reports exporting for the **Philippines** (median +13% in 2015–23; +61–64% in 2011–12, +31–37% in 2018–19) and **Malaysia** since 2019 (+10% to +22%) — consistent with under-reported exports. The Philippines also has the highest unreported-catch share. Vietnam and Thailand show the opposite (partners record 6–11% less), which points to re-exports or transshipment rather than hidden exports (figs 5.01–5.06).
+- **Data integrity (SEA5):** no sign of fabricated catch figures — leading digits of reported catch follow Benford's law closely for every country (MAD 0.0007–0.0028, Nigrini "close conformity"), and no country's fisheries value-vs-catch is a peer outlier (|z| ≤ 1.4). The real gap is **under-reporting**: Sea Around Us estimates 45% (Philippines), 39% (Malaysia), 28% (Vietnam), 24% (Thailand) and 10% (Indonesia) of 2015–19 catch is missing from official statistics. Mirror trade, formally tested (one-sample Wilcoxon 2011–2023, Holm): **Vietnam** is significantly below 0 (median −10.8%, re-exports/transshipment); the **Philippines** median is +13.9% (above the 0–10% band, with +61–64% in 2011–12) but not significant after Holm (p = 0.14, n = 13); **Malaysia**'s median is −1% but the gap is widening +2.8 pp/yr (Holm p = 0.02, +10% to +22% since 2019). Unreported share is falling significantly since 1990 in Indonesia, Vietnam and Malaysia; the integrity signals do not rank countries consistently (all Spearman p ≥ 0.19, n = 5) (figs 5.01–5.06, I.01).
 
 ---
 
@@ -332,6 +343,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-22 | Salah | Completed remaining steps: `3-data-quality/` (clean_data.py → `data/processed/` with cleaning log; quality_tests.py → formal validation of 21 source pairs and integrity tests, 2 figures, 6 tables); final figure set in `figures/README.md`; README progress/status/findings updated |
 | 2026-11-22 | Salah | Iteration 3: added ocean-warming data (OWID HadSST + ocean heat content; NOAA ERSST v5 averaged over SEA EEZs; `download_data.py --only climate`); `hypothesis_tests.py` sections i3_stationarity, i3_h3a, i3_h3b (2 figures, 8 tables, H3 decision rows); iterations 1–2 kept |
 | 2026-11-22 | Salah | Iteration 2: added IMAS fishing-effort data (`data/raw/validation/effort/`, `download_data.py --only effort`); `hypothesis_tests.py` sections i2_stationarity, i2_cpue, i2_h1b, i2_h2b (3 figures, 6 tables, decisions rows); iteration-1 results kept. Fixed undefined `RAW` in `download_integrity()` |
 | 2026-11-22 | Salah | Added `2-hypothesis-tests/` (hypothesis_tests.py + 6 figures + 12 result tables + README): ADF/KPSS stationarity, H1a Mann-Kendall/Sen/segmented/Chow, H1b CCF/prewhitening/Granger/cointegration, H2a SEA trends, H2b SEA CCF, H2c interaction regression, residual diagnostics, decisions table; README status, progress, verdicts |

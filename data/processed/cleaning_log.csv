@@ -1,0 +1,81 @@
+table,rule,detail,count
+global_annual,R4 exclude,UN SDG 14.4.1 world values after 2021 (FAO 2025 method change),2
+global_annual,R4 flag,FAO world years on a straight line between neighbours (likely interpolated),5
+global_annual,R5 drop,partial year 2026 of the SST series,1
+global_annual,R2 derive,cpue_kg_per_kwday = SAU catch (t) × 1000 ÷ nominal effort,68
+global_annual,R6 duplicate keys,rows sharing ['year'],0
+global_annual,R6 range 0–100,fao_pct_overexploited,0
+global_annual,R6 range 0–100,sdg_pct_sustainable,0
+global_annual,R6 range 0–100,sau_pct_overexploited,0
+global_annual,R6 range ≥ 0,fao_capture_t,0
+global_annual,R6 range ≥ 0,aquaculture_t,0
+global_annual,R6 range ≥ 0,sau_catch_t,0
+global_annual,R6 range ≥ 0,effort_nominal_kwdays,0
+global_annual,R6 range ≥ 0,cpue_kg_per_kwday,0
+global_annual,R6 missing values,fao_pct_overexploited,28
+global_annual,R6 missing values,fao_interpolated_flag,0
+global_annual,R6 missing values,sdg_pct_sustainable,28
+global_annual,R6 missing values,sau_pct_overexploited,6
+global_annual,R6 missing values,fao_capture_t,11
+global_annual,R6 missing values,aquaculture_t,11
+global_annual,R6 missing values,sau_catch_t,6
+global_annual,R6 missing values,effort_nominal_kwdays,8
+global_annual,R6 missing values,effort_effective_kwdays,8
+global_annual,R6 missing values,cpue_kg_per_kwday,8
+global_annual,R6 missing values,sst_anomaly_c,0
+global_annual,R6 missing values,ocean_heat_0_700m_1e22j,5
+sea_eez_annual,R2 derive,pct_overexploited = collapsed + over-exploited (share of stocks),770
+sea_eez_annual,R2 derive,"unreported, foreign-fleet and industrial shares of total reconstructed catch",770
+sea_eez_annual,R6 duplicate keys,"rows sharing ['eez_id', 'year']",0
+sea_eez_annual,R6 range 0–100,pct_overexploited,0
+sea_eez_annual,R6 range 0–100,unreported_share_pct,0
+sea_eez_annual,R6 range 0–100,foreign_share_pct,0
+sea_eez_annual,R6 range 0–100,industrial_share_pct,0
+sea_eez_annual,R6 range ≥ 0,catch_t,0
+sea_eez_annual,R6 missing values,eez_name,0
+sea_eez_annual,R6 missing values,country,0
+sea_eez_annual,R6 missing values,pct_overexploited,0
+sea_eez_annual,R6 missing values,pct_collapsed,0
+sea_eez_annual,R6 missing values,pct_over_exploited,0
+sea_eez_annual,R6 missing values,pct_exploited,0
+sea_eez_annual,R6 missing values,pct_developing,0
+sea_eez_annual,R6 missing values,pct_rebuilding,0
+sea_eez_annual,R6 missing values,mean_trophic_level,0
+sea_eez_annual,R6 missing values,catch_t,0
+sea_eez_annual,R6 missing values,unreported_share_pct,0
+sea_eez_annual,R6 missing values,foreign_share_pct,0
+sea_eez_annual,R6 missing values,industrial_share_pct,0
+sea_country_annual,R4 flag,SEA: effort source-break years,0
+sea_country_annual,R4 flag,Malaysia: effort source-break years,1
+sea_country_annual,R4 flag,Indonesia: effort source-break years,0
+sea_country_annual,R4 flag,Thailand: effort source-break years,2
+sea_country_annual,R4 flag,Vietnam: effort source-break years,0
+sea_country_annual,R4 flag,Philippines: effort source-break years,0
+sea_country_annual,R1 harmonise,"'Viet Nam' (SAU, IMAS, ERSST) -> 'Vietnam' (OWID)",all tables
+sea_country_annual,R3 aggregate,country % overexploited = mean of its EEZs; MTL and shares = catch-weighted,456
+sea_country_annual,R3 aggregate,"SEA % overexploited = mean of 5 countries; SEA catch, effort = sums; SEA SST = area-weighted",76
+sea_country_annual,R5 keep missing,SDG 14.7.1 (biennial) and mirror trade (2011–2023) are not interpolated,422
+sea_country_annual,R6 duplicate keys,"rows sharing ['country', 'year']",0
+sea_country_annual,R6 range 0–100,pct_overexploited,0
+sea_country_annual,R6 range 0–100,unreported_share_pct,0
+sea_country_annual,R6 range 0–100,foreign_share_pct,0
+sea_country_annual,R6 range 0–100,industrial_share_pct,0
+sea_country_annual,R6 range ≥ 0,sau_catch_t,0
+sea_country_annual,R6 range ≥ 0,fao_capture_t,0
+sea_country_annual,R6 range ≥ 0,effort_nominal_kwdays,0
+sea_country_annual,R6 range ≥ 0,cpue_kg_per_kwday,0
+sea_country_annual,R6 missing values,pct_overexploited,36
+sea_country_annual,R6 missing values,mean_trophic_level,36
+sea_country_annual,R6 missing values,sau_catch_t,36
+sea_country_annual,R6 missing values,unreported_share_pct,36
+sea_country_annual,R6 missing values,foreign_share_pct,36
+sea_country_annual,R6 missing values,industrial_share_pct,36
+sea_country_annual,R6 missing values,fao_capture_t,66
+sea_country_annual,R6 missing values,effort_nominal_kwdays,48
+sea_country_annual,R6 missing values,effort_source_break_flag,0
+sea_country_annual,R6 missing values,cpue_kg_per_kwday,48
+sea_country_annual,R6 missing values,sst_mean_c,0
+sea_country_annual,R6 missing values,sst_anomaly_c,0
+sea_country_annual,R6 missing values,sst_hot_months,0
+sea_country_annual,R6 missing values,sdg1471_fisheries_pct_gdp,422
+sea_country_annual,R6 missing values,mirror_gap_pct,391

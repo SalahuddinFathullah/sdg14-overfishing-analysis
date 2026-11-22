@@ -1,0 +1,11 @@
+country,reporting_status,n_values,mad,nigrini
+Indonesia,Reported,189588,0.001096,close conformity
+Indonesia,Unreported,173627,0.000908,close conformity
+Malaysia,Reported,418829,0.0007,close conformity
+Malaysia,Unreported,365398,0.000656,close conformity
+Philippines,Reported,48209,0.001331,close conformity
+Philippines,Unreported,52490,0.001586,close conformity
+Thailand,Reported,69253,0.001784,close conformity
+Thailand,Unreported,42199,0.001118,close conformity
+Vietnam,Reported,36921,0.002808,close conformity
+Vietnam,Unreported,41564,0.001823,close conformity
