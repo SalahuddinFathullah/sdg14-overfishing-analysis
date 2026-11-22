@@ -1,4 +1,4 @@
-# 2-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures) and H5 (panel, rebuilding, FiB)
+# 2-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures) and H5 (panel, rebuilding, FiB, 2030 forecast)
 
 `hypothesis_tests.py` runs the analysis pipeline from the main README (§4) on `data/raw/`. It reuses the data builders from [`1-statistical-tests/stat_tests.py`](../1-statistical-tests/stat_tests.py) and the chart style from [`0-visualisation/visualise.py`](../0-visualisation/visualise.py).
 
@@ -8,14 +8,14 @@ python 2-hypothesis-tests/hypothesis_tests.py --only h1a h2c
 python 2-hypothesis-tests/hypothesis_tests.py --only i2_cpue i2_h1b i2_h2b   # iteration 2 (effort)
 python 2-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # iteration 3 (warming)
 python 2-hypothesis-tests/hypothesis_tests.py --only i4_data i4_h4a i4_h4b i4_h4c i4_descriptive   # iteration 4
-python 2-hypothesis-tests/hypothesis_tests.py --only i5_h5a i5_h5b i5_h5c     # iteration 5
+python 2-hypothesis-tests/hypothesis_tests.py --only i5_h5a i5_h5b i5_h5c i5_h5d   # iteration 5
 python 2-hypothesis-tests/hypothesis_tests.py --only summary                  # all drivers, one figure
 ```
 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 19 figures (6 for iteration 1, 3 + 2 + 4 + 3 for iterations 2–5, 1 summary).
+- `figures/<section>/*.png`: 20 figures (6 for iteration 1, 3 + 2 + 4 + 4 for iterations 2–5, 1 summary).
 
 ## Verdicts
 
@@ -142,14 +142,17 @@ Iterations 1–4 tested each driver on one short yearly series, so the obvious o
 - **H5a (pooled panel):** all 11 SEA EEZs in one regression (5 countries for effort), with EEZ and year fixed effects. Year effects remove the common upward trend, so a driver's effect comes from EEZs where pressure rose faster also worsening faster. Drivers: industrial, unreported and foreign-fleet shares of catch, fishing effort (break-adjusted), and catch (against mean trophic level only, because SAU stock status is derived from catch). Each is tested same-year and as the mean of the previous 5 years, with and without a linear trend per EEZ.
 - **H5b (rebuilding, SDG 14.4):** SDG 14.4 also asks to *restore* stocks. Did the share of rebuilding stocks rise after 2015?
 - **H5c (Fishing-in-Balance):** the FiB index (Pauly et al. 2000) asks whether catch still grows enough to offset any drop in trophic level. It explains why SEA mean trophic level rises while overexploitation also rises.
+- **H5d (forecast to 2030):** on current trends, will the share of overexploited stocks be higher at the SDG deadline than today? World (FAO and SAU), SEA and the 5 countries.
 
 | Test | Result |
 |---|---|
 | **H5a pooled panel** (36 coefficients, wild cluster bootstrap, Holm) | **Fail to reject H₀.** 0 of 36 significant. The smallest raw p is foreign-fleet share → % overexploited (standardised β = −0.38, raw p = 0.020, Holm 0.73), and its sign is the opposite of "foreign fleets cause it". Industrial share also leans negative. Clustered CIs exclude zero for some rows, but with 11 clusters those are too narrow; the bootstrap corrects that. |
 | **H5b rebuilding** | **Mixed.** World: 6.4% → 8.5% of stocks rebuilding (2010–14 → 2015–19), slope +1.00 pp/yr faster after 2015 (p = 0.016). SEA: 9.0% → 9.3%, and the slope *fell* after 2015 (−0.43 pp/yr, p = 0.002). Across the 11 EEZs, 6 rose and 5 fell (one-sided Wilcoxon p = 0.26). Thailand rose (+1.66 pp/yr, Holm p < 0.001); Vietnam (−1.18) and the Philippines (−2.64) fell. |
 | **H5c Fishing-in-Balance** (Mann-Kendall 1990–2019) | **Fail to reject H₀ for SEA: FiB is rising**, +0.15 per decade (p < 0.001). From 1990–94 to 2015–19 SEA FiB rose 0.39: catch contributed +0.32, trophic level +0.07. It is rising in Indonesia and Vietnam and **falling only in Thailand** (−0.10/decade, Holm p = 0.017; Gulf of Thailand −0.14, p = 0.006), where catch fell 30%. World FiB rose slightly (+0.05/decade) through trophic level while world catch fell. |
+| **H5d forecast to 2030** (linear trend / damped ETS / ARIMA on logit %, model picked by a 5-year back-test) | **Reject H₀ for the world.** FAO world 35.5% (2021) → **41.3% in 2030** [95% PI 36.7–46.1]; the lower bound is above today's level in 2 of 3 models (linear 36.7, ARIMA 36.7; damped ETS 34.7). For SEA and most countries (SAU), a no-change forecast beat every trend model in the 2015–19 back-test: those series flattened, so the projected rises (SEA 43.9% → 53.5%) are not supported. The honest SEA reading is "no improvement by 2030", not "further rise". Vietnam is the only series projected to fall (20% → 16%, interval 6–37%). |
 
 **What the fifth iteration adds:**
+- **2030 outlook:** on its current path the world reaches ~41% overexploited by the SDG deadline, further from the target, not closer. SEA has levelled off at ~44% but shows no reversal.
 - **Low power is not the explanation.** Pooling 770 EEZ-years with the common trend removed still finds no pressure effect. The null results reflect the data's resolution (EEZ-level, catch-based status), not too few years.
 - **SDG 14.4 "restore" is missed in SEA.** Rebuilding picked up worldwide after 2015 but stalled in SEA, and fell in Vietnam and the Philippines.
 - **The trophic-level puzzle is expansion.** SEA mean trophic level rises because catches are still growing into new grounds and higher-trophic (offshore, pelagic) stocks. That keeps FiB rising and hides depletion of the older fisheries. Thailand is the one country past that phase: catch and FiB are falling, which matches it being among the most overexploited and worsening faster than the world (H2c).
@@ -159,13 +162,15 @@ Iterations 1–4 tested each driver on one short yearly series, so the obvious o
 - **Wild cluster bootstrap (Webb 6-point weights, null imposed):** standard clustered errors over-reject with 11 (or 5) clusters. With 5 clusters all 6⁵ = 7,776 weight draws are enumerated; with 11, 9,999 random draws.
 - **Effort rebuilt without its source breaks** before entering a level regression, otherwise a statistical break would act as a permanent jump.
 - **Paired Wilcoxon across EEZs** for the before/after-2015 comparison: 11 pairs, non-normal, one-sided because the SDG asks for an increase.
+- **Forecast on the logit scale:** keeps forecasts and intervals inside 0–100%. Three model families (a supervised-regression trend, damped exponential smoothing, ARIMA) compete in a 5-year back-test; a projected rise only counts if the chosen model also beats a no-change forecast, which guards against extending a trend that has already flattened.
 - **FiB with TE = 0.1** (the standard transfer efficiency), baseline 1950, natural log (the base only rescales the index).
 
 | | | |
 |---|---|---|
 | ![](figures/11_iteration5/I5.01_h5a_panel_fixed_effects.png) | ![](figures/11_iteration5/I5.02_h5b_rebuilding_before_after_2015.png) | ![](figures/11_iteration5/I5.03_h5c_fishing_in_balance.png) |
+| ![](figures/11_iteration5/I5.04_h5d_forecast_2030.png) | | |
 
-Tables: `11_I5_H5a_panel_fixed_effects.csv`, `11_I5_H5b_rebuilding_by_eez.csv`, `11_I5_H5b_rebuilding_trends.csv`, `11_I5_H5c_fishing_in_balance.csv`. Verdicts are rows in `decisions.csv`. Iteration 5 reads the cleaned table `data/processed/sea_eez_annual.csv` (built by `3-data-quality/clean_data.py`).
+Tables: `11_I5_H5a_panel_fixed_effects.csv`, `11_I5_H5b_rebuilding_by_eez.csv`, `11_I5_H5b_rebuilding_trends.csv`, `11_I5_H5c_fishing_in_balance.csv`, `11_I5_H5d_forecast_backtest.csv`, `11_I5_H5d_forecast_2030.csv`, `11_I5_H5d_forecast_all_models.csv`, `11_I5_H5d_forecast_paths.csv`. Verdicts are rows in `decisions.csv`. Iteration 5 reads the cleaned table `data/processed/sea_eez_annual.csv` (built by `3-data-quality/clean_data.py`).
 
 ## Summary across iterations — all drivers on one method
 

@@ -1,0 +1,9 @@
+unit,fit_window,chosen_model,backtest_mae_pp,naive_mae_pp,last_year,last_value,forecast_2030,pi95_low_2030,pi95_high_2030,beats_naive_in_backtest,rise_with_95pct_confidence,fall_with_95pct_confidence,rise_credible
+World (FAO),1990–2021,linear,0.608102,1.544,2021,35.5,41.2945,36.6536,46.0955,True,True,False,True
+World (SAU),1990–2019,"arima(0, 1, 0)",2.82669,1.188,2019,46.42,57.2697,49.9286,64.3041,False,True,False,False
+SEA (SAU),1990–2019,ets,2.38223,1.0525,2019,43.9077,53.5301,49.1735,57.8336,False,True,False,False
+Malaysia (SAU),1990–2019,ets,3.57518,1.8085,2019,50.69,59.7625,40.5357,76.393,False,False,False,False
+Indonesia (SAU),1990–2019,ets,6.44093,1.03533,2019,50.9033,64.0616,34.4829,85.7896,False,False,False,False
+Thailand (SAU),1990–2019,linear,5.83848,3.968,2019,46.785,74.4016,63.4314,82.9646,False,True,False,False
+Vietnam (SAU),1990–2019,"arima(0, 1, 1)",3.71226,4.024,2019,20.34,15.5881,5.57044,36.6325,True,False,False,False
+Philippines (SAU),1990–2019,linear,1.2907,2.752,2019,50.82,58.721,41.4653,74.0707,True,False,False,False

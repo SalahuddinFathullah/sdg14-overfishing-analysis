@@ -1,0 +1,25 @@
+unit,model,forecast_2030,pi95_low_2030,pi95_high_2030,low_above_last_value
+World (FAO),linear,41.294521,36.653566,46.095502,True
+World (FAO),ets,38.589379,34.698394,42.631837,False
+World (FAO),"arima(2, 1, 1)",40.910897,36.677711,45.283266,True
+World (SAU),linear,62.416869,57.928594,66.701559,True
+World (SAU),ets,52.709275,46.777322,58.565709,True
+World (SAU),"arima(0, 1, 0)",57.269732,49.928587,64.304063,True
+SEA (SAU),linear,59.237628,53.925169,64.342586,True
+SEA (SAU),ets,53.530137,49.173463,57.833598,True
+SEA (SAU),"arima(2, 1, 0)",56.183812,48.025188,64.021198,True
+Malaysia (SAU),linear,67.437612,58.267246,75.44218,True
+Malaysia (SAU),ets,59.762466,40.535691,76.393014,False
+Malaysia (SAU),"arima(0, 1, 0)",65.280366,43.020885,82.401226,False
+Indonesia (SAU),linear,83.872596,71.835399,91.382402,True
+Indonesia (SAU),ets,64.061602,34.482881,85.78963,False
+Indonesia (SAU),"arima(0, 1, 0)",74.274027,37.965816,93.159931,False
+Thailand (SAU),linear,74.401576,63.431446,82.964617,True
+Thailand (SAU),ets,56.503801,35.216345,75.635743,False
+Thailand (SAU),"arima(0, 1, 1)",59.858221,37.652383,78.641528,False
+Vietnam (SAU),linear,8.057995,3.94372,15.760238,False
+Vietnam (SAU),ets,11.344854,6.726138,18.505901,False
+Vietnam (SAU),"arima(0, 1, 1)",15.588141,5.570437,36.632524,False
+Philippines (SAU),linear,58.720978,41.465293,74.070736,False
+Philippines (SAU),ets,44.894443,33.976456,56.327655,False
+Philippines (SAU),"arima(0, 1, 0)",62.719611,27.615733,88.121817,False

@@ -1,0 +1,33 @@
+unit,model,train,test,mae_pp,test_inside_95pi
+World (FAO),linear,1990–2016,2017–2021,0.608102,5.0
+World (FAO),ets,1990–2016,2017–2021,1.456218,5.0
+World (FAO),"arima(2, 1, 1)",1990–2016,2017–2021,0.639139,5.0
+World (FAO),naive (last value),1990–2016,2017–2021,1.544002,
+World (SAU),linear,1990–2014,2015–2019,5.293151,0.0
+World (SAU),ets,1990–2014,2015–2019,3.241074,1.0
+World (SAU),"arima(0, 1, 0)",1990–2014,2015–2019,2.826693,3.0
+World (SAU),naive (last value),1990–2014,2015–2019,1.188,
+SEA (SAU),linear,1990–2014,2015–2019,3.259694,5.0
+SEA (SAU),ets,1990–2014,2015–2019,2.382231,5.0
+SEA (SAU),"arima(0, 1, 2)",1990–2014,2015–2019,3.689878,4.0
+SEA (SAU),naive (last value),1990–2014,2015–2019,1.0525,
+Malaysia (SAU),linear,1990–2014,2015–2019,5.578815,5.0
+Malaysia (SAU),ets,1990–2014,2015–2019,3.575181,5.0
+Malaysia (SAU),"arima(0, 1, 0)",1990–2014,2015–2019,4.934334,5.0
+Malaysia (SAU),naive (last value),1990–2014,2015–2019,1.8085,
+Indonesia (SAU),linear,1990–2014,2015–2019,12.717887,4.0
+Indonesia (SAU),ets,1990–2014,2015–2019,6.440927,5.0
+Indonesia (SAU),"arima(0, 1, 0)",1990–2014,2015–2019,7.979554,5.0
+Indonesia (SAU),naive (last value),1990–2014,2015–2019,1.035333,
+Thailand (SAU),linear,1990–2014,2015–2019,5.838478,4.0
+Thailand (SAU),ets,1990–2014,2015–2019,7.933962,4.0
+Thailand (SAU),"arima(0, 1, 1)",1990–2014,2015–2019,6.179451,4.0
+Thailand (SAU),naive (last value),1990–2014,2015–2019,3.968,
+Vietnam (SAU),linear,1990–2014,2015–2019,4.726257,3.0
+Vietnam (SAU),ets,1990–2014,2015–2019,4.225399,3.0
+Vietnam (SAU),"arima(1, 1, 0)",1990–2014,2015–2019,3.71226,5.0
+Vietnam (SAU),naive (last value),1990–2014,2015–2019,4.024,
+Philippines (SAU),linear,1990–2014,2015–2019,1.290701,5.0
+Philippines (SAU),ets,1990–2014,2015–2019,5.821337,5.0
+Philippines (SAU),"arima(0, 1, 0)",1990–2014,2015–2019,1.617315,5.0
+Philippines (SAU),naive (last value),1990–2014,2015–2019,2.752,

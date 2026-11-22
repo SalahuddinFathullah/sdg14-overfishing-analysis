@@ -63,6 +63,8 @@ Runs the analysis pipeline in README §4 on the raw data:
                      and segmented trend at 2015 for SEA, countries and the world
     i5_h5c           Fishing-in-Balance index: Mann-Kendall since 1990, decomposition into
                      catch and trophic-level parts
+    i5_h5d           forecast of % overexploited to 2030 (linear trend, damped ETS, ARIMA on the
+                     logit scale; model chosen by a 5-year back-test against a no-change forecast)
 
   Summary (report figure):
     summary          all 8 world drivers from iterations 1–4 on one common method:
@@ -2253,6 +2255,175 @@ def section_i5_h5c() -> None:
     save_fig(fig, sec, "I5.03_h5c_fishing_in_balance", "Sea Around Us (World; 11 SEA EEZs)")
 
 
+FORECAST_END = 2030   # SDG deadline
+FORECAST_FROM = 1990  # fit window start: the post-development phase (earlier SAU years are mostly 0%)
+BACKTEST_H = 5        # hold-out years for model selection
+
+
+def logit_pct(s: pd.Series) -> pd.Series:
+    """% share → logit, so forecasts and intervals stay inside 0–100%. Clipped at 0.5% / 99.5%."""
+    p = (s / 100).clip(0.005, 0.995)
+    return np.log(p / (1 - p))
+
+
+def inv_logit_pct(x) -> np.ndarray:
+    return 100 / (1 + np.exp(-np.asarray(x, float)))
+
+
+def fit_forecast(s: pd.Series, model: str, horizon: int) -> pd.DataFrame:
+    """
+    Forecast `horizon` years of a % series with one model, on the logit scale, back-transformed.
+    Returns mean, lower, upper (95% prediction interval) indexed by year.
+      linear  OLS trend on logit(y) — the supervised-regression baseline; its interval ignores
+              autocorrelation, so it is too narrow (reported, not preferred)
+      ets     damped additive-trend exponential smoothing (ETS(A,Ad,N)); damping lets the trend
+              flatten, the cautious choice for a bounded share
+      arima   ARIMA(p,1,q) with drift, p, q ≤ 2 chosen by AIC
+    """
+    from statsmodels.tsa.arima.model import ARIMA
+    from statsmodels.tsa.exponential_smoothing.ets import ETSModel
+    y = logit_pct(s).astype(float)
+    years = np.arange(s.index.max() + 1, s.index.max() + 1 + horizon)
+    if model == "linear":
+        t = y.index.to_numpy(float)
+        fit = sm.OLS(y.to_numpy(), sm.add_constant(t)).fit()
+        fr = fit.get_prediction(sm.add_constant(years.astype(float))).summary_frame(alpha=0.05)
+        mean, lo, hi = fr["mean"], fr["obs_ci_lower"], fr["obs_ci_upper"]
+    elif model == "ets":
+        fit = ETSModel(y.reset_index(drop=True), error="add", trend="add", damped_trend=True).fit(disp=False)
+        fr = fit.get_prediction(start=len(y), end=len(y) + horizon - 1).summary_frame(alpha=0.05)
+        mean, lo, hi = fr["mean"], fr["pi_lower"], fr["pi_upper"]
+    else:
+        best = None
+        for p_ in range(3):
+            for q_ in range(3):
+                try:
+                    with warnings.catch_warnings():
+                        warnings.simplefilter("ignore")
+                        f = ARIMA(y.reset_index(drop=True), order=(p_, 1, q_), trend="t").fit()
+                except Exception:   # some orders fail to converge on short series
+                    continue
+                if best is None or f.aic < best.aic:
+                    best = f
+        fr = best.get_forecast(horizon).summary_frame(alpha=0.05)
+        mean, lo, hi = fr["mean"], fr["mean_ci_lower"], fr["mean_ci_upper"]
+        model = f"arima{best.model.order}"
+    return pd.DataFrame({"model": model, "mean": inv_logit_pct(mean), "lower": inv_logit_pct(lo),
+                         "upper": inv_logit_pct(hi)}, index=years)
+
+
+def section_i5_h5d() -> None:
+    sec = "11_iteration5"
+    print("Iteration 5: H5d — forecast of % overexploited to 2030")
+    sea, cs = sea_series(), country_series()
+    units = [("World (FAO)", st.world_fao()), ("World (SAU)", st.world_sau()), ("SEA (SAU)", sea["over"])]
+    units += [(f"{c} (SAU)", cs[c]["over"]) for c in SEA5]
+    bt_rows, fc_rows, paths, all_rows = [], [], [], []
+    for name, s in units:
+        s = s.loc[FORECAST_FROM:].dropna()
+        # (1) back-test: fit on all but the last BACKTEST_H years, forecast them, score MAE in pp
+        train, test = s.iloc[:-BACKTEST_H], s.iloc[-BACKTEST_H:]
+        scores = {"naive (last value)": float(np.mean(np.abs(test.values - train.iloc[-1])))}
+        for m in ("linear", "ets", "arima"):
+            f = fit_forecast(train, m, BACKTEST_H)
+            scores[m] = float(np.mean(np.abs(test.values - f["mean"].values)))
+            bt_rows.append({"unit": name, "model": f["model"].iloc[0], "train": f"{train.index.min()}–{train.index.max()}",
+                            "test": f"{test.index.min()}–{test.index.max()}", "mae_pp": scores[m],
+                            "test_inside_95pi": int(((test.values >= f["lower"].values) &
+                                                     (test.values <= f["upper"].values)).sum())})
+        bt_rows.append({"unit": name, "model": "naive (last value)", "train": f"{train.index.min()}–{train.index.max()}",
+                        "test": f"{test.index.min()}–{test.index.max()}", "mae_pp": scores["naive (last value)"],
+                        "test_inside_95pi": np.nan})
+        # (2) choose the model with the lowest back-test error (naive excluded: it gives no trend or interval)
+        chosen = min(("linear", "ets", "arima"), key=lambda m: scores[m])
+        horizon = FORECAST_END - int(s.index.max())
+        for m in ("linear", "ets", "arima"):          # robustness: every model's 2030 value
+            fm = fit_forecast(s, m, horizon).loc[FORECAST_END]
+            all_rows.append({"unit": name, "model": fm["model"], "forecast_2030": fm["mean"],
+                             "pi95_low_2030": fm["lower"], "pi95_high_2030": fm["upper"],
+                             "low_above_last_value": bool(fm["lower"] > float(s.iloc[-1]))})
+        f = fit_forecast(s, chosen, horizon)
+        last = float(s.iloc[-1])
+        r = f.loc[FORECAST_END]
+        fc_rows.append({"unit": name, "fit_window": f"{s.index.min()}–{s.index.max()}", "chosen_model": r["model"],
+                        "backtest_mae_pp": scores[chosen], "naive_mae_pp": scores["naive (last value)"],
+                        "last_year": int(s.index.max()), "last_value": last, "forecast_2030": r["mean"],
+                        "pi95_low_2030": r["lower"], "pi95_high_2030": r["upper"],
+                        "beats_naive_in_backtest": scores[chosen] < scores["naive (last value)"],
+                        "rise_with_95pct_confidence": bool(r["lower"] > last),
+                        "fall_with_95pct_confidence": bool(r["upper"] < last)})
+        paths.append(f.assign(unit=name).reset_index(names="year"))
+    bt = pd.DataFrame(bt_rows)
+    fc = pd.DataFrame(fc_rows)
+    save_table(bt, "11_I5_H5d_forecast_backtest")
+    save_table(fc, "11_I5_H5d_forecast_2030")
+    save_table(pd.concat(paths, ignore_index=True), "11_I5_H5d_forecast_paths")
+    allm = pd.DataFrame(all_rows)
+    save_table(allm, "11_I5_H5d_forecast_all_models")
+    wa = allm[allm["unit"] == "World (FAO)"]
+
+    # A projected rise counts only if the trend model also beat a no-change forecast in the back-test;
+    # otherwise the recent years have flattened and extending the old trend is not supported.
+    fc["rise_credible"] = fc["rise_with_95pct_confidence"] & fc["beats_naive_in_backtest"]
+    fc.to_csv(RES / "11_I5_H5d_forecast_2030.csv", index=False, float_format="%.6g")
+    w, s_ = fc.iloc[0], fc.iloc[2]
+    rising = fc[fc["rise_credible"]]["unit"].tolist()
+    flat = fc[~fc["beats_naive_in_backtest"]]["unit"].tolist()
+    reject = bool(w["rise_credible"])
+    decide("H5d (iteration 5: forecast to 2030)",
+           "On current trends, will the share of overexploited stocks in 2030 be higher than its latest value?",
+           f"World (FAO, {w['chosen_model']}): {w['last_value']:.1f}% in {w['last_year']} → {w['forecast_2030']:.1f}% in "
+           f"2030 [95% PI {w['pi95_low_2030']:.1f}–{w['pi95_high_2030']:.1f}]; SEA (SAU, {s_['chosen_model']}): "
+           f"{s_['last_value']:.1f}% → {s_['forecast_2030']:.1f}% [{s_['pi95_low_2030']:.1f}–{s_['pi95_high_2030']:.1f}]; "
+           f"world 2030 lower bound above {w['last_value']:.1f}% in {int(wa['low_above_last_value'].sum())} of 3 models ("
+           + ", ".join(f"{r['model']} {r['pi95_low_2030']:.1f}" for _, r in wa.iterrows()) + "); "
+           f"rise with 95% confidence AND trend validated in the back-test: {', '.join(rising) or 'none'}; a no-change "
+           f"forecast beat every trend model in: {', '.join(flat) or 'none'}",
+           reject,
+           "Model per series chosen by a 5-year back-test (linear trend on logit, damped-trend ETS, ARIMA with drift); "
+           "the logit keeps forecasts within 0–100%. A forecast extends past trends, so it assumes no change in "
+           "management; it shows the distance from the SDG target, not a prediction of policy. Where the no-change "
+           "forecast wins the back-test (most Sea Around Us series flattened in 2015–19), the projected rise is not "
+           "supported and the honest reading is 'no improvement', not 'further rise'.",
+           verdict=None if reject else
+           ("Fail to reject H0 for the world (2030 interval includes today's level)" +
+            (f"; rise projected with 95% confidence in {', '.join(rising)}" if rising else "")))
+
+    # Figure: small multiples, history + forecast mean + 95% PI to 2030
+    fig, axes = plt.subplots(2, 4, figsize=(16, 7.6), sharex=True)
+    for ax, (name, s) in zip(axes.flat, units):
+        s = s.loc[FORECAST_FROM:].dropna()
+        f = pd.concat(paths)[lambda d: d["unit"] == name].set_index("year")
+        r = fc[fc["unit"] == name].iloc[0]
+        c = name.split(" (")[0]
+        col = v.COUNTRY_COLOR.get(c, v.SERIES[0] if c == "SEA" else v.INK_2)
+        ax.plot(s.index, s.values, color=v.INK, lw=1.6)
+        xs = np.r_[s.index[-1], f.index]
+        ax.fill_between(xs, np.r_[s.iloc[-1], f["lower"]], np.r_[s.iloc[-1], f["upper"]], color=col, alpha=0.18, lw=0)
+        ax.plot(xs, np.r_[s.iloc[-1], f["mean"]], color=col, lw=2, ls=(0, (4, 2)))
+        ax.scatter([FORECAST_END], [r["forecast_2030"]], s=36, color=col, edgecolor=v.SURFACE, lw=1, zorder=4)
+        ax.axhline(r["last_value"], color=v.AXIS, lw=0.8, ls=(0, (2, 2)))
+        ax.set_title(f"{name}: {r['last_value']:.0f}% → {r['forecast_2030']:.0f}% "
+                     f"[{r['pi95_low_2030']:.0f}–{r['pi95_high_2030']:.0f}]", fontsize=9.2)
+        if not r["beats_naive_in_backtest"]:
+            ax.text(0.02, 0.9, "trend not validated:\nno-change forecast won back-test", transform=ax.transAxes,
+                    fontsize=7.8, color=v.INK_2, va="top")
+        ax.text(0.02, 0.04, r["chosen_model"].replace("arima", "ARIMA").replace("ets", "damped ETS")
+                .replace("linear", "linear trend"), transform=ax.transAxes, fontsize=7.8, color=v.MUTED)
+        ax.set_ylim(0, max(80, float(f["upper"].max()) + 5))
+    for ax in axes[:, 0]:
+        ax.set_ylabel("% of stocks overexploited")
+    for ax in axes[1]:
+        ax.set_xticks([1990, 2000, 2010, 2020, 2030])
+    v.suptitle(fig, "Iteration 5 · H5d — " + ("On current trends, overexploitation will be higher in 2030"
+                                              if reject else "Forecast to the SDG deadline (2030): no reversal in sight"),
+               f"Solid = data since 1990; dashed = forecast, shaded = 95% prediction interval; dotted = latest value. "
+               f"A rise is supported (interval above today and trend validated) for: {', '.join(rising) or 'none'}. "
+               "Linear-trend forecasts follow the fitted line, so they can start away from the last value (Thailand)")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I5.04_h5d_forecast_2030", "FAO via OWID; Sea Around Us")
+
+
 # =========================================================================== #
 # Summary across iterations — every driver, one common method (report figure)
 # =========================================================================== #
@@ -2420,7 +2591,7 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             "i4_data": section_i4_data, "i4_h4a": section_i4_h4a, "i4_h4b": section_i4_h4b,
             "i4_h4c": section_i4_h4c, "i4_descriptive": section_i4_descriptive,
             # iteration 5: pooled panel, stock rebuilding, Fishing-in-Balance (new hypothesis H5)
-            "i5_h5a": section_i5_h5a, "i5_h5b": section_i5_h5b, "i5_h5c": section_i5_h5c,
+            "i5_h5a": section_i5_h5a, "i5_h5b": section_i5_h5b, "i5_h5c": section_i5_h5c, "i5_h5d": section_i5_h5d,
             # summary across iterations (report figure S.01)
             "summary": section_summary,
             "diagnostics": section_diagnostics}
