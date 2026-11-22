@@ -20,9 +20,9 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 | Report section (weight) | What we produce | Where in this repo |
 |---|---|---|
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
-| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), `notebooks/01_*` |
+| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`1-statistical-tests/`](1-statistical-tests/) §A (summary stats, outliers, missing-value map), `notebooks/01_*` |
 | EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`0-visualisation/`](0-visualisation/) |
-| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests** | [§4](#4-analysis-pipeline), `notebooks/03_*` |
+| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`1-statistical-tests/`](1-statistical-tests/) §B–E, `notebooks/03_*` |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
 | Conclusion (5%) | Direct answer to each hypothesis + SDG 14.4 relevance | [Findings](#findings-so-far) |
 | Code quality & references (5%) | Commented, reproducible code; all sources cited | `src/`, `requirements.txt`, [§3](#3-datasets) |
@@ -210,6 +210,12 @@ sdg14-overfishing-analysis/
 │   ├── visualise.py     ← creates every exploratory figure from data/raw/
 │   ├── README.md        ← figure gallery with descriptions
 │   └── figures/         ← 34 PNGs in 5 sections (global, sea_owid, sea_sau, validation, integrity)
+├── 1-statistical-tests/
+│   ├── stat_tests.py    ← course methods: EDA profiling, t-test/ANOVA vs non-parametric, rank-sum,
+│   │                      chi-square, k-means + hierarchical clustering
+│   ├── README.md        ← method ↔ course-topic map, results tables and interpretation
+│   ├── results/         ← one CSV per test + test_summary.csv
+│   └── figures/         ← 8 PNGs in 5 sections (A profile … E clustering)
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
@@ -237,6 +243,8 @@ pip install -r requirements.txt
 python src/download_data.py
 # regenerate all exploratory figures:
 python 0-visualisation/visualise.py
+# run the course-method statistical tests (tables + figures):
+python 1-statistical-tests/stat_tests.py
 jupyter lab
 ```
 
@@ -249,7 +257,8 @@ jupyter lab
 | Repo & plan set up | — | ✅ Done | `README.md` |
 | Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
 | Download alternative sources for validation | 1–2 | ✅ Done | `data/raw/validation/` |
-| Clean global datasets | 1 | ⬜ Not started | — |
+| Clean global datasets | 1 | 🟡 Profiling done (descriptives, IQR outliers, missing-value map); cleaning to `data/processed/` pending | `1-statistical-tests/` §A |
+| Course-method tests: assumption checks, t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square, k-means + hierarchical clustering | 1–2 | ✅ Done | `1-statistical-tests/stat_tests.py` |
 | Validate main data vs alternative sources | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/4_validation/` |
 | Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
 | Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | 🟡 Visual checks done, formal tests pending | `0-visualisation/figures/5_integrity/` |
@@ -266,13 +275,18 @@ jupyter lab
 
 ### Findings so far
 
-_Exploratory only — formal tests pending. See [`0-visualisation/`](0-visualisation/)._
+_Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method tests: [`1-statistical-tests/`](1-statistical-tests/). Trend/CCF tests (Mann-Kendall, ADF, CCF) still pending._
 
 - **World:** % of stocks overexploited rose from ~10% (1974) to 35.5% (2021); the fitted slope is +0.55 pp/yr before 2015 and +0.48 pp/yr after — little sign of SDG-era improvement (fig 1.01).
 - **Catch vs overexploitation:** world wild catch plateaued at ~90–95 Mt from the mid-1990s while overexploitation kept rising (figs 1.03–1.04).
 - **ACF:** both series are strongly autocorrelated in levels and close to white noise after differencing → correlation tests must use differenced series (fig 1.05).
 - **SEA:** FAO Area 71 (South China Sea etc.) went from ~6% to 47% overexploited between 2004 and 2021, the largest rise of any FAO area (fig 1.07). In Sea Around Us data, ~50% of stocks in most SEA EEZs are collapsed or over-exploited by 2019, tracking or exceeding the world level; Vietnam is the exception (~20%) (figs 3.01–3.03).
 - **Validation:** OWID matches the UN SDG database exactly; FAO and Sea Around Us agree on the long-run trend but Sea Around Us shows a steeper rise after 2000 (Bland-Altman bias −4 pp, widening) (figs 4.01–4.03).
+- **Missing values:** no data loss — the only gaps are reporting cycles (FAO areas 71/57 assessed ~every 2 years, SDG 14.7.1 published every 2 years); 5 FAO world years look linearly interpolated (fig A.01).
+- **Test choice:** normality fails for most series (Shapiro-Wilk), so non-parametric tests are used. FAO is systematically 4.1 pp below Sea Around Us (Wilcoxon p < 0.001, r = −0.58). Countries' yearly MTL changes do not differ (Kruskal-Wallis p = 0.32); a plain ANOVA would have wrongly said they do (p = 0.033, unequal variances) (fig B.01).
+- **SDG effect:** no indicator changed significantly after 2015 (rank-sum / Welch, all p ≥ 0.22); the world rise looks slower (median +1.1 → +0.5 pp/yr) but 6 post-2015 years are too few (fig C.01).
+- **Chi-square:** SEA overexploitation class depends strongly on period (Cramér's V = 0.68; 28% of EEZ-years ≥ 50% overexploited in 2000–19 vs 0% before 1980) and on country in 2010–19 (V = 0.51; Indonesia and Thailand highest, Vietnam lowest) (fig D.01). Chi-square rejects Benford only because N is huge — MAD confirms conformity (fig D.02).
+- **Clustering:** globally, Area 71 (SEA) sits with the lower-level FAO areas but has one of the steepest trends (+1.6 pp/yr). Among SEA EEZs, Vietnam is an outlier; the rest form 3 groups that cut across borders — Indonesia (fast-rising overexploitation, little unreported catch), Malaysia Peninsula/Sabah + Philippines (high unreported share), Sarawak + Thailand (most overexploited, catch ~40% below peak) (figs E.01–E.03).
 - **Data integrity (SEA5):** no sign of fabricated catch figures — leading digits of reported catch follow Benford's law closely for every country (MAD 0.0007–0.0028, Nigrini "close conformity"), and no country's fisheries value-vs-catch is a peer outlier (|z| ≤ 1.4). The real gap is **under-reporting**: Sea Around Us estimates 45% (Philippines), 39% (Malaysia), 28% (Vietnam), 24% (Thailand) and 10% (Indonesia) of 2015–19 catch is missing from official statistics. Mirror trade: partners record clearly more fish imports than the country reports exporting for the **Philippines** (median +13% in 2015–23; +61–64% in 2011–12, +31–37% in 2018–19) and **Malaysia** since 2019 (+10% to +22%) — consistent with under-reported exports. The Philippines also has the highest unreported-catch share. Vietnam and Thailand show the opposite (partners record 6–11% less), which points to re-exports or transshipment rather than hidden exports (figs 5.01–5.06).
 
 ---
@@ -283,6 +297,7 @@ _Exploratory only — formal tests pending. See [`0-visualisation/`](0-visualisa
 |------|--------|--------|
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
+| 2026-11-22 | Salah | Added `1-statistical-tests/` (stat_tests.py + 8 figures + 13 result tables + README): EDA profiling and missing-value map, Shapiro/Levene-gated t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square independence with Cramér's V, k-means + hierarchical clustering; added scikit-learn to requirements |
 | 2026-11-22 | Salah | Filled Philippines 2014–2023 Comtrade mirror-trade data (previously blocked by the API rate limit); re-rendered figs 5.04 and 5.06 |
 | 2026-11-22 | Salah | Added data-integrity sources recommended for validation (SDG 14.7.1 + World Bank GDP/capture, UN Comtrade mirror trade, Benford digit counts from SAU records), `download_data.py --only integrity`, and visualisation section 5 (6 figures) |
 | 2026-11-21 | Salah | Added `0-visualisation/` (visualise.py + 28 figures + gallery README); fixed domestic/foreign fleet labels in `sau/catch_summary/` for the 9 split EEZs (and in `download_data.py`); first exploratory findings |

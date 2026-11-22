@@ -1,0 +1,12 @@
+comparison,n,shapiro_p_differences,lag1_autocorr_differences,test,statistic,p_value,effect_size,chosen
+"B1 FAO vs SAU, world % overexploited (paired years)",46,0.0041,0.9398,Paired t-test,-4.0562,0.0002,Cohen's dz = -0.60,False
+"B1 FAO vs SAU, world % overexploited (paired years)",46,0.0041,0.9398,Wilcoxon signed-rank,229.0,0.0005,rank-biserial r = -0.58,True
+"B2 Yearly change in mean trophic level, 5 countries",345,,,Levene (median-centred),11.3031,0.0,,False
+"B2 Yearly change in mean trophic level, 5 countries",345,,,One-way ANOVA,2.6599,0.0327,eta² = 0.030,False
+"B2 Yearly change in mean trophic level, 5 countries",345,,,Welch ANOVA,1.195,0.3149,eta² = 0.030,False
+"B2 Yearly change in mean trophic level, 5 countries",345,,,Kruskal-Wallis,4.697,0.3198,epsilon² = 0.014,True
+B2 group normality: Malaysia,69,0.0,0.0001,Shapiro-Wilk,0.8764,0.0,,False
+B2 group normality: Indonesia,69,0.0605,-0.1124,Shapiro-Wilk,0.9664,0.0605,,False
+B2 group normality: Thailand,69,0.0,0.1231,Shapiro-Wilk,0.8907,0.0,,False
+B2 group normality: Vietnam,69,0.0052,-0.0646,Shapiro-Wilk,0.9465,0.0052,,False
+B2 group normality: Philippines,69,0.0,-0.3505,Shapiro-Wilk,0.8921,0.0,,False

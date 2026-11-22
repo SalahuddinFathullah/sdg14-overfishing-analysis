@@ -1,0 +1,16 @@
+fao_area,mean_pct_overexploited,trend_pp_per_year,volatility_sd_resid,latest_pct_overexploited,kmeans_cluster,hierarchical_cluster
+Eastern Central Atlantic,45.589,0.284,9.4426,52.6,1,1
+Eastern Central Pacific,14.823,0.3582,6.2596,30.8,2,2
+Eastern Indian Ocean,22.26,0.9615,5.5785,27.3,2,2
+Mediterranean and Black Sea,52.543,2.0135,4.7899,64.9,1,2
+Northeast Atlantic,25.539,-0.4287,5.192,24.2,2,2
+Northeast Pacific,16.987,-1.0912,6.064,7.3,2,2
+Northwest Atlantic,28.741,1.3231,6.6821,36.4,2,2
+Northwest Pacific,23.563,1.8391,5.3877,37.0,2,2
+Southeast Atlantic,42.785,-0.852,6.028,42.0,1,2
+Southeast Pacific,44.906,1.7536,10.2734,53.6,1,1
+Southwest Atlantic,46.926,0.4569,8.7244,42.0,1,1
+Southwest Pacific,17.103,0.2113,5.086,14.5,2,2
+Western Central Atlantic,38.6,0.3042,7.2094,37.9,1,1
+Western Central Pacific,19.276,1.6109,7.4187,47.1,2,2
+Western Indian Ocean,29.395,0.9282,3.7974,37.0,2,2

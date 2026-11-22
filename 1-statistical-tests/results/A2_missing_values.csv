@@ -1,0 +1,26 @@
+dataset,entity,first_year,last_year,years_in_span,observed,missing,pct_missing,flagged_interpolated,missing_years
+FAO stock status,World,1974,2021,48,48,0,0.0,5,
+FAO stock status,Area 71 W. Central Pacific,2004,2021,18,10,8,44.4444,0,2005 2007 2010 2012 2014 2016 2018 2020
+FAO stock status,Area 57 E. Indian Ocean,2004,2021,18,10,8,44.4444,0,2005 2007 2010 2012 2014 2016 2018 2020
+SAU stock status,World,1950,2019,70,70,0,0.0,0,
+SAU stock status,Malaysia,1950,2019,70,70,0,0.0,0,
+SAU stock status,Indonesia,1950,2019,70,70,0,0.0,0,
+SAU stock status,Thailand,1950,2019,70,70,0,0.0,0,
+SAU stock status,Vietnam,1950,2019,70,70,0,0.0,0,
+SAU stock status,Philippines,1950,2019,70,70,0,0.0,0,
+FAO capture,World,1960,2024,65,65,0,0.0,0,
+FAO capture,Malaysia,1960,2024,65,65,0,0.0,0,
+FAO capture,Indonesia,1960,2024,65,65,0,0.0,0,
+FAO capture,Thailand,1960,2024,65,65,0,0.0,0,
+FAO capture,Vietnam,1960,2024,65,65,0,0.0,0,
+FAO capture,Philippines,1960,2024,65,65,0,0.0,0,
+SDG 14.7.1 fisheries % GDP,Malaysia,2011,2023,13,7,6,46.1538,0,2012 2014 2016 2018 2020 2022
+SDG 14.7.1 fisheries % GDP,Indonesia,2011,2023,13,7,6,46.1538,0,2012 2014 2016 2018 2020 2022
+SDG 14.7.1 fisheries % GDP,Thailand,2011,2021,11,6,5,45.4545,0,2012 2014 2016 2018 2020
+SDG 14.7.1 fisheries % GDP,Vietnam,2011,2023,13,7,6,46.1538,0,2012 2014 2016 2018 2020 2022
+SDG 14.7.1 fisheries % GDP,Philippines,2011,2023,13,7,6,46.1538,0,2012 2014 2016 2018 2020 2022
+Comtrade mirror trade,Malaysia,2011,2023,13,13,0,0.0,0,
+Comtrade mirror trade,Indonesia,2011,2023,13,13,0,0.0,0,
+Comtrade mirror trade,Thailand,2011,2023,13,13,0,0.0,0,
+Comtrade mirror trade,Vietnam,2011,2023,13,13,0,0.0,0,
+Comtrade mirror trade,Philippines,2011,2023,13,13,0,0.0,0,

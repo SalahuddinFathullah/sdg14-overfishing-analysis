@@ -1,0 +1,7 @@
+country,observed,observed,expected,expected,adjusted_residual,adjusted_residual
+,< 50% overexploited,≥ 50% overexploited,< 50% overexploited,≥ 50% overexploited,< 50% overexploited,≥ 50% overexploited
+Malaysia,28,12,21.8182,18.1818,2.4607,-2.4607
+Indonesia,9,21,16.3636,13.6364,-3.166,3.166
+Thailand,5,15,10.9091,9.0909,-2.9337,2.9337
+Vietnam,10,0,5.4545,4.5455,3.0277,-3.0277
+Philippines,8,2,5.4545,4.5455,1.6955,-1.6955

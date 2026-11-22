@@ -1,0 +1,16 @@
+section,test,data,n,statistic,p_value,effect_size,conclusion
+A,Descriptive statistics + IQR (Tukey) outliers,23 series,23 series,—,,"7 series with level outliers, 22 with outlier yearly changes","Level outliers mark regime shifts (e.g. Indonesia 2008–19); many SAU series change in steps, so the IQR of yearly changes is narrow and flags many years — read with the figures"
+A,Missing-value analysis,"24 series, 1950–2024",24 series,—,,7 series have gaps; 5 FAO world years look interpolated,"Gaps come from assessment/reporting cycles (FAO areas, SDG 14.7.1 every 2 yrs), not data loss"
+A,Frequency distribution table,"SEA EEZ-years, % overexploited class x period",770,—,,see A3 table,Input to chi-square test D1
+B,Shapiro-Wilk on differences (p = 0.004) -> Wilcoxon signed-rank,"World % overexploited, FAO vs SAU",46,229.00,0.00045202134995747656,"mean diff -4.1 pp, r = -0.58",Systematic difference between the two sources
+B,Shapiro-Wilk per group + Levene (p = 0.000) -> Kruskal-Wallis,"Yearly change in MTL, 5 SEA countries",345,4.70,0.31982651999913114,"eta² = 0.030, epsilon² = 0.014",No difference between countries' yearly MTL changes
+C,"Welch t-test, before vs after 2015",World % stocks overexploited (FAO),10 vs 6,t = -0.67,0.5155771290808476,rank-biserial r = -0.40,"No significant change after 2015 (post median smaller, few post-2015 years)"
+C,"Welch t-test, before vs after 2015",World capture production (FAO),10 vs 9,t = 0.12,0.9031366851129214,rank-biserial r = +0.02,"No significant change after 2015 (post median larger, few post-2015 years)"
+C,"Wilcoxon rank-sum (Mann-Whitney U), before vs after 2015",SEA EEZs % stocks overexploited (SAU),110 vs 44,U = 2114,0.22098988865252478,rank-biserial r = -0.13,No significant change after 2015 (post median smaller)
+C,"Wilcoxon rank-sum (Mann-Whitney U), before vs after 2015",SEA EEZs mean trophic level (SAU),110 vs 44,U = 2376,0.8558244866543974,rank-biserial r = -0.02,No significant change after 2015 (post median larger)
+D,Chi-square independence: overexploitation class x period,"11 SEA EEZs, 1950–2019",770,χ²(6) = 704.8,5.569096994710546e-149,Cramér's V = 0.68,Class depends on period: EEZs moved into higher overexploitation classes over time
+D,Chi-square independence: ≥50% overexploited x country (2010–19),11 SEA EEZs,110,χ²(4) = 29.1,7.350406119221636e-06,Cramér's V = 0.51,Overexploitation level depends on country
+D,"Chi-square: leading digit x reporting status, and goodness-of-fit vs Benford","SAU catch records, 5 countries","1,438,078",GOF p < 0.05 for 4/5,,Cramér's V 0.006–0.019; MAD 0.0007–0.0028,Large N makes chi-square flag trivial deviations; tiny V and MAD → digits conform
+E,K-means + Ward hierarchical clustering (k = 2 by silhouette),"15 FAO fishing areas, 2004–2021",15,silhouette = 0.33,,ARI k-means vs hierarchical = 0.51,Areas group by overexploitation level and trend; see E1 table for members
+E,"Step 1: k-means + Ward clustering, all 11 EEZs (k = 2 by silhouette)","11 SEA EEZs, 6 indicators",11,silhouette = 0.41,,ARI k-means vs hierarchical = 1.00,Single-member cluster → outlier: Vietnam
+E,Step 2: k-means + Ward clustering without the outlier (k = 3 by silhouette),"10 SEA EEZs, 6 indicators",10,silhouette = 0.28,,ARI k-means vs hierarchical = 0.66,Weak-to-moderate structure (silhouette < 0.5); see E3 cluster profiles

@@ -1,0 +1,12 @@
+eez,pct_overexploited_2015_19,overexploited_trend_pp_per_yr_1990_2019,mtl_trend_per_decade_1990_2019,unreported_share_2015_19,foreign_fleet_share_2015_19,catch_vs_peak_pct,step1_kmeans,step1_hierarchical,step2_hierarchical,final_cluster
+Indonesia – Eastern,57.468,1.8286,0.0124,8.1499,2.1379,-10.7026,2,1,1.0,1
+Malaysia – Peninsula West,36.986,0.5347,-0.0141,33.7374,0.7979,-7.1234,2,1,2.0,2
+Malaysia – Peninsula East,45.256,0.7026,0.0065,28.9947,0.9016,-17.3634,2,1,2.0,2
+Malaysia – Sabah,49.216,1.8042,0.019,62.6656,0.5013,-16.9654,2,1,3.0,2
+Malaysia – Sarawak,55.65,1.8941,0.089,26.4953,2.6245,-48.065,2,1,3.0,3
+Philippines,48.422,0.704,-0.06,45.5232,0.067,-20.36,2,1,2.0,2
+Vietnam,14.122,-0.4411,-0.0012,28.3576,10.7353,0.0,1,2,,0
+Indonesia – Central,51.55,2.2724,0.0238,11.8083,4.9461,0.0,2,1,1.0,1
+Indonesia – Indian Ocean,44.112,1.7288,0.0252,9.9953,3.5544,0.0,2,1,1.0,1
+Thailand – Andaman Sea,57.754,1.8794,0.0227,28.1448,0.0032,-33.783,2,1,3.0,3
+Thailand – Gulf of Thailand,50.766,0.9125,0.0104,22.8671,0.0581,-38.5473,2,1,3.0,3
