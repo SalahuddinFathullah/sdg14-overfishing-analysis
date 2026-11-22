@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3), in 3 iterations
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4), in 4 iterations
 =========================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -43,6 +43,18 @@ Runs the analysis pipeline in README §4 on the raw data:
                      without trend, and jointly with effort), CCF, Granger
     i3_h3b           SEA: SST trends (Mann-Kendall), CCF of Δ SST vs Δ % overexploited,
                      Δ MTL and Δlog catch per EEZ group, Holm-corrected
+
+  Iteration 4 (shipping and built structures, new hypothesis H4):
+    i4_data          driver coverage, container-series splice check, ADF + KPSS
+    i4_h4a           global: container traffic, seaborne trade, dams, aquaculture vs world
+                     % overexploited — levels vs linear- and quadratic-detrended correlation,
+                     cointegration (≥ 30 years), CCF of growth rates (lags 0 to n/3)
+    i4_h4b           SEA: the same drivers + liner shipping connectivity, CCF vs Δ% overexploited
+                     and Δ MTL per country, Holm within row and across all tests
+    i4_h4c           artificial islands: difference-in-differences, Spratly-facing EEZs vs other
+                     SEA EEZs around China's 2014 reclamation, randomization inference, placebo
+    i4_descriptive   offshore oil & gas platforms (2017–23) and wind turbines (2016–21): too
+                     short to test, summarised and plotted
 
     python 2-hypothesis-tests/hypothesis_tests.py               # everything
     python 2-hypothesis-tests/hypothesis_tests.py --only h1a h1b
@@ -255,14 +267,15 @@ def ols_hac(y: np.ndarray, X: np.ndarray, label: str):
     return fit, hac
 
 
-def ccf_table(x: pd.Series, y: pd.Series, label: str) -> pd.DataFrame:
+def ccf_table(x: pd.Series, y: pd.Series, label: str, max_lag: int = MAX_LAG) -> pd.DataFrame:
     """
-    Cross-correlation r_k = corr(x_t, y_{t+k}) for k = 0..MAX_LAG (x leads y by k years),
-    Pearson p per lag, Holm-adjusted across the 11 lags, and the ±1.96/√n white-noise band.
+    Cross-correlation r_k = corr(x_t, y_{t+k}) for k = 0..max_lag (x leads y by k years),
+    Pearson p per lag, Holm-adjusted across the lags, and the ±1.96/√n white-noise band.
+    `max_lag` is lowered for short series (iteration 4) so every lag keeps ≥ 2/3 of the years.
     """
     d = pd.concat([x.rename("x"), y.rename("y")], axis=1).dropna()
     rows = []
-    for k in range(MAX_LAG + 1):
+    for k in range(max_lag + 1):
         a, b = d["x"].iloc[: len(d) - k].to_numpy(), d["y"].iloc[k:].to_numpy()
         r, p = stats.pearsonr(a, b)
         rho = stats.spearmanr(a, b)[0]
@@ -1276,6 +1289,582 @@ def section_i3_h3b() -> None:
 
 
 # =========================================================================== #
+# Iteration 4 — human use of the sea: shipping and built structures (new hypothesis H4)
+# =========================================================================== #
+# Iterations 1–3 found no driver whose changes line up with overexploitation beyond a
+# shared upward trend. Iteration 4 tests two families of human activity that grew over
+# the same decades and could degrade fish stocks through habitat loss rather than catch:
+#   shipping   container port throughput (TEU), seaborne trade volume, liner connectivity
+#   structures dams/reservoirs (river flow, sediment and nutrient supply to the coast),
+#              aquaculture (habitat conversion, wild-caught feed), offshore oil & gas
+#              platforms, offshore wind farms, artificial islands / military outposts
+# Same three-step logic as iteration 3: (1) levels vs detrended association,
+# (2) cointegration where the series are long enough (n ≥ 30), (3) CCF of growth rates.
+# Artificial islands have no annual series, only a dated event (China's Spratly
+# reclamation, 2013–2016), so they are tested with a difference-in-differences design.
+# Offshore platforms (2017–2023) and wind turbines (2016–2021) overlap the fisheries
+# series by 3–4 years, too few for any test; they are shown descriptively.
+
+HUMAN = VAL / "human_use"
+ISO3 = {"MYS": "Malaysia", "IDN": "Indonesia", "THA": "Thailand", "VNM": "Vietnam", "PHL": "Philippines",
+        "WLD": "World"}
+SPLICE: list[dict] = []        # container-series splice check -> 9_I4_container_splice.csv
+EVENT_YEAR = 2014              # China's Spratly reclamation: Dec 2013 – 2016 (bulk in 2014–15)
+SCS_EEZ = [704, 608, 461, 463]           # Vietnam, Philippines, Sabah, Sarawak: face the Spratlys
+OTHER_EEZ = [459, 938, 361, 956, 957]    # Malacca Strait, Indonesian Indian Ocean & east, Thai seas
+EDGE_EEZ = [460, 937]                    # Peninsula East, Indonesia Central: SCS edge, not Spratlys
+
+
+def container_teu() -> pd.DataFrame:
+    """
+    Container port throughput (TEU) per region, 2000–2024. The current WDI series starts in
+    2010; the WDI December-2020 archive covers 2000–2019. Archive years 2000–2009 are rescaled
+    by the median current/archive ratio over the 2010–2019 overlap so the joined series has no
+    level jump (the match is logged to SPLICE). SEA = sum of the 5 countries.
+    """
+    d = pd.read_csv(HUMAN / "wb_shipping.csv")
+    d = d[d["indicator"] == "IS.SHP.GOOD.TU"]
+    out = {}
+    SPLICE.clear()
+    for iso, g in d.groupby("iso3"):
+        a = g[g["source"] == "WDI_archive_202012"].set_index("year")["value"]
+        c = g[g["source"] == "WDI_current"].set_index("year")["value"]
+        ratio = (c / a).dropna()
+        SPLICE.append({"region": ISO3[iso], "overlap_years": f"{ratio.index.min()}–{ratio.index.max()}",
+                       "median_ratio_current_to_archive": ratio.median(), "min_ratio": ratio.min(),
+                       "max_ratio": ratio.max(),
+                       "growth_corr_overlap": np.corrcoef(np.log(a).diff().loc[2011:2019],
+                                                          np.log(c).diff().loc[2011:2019])[0, 1]})
+        out[ISO3[iso]] = pd.concat([a.loc[:2009] * ratio.median(), c]).sort_index()
+    df = pd.DataFrame(out)
+    df["SEA"] = df[SEA5].sum(axis=1, min_count=5)
+    return df
+
+
+def lsci() -> pd.DataFrame:
+    """UNCTAD liner shipping connectivity index (current WDI, 2006–2021; no world value). SEA = mean."""
+    d = pd.read_csv(HUMAN / "wb_shipping.csv")
+    d = d[(d["indicator"] == "IS.SHP.GCNW.XQ") & (d["source"] == "WDI_current")]
+    df = d.pivot(index="year", columns="iso3", values="value").rename(columns=ISO3)
+    df["SEA"] = df[SEA5].mean(axis=1)
+    return df
+
+
+def seaborne() -> pd.DataFrame:
+    """
+    UNCTAD seaborne trade volume (thousand t), 2000–2024. Countries: goods loaded + discharged
+    (total handled). World: goods loaded only (world loaded = world discharged). SEA = sum.
+    """
+    d = pd.read_csv(HUMAN / "unctad_seaborne_trade.csv")
+    tot = d.groupby(["iso3", "year"])["thousand_tonnes"].sum().unstack(0).rename(columns=ISO3)
+    tot["World"] = d[(d["iso3"] == "WLD") & (d["flow"] == "loaded")].set_index("year")["thousand_tonnes"]
+    tot["SEA"] = tot[SEA5].sum(axis=1, min_count=5)
+    return tot
+
+
+def dams(last: int = 2019) -> pd.DataFrame:
+    """
+    Cumulative number of dams with a known completion year (GDAT v1), 1900–`last`.
+    Decade-only years (e.g. '195') sit at the decade start. Undated dams (34% of GDAT, and
+    more than half in Indonesia, Thailand and Vietnam) cannot be placed and are excluded,
+    so the series is a lower bound; completions also thin out after ~2005 because the
+    database lags construction.
+    """
+    d = pd.read_csv(HUMAN / "gdat_dams_by_year.csv").dropna(subset=["year"])
+    d["year"] = d["year"].astype(int)
+    yrs = range(1900, last + 1)
+    out = {}
+    for reg, g in d.groupby("region"):
+        per_year = g.groupby("year")["n_dams"].sum()
+        before = per_year.loc[:1899].sum()
+        out[ISO3[reg]] = per_year.reindex(yrs, fill_value=0).cumsum() + before
+    df = pd.DataFrame(out)
+    df["SEA"] = df[SEA5].sum(axis=1)
+    return df
+
+
+def aquaculture() -> pd.DataFrame:
+    """Aquaculture production (t, all farmed aquatic animals), FAO via OWID, 1960–2024. SEA = sum."""
+    o = v.owid("aquaculture-farmed-fish-production")
+    df = o[o["Entity"].isin(SEA5 + ["World"])].pivot(index="Year", columns="Entity",
+                                                     values="Aquaculture production (metric tons)")
+    df["SEA"] = df[SEA5].sum(axis=1, min_count=5)
+    return df
+
+
+def i4_drivers(unit: str) -> list[tuple[str, pd.Series, bool]]:
+    """(name, level series, log?) for one unit ('World', 'SEA' or a country). LSCI has no world value."""
+    out = [("Container port traffic", container_teu()[unit].dropna(), True),
+           ("Seaborne trade volume", seaborne()[unit].dropna(), True)]
+    if unit != "World":
+        out.append(("Liner shipping connectivity", lsci()[unit].dropna(), False))
+    out += [("Dams completed (cumulative)", dams()[unit], True),
+            ("Aquaculture production", aquaculture()[unit].dropna(), True)]
+    return out
+
+
+def quad_detrended_corr(x: pd.Series, y: pd.Series) -> tuple[float, float]:
+    """
+    Spearman ρ of residuals after removing a quadratic trend from each series. Robustness check
+    for curved (S-shaped or saturating) series, where a straight-line detrend leaves curvature
+    that two unrelated series can share; a real link should keep its sign under both detrends.
+    """
+    d = pd.concat([x.rename("x"), y.rename("y")], axis=1).dropna()
+    t = d.index.to_numpy(float)
+    rx = d["x"] - np.polyval(np.polyfit(t, d["x"], 2), t)
+    ry = d["y"] - np.polyval(np.polyfit(t, d["y"], 2), t)
+    r = stats.spearmanr(rx, ry)
+    return float(r[0]), float(r[1])
+
+
+def i4_consistent(df: pd.DataFrame) -> pd.Series:
+    """Row flag: linear- and quadratic-detrended ρ both Holm-significant and of the same sign."""
+    return ((df["p_detrended_holm"] < ALPHA) & (df["p_quad_holm"] < ALPHA)
+            & (np.sign(df["spearman_detrended"]) == np.sign(df["spearman_quad_detrended"])))
+
+
+def i4_change(s: pd.Series, log: bool) -> pd.Series:
+    """Growth rate (Δlog) for volumes, first difference for indices."""
+    return (np.log(s) if log else s).diff().dropna()
+
+
+def i4_max_lag(n: int) -> int:
+    """Short series: test lags up to n/3 so each lag keeps at least 2/3 of the years."""
+    return int(min(MAX_LAG, max(2, n // 3)))
+
+
+def section_i4_data() -> None:
+    print("Iteration 4: driver coverage, container splice, stationarity")
+    container_teu()
+    save_table(pd.DataFrame(SPLICE), "9_I4_container_splice")
+    rows, st_rows = [], []
+    for unit in ["World", "SEA"] + SEA5:
+        for name, s, log in i4_drivers(unit):
+            s = s[s > 0] if log else s
+            rows.append({"unit": unit, "driver": name, "first": int(s.index.min()), "last": int(s.index.max()),
+                         "n_years": len(s), "growth_per_year_pct": (np.exp(np.polyfit(s.index, np.log(s), 1)[0]) - 1) * 100
+                         if log else np.nan,
+                         "trend_per_year": np.nan if log else np.polyfit(s.index, s.values, 1)[0]})
+            if unit in ("World", "SEA"):
+                x = np.log(s) if log else s
+                label, d, a, k = make_stationary(s, log)
+                st_rows.append({"series": f"{unit}: {name}", "n": len(s), "level_adf_p": adf_p(x, "ct"),
+                                "level_kpss_p": kpss_p(x, "ct"), "transformation_used": label,
+                                "transformed_adf_p": a, "transformed_kpss_p": k,
+                                "stationary_after": "yes" if a < ALPHA and k >= ALPHA
+                                else ("ADF yes, KPSS no" if a < ALPHA else "no")})
+    save_table(pd.DataFrame(rows), "9_I4_driver_coverage")
+    save_table(pd.DataFrame(st_rows), "9_I4_stationarity")
+
+
+def section_i4_h4a() -> None:
+    sec = "9_iteration4_human_use"
+    print("Iteration 4: H4a — global shipping and structures vs % overexploited")
+    responses = [("FAO % overexploited", st.world_fao()), ("SAU % overexploited", st.world_sau())]
+    drivers = i4_drivers("World")
+
+    # (1) shared trend vs beyond-trend association (Spearman on levels and on linear-trend residuals)
+    rows = []
+    for dn, x, log in drivers:
+        xl = np.log(x) if log else x
+        for rn, y in responses:
+            r_lv, p_lv, r_dt, p_dt, n = detrended_corr(xl, y)
+            r_q, p_q = quad_detrended_corr(xl, y)
+            rows.append({"driver": dn, "response": rn, "n_years": n, "spearman_levels": r_lv, "p_levels": p_lv,
+                         "spearman_detrended": r_dt, "p_detrended": p_dt,
+                         "spearman_quad_detrended": r_q, "p_quad_detrended": p_q})
+    trend = pd.DataFrame(rows)
+    trend["p_detrended_holm"] = holm(trend["p_detrended"])
+    trend["p_quad_holm"] = holm(trend["p_quad_detrended"])
+    trend["consistent_link"] = i4_consistent(trend)
+    save_table(trend, "9_I4_H4a_levels_vs_detrended")
+
+    # (2) long run: Engle-Granger cointegration, only where ≥ 30 common years
+    rows = []
+    for dn, x, log in drivers:
+        xl = np.log(x) if log else x
+        for rn, y in responses:
+            lv = pd.concat([y, xl], axis=1).dropna()
+            if len(lv) < 30:
+                rows.append({"response": rn, "driver": dn, "trend_term": "–", "years": f"{lv.index.min()}–{lv.index.max()}",
+                             "n": len(lv), "t_stat": np.nan, "p": np.nan, "note": "too short (< 30 years)"})
+                continue
+            for tr in ("c", "ct"):
+                t_c, p_c, _ = coint(lv.iloc[:, 0], lv.iloc[:, 1], trend=tr)
+                rows.append({"response": rn, "driver": dn, "trend_term": tr,
+                             "years": f"{lv.index.min()}–{lv.index.max()}", "n": len(lv), "t_stat": t_c, "p": p_c,
+                             "note": ""})
+    co = pd.DataFrame(rows)
+    save_table(co, "9_I4_H4a_cointegration")
+
+    # (3) short run: CCF of driver growth vs Δ response, Holm within pair and across all pairs
+    tabs = []
+    for dn, x, log in drivers:
+        dx = i4_change(x, log)
+        for rn, y in responses:
+            n = len(pd.concat([dx, y.diff()], axis=1).dropna())
+            t = ccf_table(dx, y.diff().dropna(), f"{'Δlog' if log else 'Δ'} {dn} -> Δ {rn}", i4_max_lag(n))
+            t.insert(0, "driver", dn)
+            t.insert(1, "response", rn)
+            tabs.append(t)
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    save_table(ccf, "9_I4_H4a_ccf")
+
+    # Decision: a driver counts only if the beyond-trend link is Holm-significant with one sign under BOTH
+    # linear and quadratic detrending, in BOTH sources (FAO and SAU), or if a year-to-year (CCF) link
+    # survives the all-test correction. Iteration 3 showed linear-detrended residuals of curved series
+    # can correlate by accident, so one source or one detrend order is not enough.
+    cons = trend[trend["consistent_link"]]
+    both = [d for d, g in cons.groupby("driver") if len(g) == 2 and g["spearman_detrended"].apply(np.sign).nunique() == 1]
+    sig_ccf = ccf[ccf["p_holm_all"] < ALPHA]
+    one = trend[trend["p_detrended_holm"] < ALPHA]
+    flips = one[~one["driver"].isin(both)]   # significant once, but not in both sources and both detrends
+    reject = bool(both) or len(sig_ccf) > 0
+    co_ok = co.dropna(subset=["p"])
+    co_txt = "; ".join(f"{r['driver']} × {r['response'].split()[0]} {r['trend_term']} p {fmt_p(r['p'])}"
+                       for _, r in co_ok.iterrows())
+    decide("H4a (iteration 4: shipping & structures, global)",
+           "Do shipping volume, dam building or aquaculture growth track world % stocks overexploited beyond "
+           "their shared upward trend?",
+           f"Levels ρ {trend['spearman_levels'].min():+.2f} to {trend['spearman_levels'].max():+.2f}; linear-detrended "
+           "ρ significant after Holm in "
+           + (", ".join(f"{r['driver']} × {r['response'].split()[0]} ({r['spearman_detrended']:+.2f}, quadratic "
+                        f"{r['spearman_quad_detrended']:+.2f})" for _, r in one.iterrows()) or "none")
+           + f"; consistent in both sources and both detrends: {', '.join(both) or 'none'}; cointegration: {co_txt}; "
+           f"CCF {len(sig_ccf)} of {len(ccf)} lag tests significant across all (min Holm p {fmt_p(ccf['p_holm_all'].min())})",
+           reject,
+           f"{len(flips)} of {len(one)} linear-detrended links either lose significance under a quadratic detrend, have "
+           "no significant counterpart in the other source, or flip sign between FAO and SAU (dams): they reflect "
+           "curvature, not co-movement. Shipping starts in 2000 (≤ 22 overlapping years), so its "
+           "power is low; GDAT completions are a lower bound that thins after ~2005 (database lag).",
+           verdict=None if reject else "Fail to reject H0 (shared trend only; no consistent link beyond it)")
+
+    # Figure: (1) drivers indexed, (2) levels vs detrended ρ dumbbell, (3) min Holm p per pair
+    fig = plt.figure(figsize=(16, 6.2))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.15, 1, 0.8], wspace=0.42)
+    a1, a2, a3 = (fig.add_subplot(gs[i]) for i in range(3))
+    for i, (dn, x, log) in enumerate(drivers):
+        s = x.loc[1990:]
+        base = s.loc[2000] if 2000 in s.index else s.iloc[0]
+        a1.plot(s.index, s / base * 100, color=v.SERIES[i], lw=1.8, label=dn)
+    a1.set_yscale("log")
+    a1.axhline(100, color=v.AXIS, lw=0.8)
+    a1.set_ylabel("Index, 2000 = 100 (log scale)")
+    a1.legend(loc="upper left", fontsize=8.5)
+    a1.set_title("1 · World drivers all rise, like % overexploited", fontsize=9.5)
+    labels = [f"{dn}\n× {rn.split()[0]}" for dn, _, _ in drivers for rn, _ in responses]
+    ypos = np.arange(len(trend))[::-1]
+    for yp, (_, r) in zip(ypos, trend.iterrows()):
+        a2.plot([r["spearman_levels"], r["spearman_detrended"]], [yp, yp], color=v.GRID, lw=2.5, zorder=1)
+        a2.scatter(r["spearman_levels"], yp, s=46, facecolor=v.SURFACE, edgecolor=v.INK_2, lw=1.4, zorder=3)
+        a2.scatter(r["spearman_detrended"], yp, s=52, zorder=4,
+                   color=v.SERIES[0] if r["p_detrended_holm"] < ALPHA else v.NEUTRAL, edgecolor=v.SURFACE, lw=1)
+        a2.scatter(r["spearman_quad_detrended"], yp, s=46, marker="D", zorder=4,
+                   color=v.SERIES[1] if r["p_quad_holm"] < ALPHA else v.NEUTRAL, edgecolor=v.SURFACE, lw=1)
+    a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_yticks(ypos, labels, fontsize=7.8)
+    a2.set_xlim(-1.05, 1.05)
+    a2.set_xlabel("Spearman ρ: ○ levels, ● linear detrend, ◆ quadratic detrend\n(coloured = Holm p < 0.05, grey = not)")
+    a2.grid(axis="y", visible=False)
+    a2.set_title("2 · Beyond the trend, signs flip with the detrend or the source", fontsize=9.5)
+    mins = ccf.groupby(["driver", "response"], sort=False)["p_holm"].min().reset_index()
+    a3.barh(np.arange(len(mins))[::-1], -np.log10(mins["p_holm"]),
+            color=[v.SERIES[0] if p < ALPHA else v.NEUTRAL for p in mins["p_holm"]], height=0.6)
+    a3.axvline(-np.log10(ALPHA), color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a3.set_yticks(np.arange(len(mins))[::-1], [""] * len(mins))
+    a3.set_xlabel("−log10(min Holm p) across lags")
+    a3.grid(axis="y", visible=False)
+    a3.text(-np.log10(ALPHA), len(mins) - 0.4, " p = 0.05", color=v.INK_2, fontsize=8, va="bottom")
+    a3.set_title("3 · Year-to-year changes (same rows; Holm within pair)", fontsize=9.5)
+    v.suptitle(fig, "Iteration 4 · H4a — Shipping, dams and aquaculture rise with overexploitation, "
+               "but no link survives beyond the shared trend" if not reject else
+               "Iteration 4 · H4a — A human-use driver tracks overexploitation beyond the shared trend",
+               f"Link consistent across both sources and both detrends: {', '.join(both) or 'none'}; CCF tests "
+               f"significant across all {len(ccf)}: {len(sig_ccf)}. Shipping series cover 2000–2024 only")
+    fig.subplots_adjust(top=0.8, bottom=0.17, left=0.05, right=0.98)
+    save_fig(fig, sec, "I4.01_h4a_global_drivers",
+             "World Bank WDI (UNCTAD port data); UNCTADstat; GDAT v1 (Zenodo); FAO via OWID; Sea Around Us")
+
+
+def section_i4_h4b() -> None:
+    sec = "9_iteration4_human_use"
+    print("Iteration 4: H4b — SEA shipping and structures vs % overexploited and MTL")
+    sea, cs = sea_series(), country_series()
+    tabs, lv_rows = [], []
+    for unit in ["SEA"] + SEA5:
+        src = sea if unit == "SEA" else cs[unit]
+        for dn, x, log in i4_drivers(unit):
+            dx = i4_change(x[x > 0] if log else x, log)
+            for resp, lbl in [("over", "Δ % overexploited"), ("mtl", "Δ MTL")]:
+                dy = src[resp].diff().dropna()
+                n = len(pd.concat([dx, dy], axis=1).dropna())
+                if n < 12:
+                    continue
+                t = ccf_table(dx, dy, f"{unit}: {dn} -> {lbl}", i4_max_lag(n))
+                t.insert(0, "unit", unit)
+                t.insert(1, "driver", dn)
+                t.insert(2, "response", lbl)
+                tabs.append(t)
+            if unit == "SEA":
+                xl = np.log(x) if log else x
+                r_lv, p_lv, r_dt, p_dt, n = detrended_corr(xl, src["over"])
+                r_q, p_q = quad_detrended_corr(xl, src["over"])
+                lv_rows.append({"driver": dn, "response": "SEA % overexploited", "n_years": n,
+                                "spearman_levels": r_lv, "p_levels": p_lv, "spearman_detrended": r_dt,
+                                "p_detrended": p_dt, "spearman_quad_detrended": r_q, "p_quad_detrended": p_q})
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    save_table(ccf, "9_I4_H4b_ccf_sea")
+    lv = pd.DataFrame(lv_rows)
+    lv["p_detrended_holm"] = holm(lv["p_detrended"])
+    lv["p_quad_holm"] = holm(lv["p_quad_detrended"])
+    lv["consistent_link"] = i4_consistent(lv)
+    save_table(lv, "9_I4_H4b_levels_vs_detrended")
+
+    sig = ccf[ccf["significant_holm"]]
+    sig_all = ccf[ccf["p_holm_all"] < ALPHA]
+    n_pairs = ccf.groupby(["unit", "driver", "response"]).ngroups
+    decide("H4b (iteration 4: shipping & structures, SEA)",
+           "Do changes in SEA port traffic, seaborne trade, liner connectivity, dam building or aquaculture "
+           "cross-correlate with % overexploited or mean trophic level?",
+           f"{len(sig)} of {len(ccf)} lag tests ({n_pairs} unit × driver × response rows) significant after Holm "
+           "within row"
+           + (": " + "; ".join(f"{r['unit']} {r['driver']} -> {r['response']} lag {int(r['lag'])} r = {r['r']:+.2f}"
+                               for _, r in sig.iterrows()) if len(sig) else "")
+           + f"; across all tests {len(sig_all)} (min Holm p {fmt_p(ccf['p_holm_all'].min())}); SEA linear-detrended ρ "
+           "with % overexploited significant after Holm for "
+           + (", ".join(f"{r['driver']} ({r['spearman_detrended']:+.2f}, quadratic {r['spearman_quad_detrended']:+.2f})"
+                        for _, r in lv[lv["p_detrended_holm"] < ALPHA].iterrows()) or "none")
+           + f"; consistent under both detrends: {', '.join(lv[lv['consistent_link']]['driver']) or 'none'}",
+           len(sig_all) > 0 or bool(lv["consistent_link"].any()),
+           "Shipping overlaps the SAU series for 19 changes only (2001–2019), so only strong links could be detected. "
+           "Linear-detrended links that flip sign under a quadratic detrend are curvature artefacts.",
+           verdict=None if (len(sig_all) > 0 or lv["consistent_link"].any()) else
+           ("Fail to reject H0" if len(sig) == 0 else
+            f"Weak: {len(sig)} isolated lag(s) significant within row; none across all {len(ccf)} tests"))
+
+    # Figure: heatmap, rows = driver × response, columns = units; cell = r at the lag with the smallest p
+    units = ["SEA"] + SEA5
+    combos = [(d, r) for d in ccf["driver"].unique() for r in ["Δ % overexploited", "Δ MTL"]]
+    mat = np.full((len(combos), len(units)), np.nan)
+    lag = np.full_like(mat, np.nan)
+    sigm = np.zeros_like(mat, bool)
+    for i, (d, r) in enumerate(combos):
+        for j, u in enumerate(units):
+            t = ccf[(ccf["unit"] == u) & (ccf["driver"] == d) & (ccf["response"] == r)]
+            if len(t):
+                b = t.loc[t["p"].idxmin()]
+                mat[i, j], lag[i, j], sigm[i, j] = b["r"], b["lag"], bool(t["significant_holm"].any())
+    fig, ax = plt.subplots(figsize=(11.5, 7.6))
+    im = ax.imshow(np.ma.masked_invalid(mat), cmap=v.DIVERGING, vmin=-0.7, vmax=0.7, aspect="auto")
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            if np.isnan(mat[i, j]):
+                ax.text(j, i, "n/a", ha="center", va="center", fontsize=7.5, color=v.MUTED)
+                continue
+            ax.text(j, i, f"{mat[i, j]:+.2f}\nlag {int(lag[i, j])}", ha="center", va="center", fontsize=7.5,
+                    color="#ffffff" if abs(mat[i, j]) > 0.45 else v.INK, fontweight="bold" if sigm[i, j] else "normal")
+            if sigm[i, j]:
+                ax.add_patch(plt.Rectangle((j - 0.48, i - 0.48), 0.96, 0.96, fill=False, ec=v.INK, lw=1.6))
+    for b in range(2, len(combos), 2):
+        ax.axhline(b - 0.5, color=v.SURFACE, lw=3)
+    ax.set_xticks(range(len(units)), units)
+    ax.set_yticks(range(len(combos)), [f"{d} · {r}" for d, r in combos], fontsize=8.5)
+    ax.grid(False)
+    for spn in ax.spines.values():
+        spn.set_visible(False)
+    cb = fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02)
+    cb.set_label("r at the lag with the smallest p", color=v.INK_2)
+    cb.outline.set_visible(False)
+    v.suptitle(fig, "Iteration 4 · H4b — Southeast Asian shipping and structures do not track the fisheries "
+               "indicators year to year" if len(sig_all) == 0 else
+               "Iteration 4 · H4b — Some SEA human-use drivers track the fisheries indicators",
+               f"{len(sig)} of {len(ccf)} lag tests significant within row (outlined), {len(sig_all)} across all "
+               "tests. Liner connectivity has no world value; 'n/a' = fewer than 12 overlapping years")
+    fig.subplots_adjust(top=0.86, bottom=0.06, left=0.3, right=0.97)
+    save_fig(fig, sec, "I4.02_h4b_sea_ccf_heatmap",
+             "World Bank WDI; UNCTADstat; GDAT v1; FAO via OWID; Sea Around Us")
+
+
+def did_estimate(p: pd.DataFrame, y: str, treated: list[int], event: int) -> tuple[float, float, float]:
+    """
+    Two-way fixed-effects difference-in-differences: y_it = EEZ_i + year_t + β·(treated_i × post_t).
+    Returns β, its EEZ-clustered SE and p. With a balanced panel β equals the classic 2×2 DiD of means.
+    """
+    d = p.assign(D=(p["eez"].isin(treated) & (p["year"] >= event)).astype(float))
+    X = pd.get_dummies(d[["eez", "year"]].astype(str), drop_first=True).astype(float)
+    X.insert(0, "D", d["D"])
+    X = sm.add_constant(X)
+    fit = sm.OLS(d[y].to_numpy(), X.to_numpy()).fit(cov_type="cluster", cov_kwds={"groups": d["eez"].to_numpy()})
+    return float(fit.params[1]), float(fit.bse[1]), float(fit.pvalues[1])
+
+
+def randomization_p(p: pd.DataFrame, y: str, treated: list[int], event: int) -> tuple[float, np.ndarray]:
+    """
+    Exact randomization inference: re-estimate β for every way of choosing len(treated) EEZs
+    as 'treated'; p = share of assignments with |β| ≥ |β_observed|. Valid with few clusters,
+    where clustered standard errors are unreliable.
+    """
+    from itertools import combinations
+    eezs = sorted(p["eez"].unique())
+    obs = did_estimate(p, y, treated, event)[0]
+    draws = np.array([did_estimate(p, y, list(c), event)[0] for c in combinations(eezs, len(treated))])
+    return float(np.mean(np.abs(draws) >= abs(obs) - 1e-12)), draws
+
+
+def section_i4_h4c() -> None:
+    sec = "9_iteration4_human_use"
+    print("Iteration 4: H4c — South China Sea island building (difference-in-differences)")
+    panel = st.eez_panel()
+    panel = panel.assign(log_catch=np.log(panel["catch"]))
+    specs = [("main", SCS_EEZ, OTHER_EEZ, 2004, 2019, EVENT_YEAR),
+             ("SCS edge EEZs counted as treated", SCS_EEZ + EDGE_EEZ, OTHER_EEZ, 2004, 2019, EVENT_YEAR),
+             ("placebo: fake event 2009, pre-period only", SCS_EEZ, OTHER_EEZ, 2004, 2013, 2009)]
+    rows, draws_main = [], {}
+    for name, tr, ctl, lo, hi, ev in specs:
+        p = panel[panel["eez"].isin(tr + ctl) & panel["year"].between(lo, hi)]
+        for y, lbl in [("over", "% overexploited"), ("mtl", "mean trophic level"), ("log_catch", "log catch")]:
+            b, se, pc = did_estimate(p, y, tr, ev)
+            pr, draws = randomization_p(p, y, tr, ev)
+            if name == "main":
+                draws_main[y] = (b, draws)
+            rows.append({"spec": name, "response": lbl, "years": f"{lo}–{hi}", "event_year": ev,
+                         "n_treated": len(tr), "n_control": len(ctl), "did_beta": b, "cluster_se": se,
+                         "p_cluster": pc, "p_randomization": pr, "n_assignments": len(draws)})
+    did = pd.DataFrame(rows)
+    did["p_rand_holm"] = np.nan
+    for s in did["spec"].unique():
+        m = did["spec"] == s
+        did.loc[m, "p_rand_holm"] = holm(did.loc[m, "p_randomization"])
+    save_table(did, "9_I4_H4c_did")
+
+    # Event study for the figure: coefficient per year relative to 2013 (the last pre-event year)
+    p = panel[panel["eez"].isin(SCS_EEZ + OTHER_EEZ) & panel["year"].between(2004, 2019)].copy()
+    rel_years = [r for r in range(2004 - EVENT_YEAR, 2019 - EVENT_YEAR + 1) if r != -1]
+    X = pd.get_dummies(p[["eez", "year"]].astype(str), drop_first=True).astype(float)
+    for r in rel_years:
+        X.insert(0, f"rel{r}", ((p["year"] - EVENT_YEAR == r) & p["eez"].isin(SCS_EEZ)).astype(float).to_numpy())
+    X = sm.add_constant(X)
+    fit = sm.OLS(p["over"].to_numpy(), X.to_numpy()).fit(cov_type="cluster", cov_kwds={"groups": p["eez"].to_numpy()})
+    names = list(X.columns)
+    es = pd.DataFrame([{"rel_year": r, "year": EVENT_YEAR + r, "coef": fit.params[names.index(f"rel{r}")],
+                        "se": fit.bse[names.index(f"rel{r}")]} for r in rel_years])
+    es = pd.concat([es, pd.DataFrame([{"rel_year": -1, "year": EVENT_YEAR - 1, "coef": 0.0, "se": 0.0}])]
+                   ).sort_values("rel_year")
+    save_table(es, "9_I4_H4c_event_study")
+
+    main = did[did["spec"] == "main"]
+    m_over = main[main["response"] == "% overexploited"].iloc[0]
+    plac = did[(did["spec"].str.startswith("placebo")) & (did["response"] == "% overexploited")].iloc[0]
+    edge = did[(did["spec"].str.startswith("SCS edge")) & (did["response"] == "% overexploited")].iloc[0]
+    reject = bool((main["p_rand_holm"] < ALPHA).any()) and plac["p_randomization"] >= ALPHA
+    decide("H4c (iteration 4: artificial islands, SEA)",
+           "Did % overexploited, mean trophic level or catch in the EEZs facing the Spratly Islands change "
+           "after China's 2013–2016 island building, relative to other SEA EEZs?",
+           "DiD 2004–2019, event 2014, 4 treated vs 5 control EEZs: "
+           + "; ".join(f"{r['response']} β = {r['did_beta']:+.3f} (randomization p {fmt_p(r['p_randomization'])}, "
+                       f"Holm {fmt_p(r['p_rand_holm'])})" for _, r in main.iterrows())
+           + f"; edge EEZs as treated: % overexploited β = {edge['did_beta']:+.2f} (p {fmt_p(edge['p_randomization'])})"
+           f"; placebo 2009: β = {plac['did_beta']:+.2f} (p {fmt_p(plac['p_randomization'])})",
+           reject,
+           "Island building is a single dated event; military outposts were built on the same features in "
+           "2014–2018, so the two cannot be separated. Vietnam's own reclamation (2022–2025) is after the "
+           "fisheries data end (2019). Only 9 EEZs → randomization inference (126 assignments) instead of "
+           "clustered errors.",
+           verdict=None if reject else "Fail to reject H0 (no post-2014 change specific to Spratly-facing EEZs)")
+
+    # Figure: (1) group means, (2) event study, (3) randomization distribution
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(16, 5.2), gridspec_kw={"width_ratios": [1.1, 1.1, 0.9]})
+    pp = panel[panel["year"].between(1990, 2019)]
+    for grp, eezs, col in [("Spratly-facing EEZs (VN, PH, Sabah, Sarawak)", SCS_EEZ, v.SERIES[0]),
+                           ("Other SEA EEZs", OTHER_EEZ, v.NEUTRAL)]:
+        s = pp[pp["eez"].isin(eezs)].groupby("year")["over"].mean()
+        a1.plot(s.index, s.values, color=col, lw=2.2, label=grp)
+    a1.axvspan(2013.9, 2016, color=v.GRID, alpha=0.7, lw=0)
+    a1.text(2014.1, a1.get_ylim()[1], "China's Spratly\nreclamation", fontsize=8, color=v.INK_2, va="top")
+    a1.set_ylabel("% of stocks overexploited (mean of EEZs)")
+    a1.legend(loc="upper left", fontsize=8.5)
+    a1.set_title("1 · The gap moves before 2014 too; no break at the event", fontsize=9.5)
+    a2.errorbar(es["year"], es["coef"], yerr=1.96 * es["se"], fmt="o", color=v.SERIES[0], ecolor=v.NEUTRAL,
+                elinewidth=1.5, capsize=0, markersize=5)
+    a2.axhline(0, color=v.AXIS, lw=0.8)
+    a2.axvline(EVENT_YEAR - 0.5, color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a2.set_ylabel("Spratly-facing minus other, vs 2013 (pp)")
+    a2.set_title("2 · Event study (95% CI, EEZ-clustered)", fontsize=9.5)
+    b_obs, draws = draws_main["over"]
+    a3.hist(draws, bins=20, color=v.NEUTRAL, edgecolor=v.SURFACE)
+    a3.axvline(b_obs, color=v.SERIES[0], lw=2.2)
+    a3.text(0.02, 0.97, f"observed β = {b_obs:+.2f} (blue line)\nrandomization p = {m_over['p_randomization']:.2f}",
+            transform=a3.transAxes, color=v.INK, fontsize=8.5, va="top")
+    a3.set_xlabel("DiD β for every 4-of-9 EEZ assignment (pp)")
+    a3.set_ylabel("Assignments")
+    a3.grid(axis="x", visible=False)
+    a3.set_title("3 · Randomization inference", fontsize=9.5)
+    v.suptitle(fig, "Iteration 4 · H4c — Island building in the Spratlys left no measurable mark on "
+               "overexploitation in neighbouring EEZs" if not reject else
+               "Iteration 4 · H4c — Spratly-facing EEZs changed after the island building",
+               f"DiD β = {m_over['did_beta']:+.2f} pp (randomization p {fmt_p(m_over['p_randomization'])}); "
+               f"placebo 2009 β = {plac['did_beta']:+.2f} pp. Data end in 2019, before Vietnam's 2022–25 reclamation")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I4.03_h4c_island_building_did", "Sea Around Us; event dates: CSIS AMTI, US DoD (2016)")
+
+
+def section_i4_descriptive() -> None:
+    sec = "9_iteration4_human_use"
+    print("Iteration 4: offshore platforms and wind farms (descriptive)")
+    w = pd.read_csv(HUMAN / "deepowt_offshore_wind.csv")
+    # year-end (Q4) status; 2021 ends in Q2 in DeepOWT
+    w = pd.concat([w[w["quarter"] == "Q4"], w[(w["year"] == 2021) & (w["quarter"] == "Q2")]])
+    pl = pd.read_csv(HUMAN / "oogp_platforms.csv")
+    sea = sea_series()["over"]
+    rows = []
+    for reg in ["WLD", "VNM"]:
+        s = w[w["region"] == reg].set_index("year")["n_class2"]
+        rows.append({"structure": "Offshore wind turbines (DeepOWT)", "region": ISO3[reg], "first": int(s.index.min()),
+                     "last": int(s.index.max()), "start": s.iloc[0], "end": s.iloc[-1],
+                     "years_overlapping_fisheries_data": len(set(s.index) & set(range(1950, 2020)))})
+    for reg in ["ALL6", "THA", "MYS", "VNM", "IDN", "KHM"]:
+        s = pl[pl["region"] == reg].set_index("year")["n_platforms_detected"]
+        rows.append({"structure": "Offshore oil & gas platforms (OOGP)",
+                     "region": "6 basins" if reg == "ALL6" else ISO3.get(reg, "Cambodia"),
+                     "first": int(s.index.min()), "last": int(s.index.max()), "start": s.iloc[0], "end": s.iloc[-1],
+                     "years_overlapping_fisheries_data": len(set(s.index) & set(range(1950, 2020)))})
+    save_table(pd.DataFrame(rows), "9_I4_structures_descriptive")
+
+    fig, (a1, a2, a3) = plt.subplots(1, 3, figsize=(16, 4.8))
+    for reg, col, lbl in [("THA", v.COUNTRY_COLOR["Thailand"], "Thailand"),
+                          ("MYS", v.COUNTRY_COLOR["Malaysia"], "Malaysia"),
+                          ("VNM", v.COUNTRY_COLOR["Vietnam"], "Vietnam")]:
+        s = pl[pl["region"] == reg].set_index("year")["n_platforms_detected"]
+        a1.plot(s.index, s.values, color=col, lw=2, marker="o", markersize=4)
+        v.end_label(a1, s.index[-1], s.iloc[-1], lbl)
+    a1.set_ylabel("Platforms detected")
+    a1.set_title("1 · Offshore oil & gas platforms, SEA (Sentinel-1)", fontsize=9.5)
+    a1.set_xlim(2016.5, 2023.9)
+    for reg, col, lbl in [("WLD", v.WORLD_COLOR, "World"), ("VNM", v.COUNTRY_COLOR["Vietnam"], "Vietnam")]:
+        s = w[w["region"] == reg].set_index("year")["n_class2"]
+        a2.plot(s.index, s.values, color=col, lw=2, marker="o", markersize=4)
+        v.end_label(a2, s.index[-1], s.iloc[-1], lbl)
+    a2.set_yscale("log")
+    a2.set_ylabel("Offshore wind turbines (log scale)")
+    a2.set_title("2 · Offshore wind turbines (DeepOWT; 2021 = Q2)", fontsize=9.5)
+    a2.set_xlim(2015.6, 2021.9)
+    s = sea.loc[2010:]
+    a3.plot(s.index, s.values, color=v.INK_2, lw=2)
+    a3.axvspan(2016.5, 2019.5, color=v.GRID, alpha=0.7, lw=0)
+    a3.text(2016.6, a3.get_ylim()[0], " overlap\n with structures", fontsize=8, color=v.INK_2, va="bottom")
+    a3.set_ylabel("SEA % of stocks overexploited")
+    a3.set_title("3 · Fisheries series end in 2019", fontsize=9.5)
+    v.suptitle(fig, "Iteration 4 · Offshore platforms and wind farms — satellite records start too late to test",
+               "Platform counts are flat in SEA (Thailand ~420–450, Malaysia ~130–150); offshore wind in SEA is a "
+               "single nearshore cluster in Vietnam. Overlap with the fisheries data: 3–4 years")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I4.04_structures_descriptive", "Si et al. 2026 (OOGP, Zenodo); Hoeser et al. 2022 "
+             "(DeepOWT, Zenodo); Sea Around Us")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -1317,6 +1906,9 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             "i2_h1b": section_i2_h1b, "i2_h2b": section_i2_h2b,
             # iteration 3: ocean warming as an alternative driver (new hypothesis H3)
             "i3_stationarity": section_i3_stationarity, "i3_h3a": section_i3_h3a, "i3_h3b": section_i3_h3b,
+            # iteration 4: shipping and built structures (new hypothesis H4)
+            "i4_data": section_i4_data, "i4_h4a": section_i4_h4a, "i4_h4b": section_i4_h4b,
+            "i4_h4c": section_i4_h4c, "i4_descriptive": section_i4_descriptive,
             "diagnostics": section_diagnostics}
 
 

@@ -1,4 +1,4 @@
-# 2-hypothesis-tests — Formal tests of H1a, H1b, H2a, H2b, H2c
+# 2-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming) and H4 (shipping & structures)
 
 `hypothesis_tests.py` runs the analysis pipeline from the main README (§4) on `data/raw/`. It reuses the data builders from [`1-statistical-tests/stat_tests.py`](../1-statistical-tests/stat_tests.py) and the chart style from [`0-visualisation/visualise.py`](../0-visualisation/visualise.py).
 
@@ -7,12 +7,13 @@ python 2-hypothesis-tests/hypothesis_tests.py                 # everything (~10 
 python 2-hypothesis-tests/hypothesis_tests.py --only h1a h2c
 python 2-hypothesis-tests/hypothesis_tests.py --only i2_cpue i2_h1b i2_h2b   # iteration 2 (effort)
 python 2-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # iteration 3 (warming)
+python 2-hypothesis-tests/hypothesis_tests.py --only i4_data i4_h4a i4_h4b i4_h4c i4_descriptive   # iteration 4
 ```
 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 6 figures.
+- `figures/<section>/*.png`: 15 figures (6 for iteration 1, 3 + 2 + 4 for iterations 2–4).
 
 ## Verdicts
 
@@ -90,6 +91,48 @@ Neither catch nor effort explained the year-to-year pattern, so iteration 3 test
 | ![](figures/8_iteration3_warming/I3.01_h3a_warming_levels_detrended_ccf.png) | ![](figures/8_iteration3_warming/I3.02_h3b_sea_sst_ccf.png) |
 
 Tables: `8_I3_stationarity_warming.csv`, `8_I3_H3a_levels_vs_detrended.csv`, `8_I3_H3a_cointegration.csv`, `8_I3_H3a_ccf.csv`, `8_I3_H3a_granger.csv`, `8_I3_H3b_ccf_sea.csv`, `8_I3_H3b_sst_trends.csv`. Verdicts are rows in `decisions.csv`.
+
+## Iteration 4 — shipping and built structures (new hypothesis H4)
+
+None of catch, effort or warming linked to overexploitation beyond the shared upward trend. Iteration 4 tests human uses of the sea that grew over the same decades and could harm stocks through **habitat loss** rather than catch:
+- **H4a (global):** container port traffic, seaborne trade volume, dams completed (cumulative) and aquaculture production vs world % overexploited (FAO, SAU).
+- **H4b (SEA):** the same drivers plus the liner shipping connectivity index, per country and for SEA, vs SAU Δ% overexploited and ΔMTL.
+- **H4c (SEA):** artificial islands and military outposts. These have no yearly series, only a dated event: China's Spratly reclamation, Dec 2013 – 2016 (>3,200 acres; outposts and airstrips built on the same reefs through 2018). The test is a difference-in-differences: the 4 EEZs facing the Spratlys (Vietnam, Philippines, Sabah, Sarawak) vs 5 other SEA EEZs, 2004–2019, event year 2014.
+- **Offshore oil & gas platforms and wind farms:** satellite records start in 2017 and 2016, so they overlap the fisheries data (to 2019) by 3–4 years. That is too short for any test, so they are shown descriptively.
+
+| Test | Result |
+|---|---|
+| **Drivers** | All grow steadily: world container traffic +5.8%/yr, seaborne trade +2.8%/yr (2000–2024), aquaculture +7.5%/yr (1960–2024), dams +3.6%/yr (cumulative, 1900–2019). Vietnam grows fastest (containers +13%/yr). |
+| **H4a levels vs detrended** | Levels ρ = +0.93 to +1.00 for every pair, i.e. pure shared trend. Beyond the trend, nothing holds up: shipping correlates with SAU after a straight-line detrend (+0.85, +0.65) but not after a quadratic one (+0.38, +0.29, n.s.) and not with FAO (−0.13, −0.08). Dams correlate in both detrends but with **opposite signs** in FAO (+0.56) and SAU (−0.65). Aquaculture is significant only with SAU under a quadratic detrend. |
+| **H4a long run** (cointegration, series ≥ 30 years) | Not cointegrated: dams p = 0.19 / 0.06 (FAO, constant / trend), aquaculture p = 0.18 / 0.33; SAU p ≥ 0.49. Shipping is too short to test (20–22 years). |
+| **H4a short run** (CCF of growth rates, lags 0 to n/3) | 0 of 74 lag tests significant across all pairs (min Holm p = 0.30). One within-pair hit: aquaculture growth → Δ SAU % overexploited at lag 5, r = +0.39 (Holm p = 0.044 within the pair). **Fail to reject H₀.** |
+| **H4b SEA CCF** (6 units × 5 drivers × 2 responses = 60 rows, 492 lag tests) | **Weak.** 2 tests significant within their row, both Thailand dam completions → ΔMTL at lags 6–7 (r = +0.46, +0.41). None across all 492 tests (min Holm p = 0.48). SEA detrended links (dams −0.59, aquaculture +0.65) flip sign or vanish under a quadratic detrend (+0.63, +0.22 n.s.). |
+| **H4c island building** (DiD, randomization inference over all 126 ways to pick 4 of 9 EEZs) | **Fail to reject H₀.** % overexploited β = +0.70 pp (p = 0.91), MTL β = −0.03 (p = 0.48), log catch β = −0.08 (p = 0.59). Counting the SCS-edge EEZs (Peninsula East, Indonesia Central) as treated: β = +1.5 pp (p = 0.70). Placebo event in 2009: β = −8.0 pp (p = 0.29). The event study shows no break at 2014; only 2019 sits above zero (+11 pp), a single year. |
+| **Platforms / wind** (descriptive) | SEA platforms are nearly flat 2017–2023 (Thailand 419 → 452, Malaysia 133 → 146, Vietnam 18 → 21). SEA's only offshore wind is a nearshore cluster in Vietnam (50 → 64 turbines, 2016–2021); world turbines 3,617 → 8,885. |
+
+**What the fourth iteration adds:**
+- Shipping, dams and aquaculture all grew alongside overexploitation, so their raw correlations look strong (ρ > 0.9), but every link disappears or changes sign once the trend is handled carefully. They join catch, effort and warming as **trend-only** associations.
+- The quadratic detrend is a new robustness check. A real link should keep its sign whichever smooth trend is removed and in both data sources. None does. This also confirms the iteration-3 reading that the SAU detrended correlation came from curvature.
+- **Island building** is the one driver with a clean before/after design, and it shows no effect on the neighbouring EEZs. The damage it does (AMTI estimates ~4,600 acres of reef buried by China, ~2,400 by Vietnam) is real but local. EEZ-wide stock indicators are too coarse to register it, and Vietnam's reclamation (2022–2025) falls after the data end.
+
+**What could not be tested, and why:**
+- **Military bases:** no dated time series exists. The Spratly outposts are covered by H4c, because they sit on the reclaimed features.
+- **Artificial islands after 2019:** reclamation is documented only as milestone totals (AMTI reports), so there is no yearly series.
+- **Offshore wind and platforms:** 3–4 overlapping years, so they are shown descriptively (figure I4.04).
+- **Seaborne trade before 2000:** UNCTAD publishes only selected years (1970, 1980, 1990), so the shipping tests start in 2000.
+
+**Method choices:**
+- **Container series spliced:** the current WDI series starts in 2010. Years 2000–2009 come from the WDI Dec-2020 archive, rescaled by the median ratio over the 2010–2019 overlap (world ratio 0.994, growth correlation 0.90; table `9_I4_container_splice.csv`).
+- **Lags limited to n/3** for short series, so every lag keeps at least two-thirds of the years.
+- **Randomization inference for the DiD:** with 9 EEZs, clustered standard errors are unreliable, so the p-value comes from all 126 possible "treated" groups. The placebo year (2009) checks the pre-event trends.
+- **Dams = cumulative dated completions:** 34% of GDAT dams (more than half in Indonesia, Thailand and Vietnam) have no completion year and are left out, so the series is a lower bound. GDAT completions also thin out after ~2005 because the database lags construction.
+
+| | |
+|---|---|
+| ![](figures/9_iteration4_human_use/I4.01_h4a_global_drivers.png) | ![](figures/9_iteration4_human_use/I4.02_h4b_sea_ccf_heatmap.png) |
+| ![](figures/9_iteration4_human_use/I4.03_h4c_island_building_did.png) | ![](figures/9_iteration4_human_use/I4.04_structures_descriptive.png) |
+
+Tables: `9_I4_container_splice.csv`, `9_I4_driver_coverage.csv`, `9_I4_stationarity.csv`, `9_I4_H4a_levels_vs_detrended.csv`, `9_I4_H4a_cointegration.csv`, `9_I4_H4a_ccf.csv`, `9_I4_H4b_ccf_sea.csv`, `9_I4_H4b_levels_vs_detrended.csv`, `9_I4_H4c_did.csv`, `9_I4_H4c_event_study.csv`, `9_I4_structures_descriptive.csv`. Verdicts are rows in `decisions.csv`.
 
 ## Sections
 

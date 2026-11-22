@@ -23,6 +23,8 @@ Retrieved: **2026-11-18** (see `manifest.json`).
 | **H2a** regional check | % overexploited, FAO Area 71 & 57, 2004–2021 | `owid/share-of-fish-stocks-overexploited.csv` |
 | **H2b** SEA cause | Total catch per EEZ (t) vs stock status / MTL | `sau/catch_summary/*.csv` (sum `tonnes` by year) vs `sau/stock_status/*.csv`, `sau/marine_trophic_index/*.csv` |
 | **H2c** SEA vs World | Same indicators, SEA vs World | combine the above |
+| **H3** warming (iteration 3) | SST anomaly, ocean heat content, EEZ SST | `owid/sea-surface-temperature-anomaly.csv`, `owid/ocean-heat-content-upper.csv`, `validation/climate/*.csv` |
+| **H4** shipping & structures (iteration 4) | Port traffic, seaborne trade, liner connectivity, dams, aquaculture, platforms, offshore wind | `validation/human_use/*.csv`, `owid/aquaculture-farmed-fish-production.csv` |
 | EDA context | Catch by gear, discards, aquaculture | `owid/fish-catch-gear-type.csv`, `owid/fish-discards.csv`, `owid/aquaculture-farmed-fish-production.csv` |
 
 ---
@@ -231,6 +233,24 @@ Transfer check (SHA-256, all matched): `sea-surface-temperature-anomaly.csv` `3b
 
 ---
 
+## 7. Human use of the sea — `validation/human_use/` (added for iteration 4 of the analysis)
+
+| File | Source | Coverage | Columns |
+|---|---|---|---|
+| `wb_shipping.csv` | World Bank WDI API: current release + WDI Database Archives (source 57), version Dec 2020 | Container port traffic `IS.SHP.GOOD.TU` (TEU; UNCTAD data): archive 2000–2019, current 2010–2024, World + SEA5. Liner shipping connectivity `IS.SHP.GCNW.XQ` (index): archive 2004–2019, current 2006–2021, SEA5 only | `source` (`WDI_current` / `WDI_archive_202012`), `iso3`, `year`, `indicator`, `value` |
+| `unctad_seaborne_trade.csv` | UNCTADstat `US.SeaborneTrade` (version 10003, updated 17 Mar 2026), datamart API | 2000–2024, World + SEA5 (Indonesia 2000–2002 under its old code 960) | `iso3`, `year`, `flow` (`loaded` / `discharged`), `thousand_tonnes` |
+| `gdat_dams_by_year.csv` | Global Dam Tracker v1, Zenodo record 7616852 (35,140 dams), aggregated from `GDAT_v1_dams.dbf` | World + SEA5 | `region`, `year` (completion year `Year_Fin`; blank if undated), `year_precision` (`exact` / `decade` = 3-digit year such as "195" / `undated`), `n_dams`, `n_with_volume`, `volume_mcm` (sum of reported reservoir volume `Volume_Rep`, million m³) |
+| `deepowt_offshore_wind.csv` | DeepOWT, Zenodo record 5933967, `DeepOWT.geojson` (9,941 locations) | 2016Q3–2021Q2, World and Vietnam (102–108°E, 8–21.5°N; the only SEA5 cluster) | `region`, `year`, `quarter`, `n_class1` (under construction), `n_class2` (turbine), `n_class3` (substation) |
+| `oogp_platforms.csv` | Offshore Oil and Gas Platforms v1.0.0, Zenodo record 18350974, `OOGPs_all_v1.0.0.gpkg` (9,334 records) | 2017–2023, all 6 basins (`ALL6`) + MYS, THA, VNM, IDN, KHM (Gulf of Thailand / South China Sea) | `region`, `year`, `n_platforms_detected` (records whose `Year_label` contains the year), `n_installed`, `n_removed` (by year of `Installation_date` / `Removal_date`) |
+
+Aquaculture uses the existing `owid/aquaculture-farmed-fish-production.csv` (World + SEA5, 1960–2024).
+
+Artificial islands and military outposts have no downloadable time series. Iteration 4 uses only the dated event, China's Spratly reclamation of >3,200 acres between Dec 2013 and 2016 (US DoD 2016; CSIS AMTI), with outposts and airstrips built on the same reefs through 2018. Vietnam's reclamation (~120 acres by 2016, 540 by Dec 2022, ~3,300 by Mar 2025; AMTI) falls mostly after the fisheries data end in 2019.
+
+Re-create with `python src/download_data.py --only human_use`. Transfer check (SHA-256, all matched): `wb_shipping.csv` `25484fc0…`, `unctad_seaborne_trade.csv` `d98ed488…`, `gdat_dams_by_year.csv` `6899d1b8…`, `deepowt_offshore_wind.csv` `aa6edf46…`, `oogp_platforms.csv` `563032c5…`.
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -247,6 +267,12 @@ Transfer check (SHA-256, all matched): `sea-surface-temperature-anomaly.csv` `3b
     - **Two products:** the global SST (HadSST) and the SEA SST (ERSST v5) come from different products. They are never compared directly; each is only correlated with the fisheries series at its own scale.
     - **Coarse grid:** ERSST's 2° grid is coarse, so coastal EEZ cells are partly land, and narrow seas (e.g. the Malacca Strait) are smoothed.
     - **Short ocean-heat series:** NOAA ocean heat content starts in 1955.
+12. **Human-use data (iteration 4):**
+    - **Container series break in 2010:** the current WDI series starts in 2010 and differs slightly from the Dec-2020 archive (current/archive ratio 0.92–1.02 over 2010–2019). `2-hypothesis-tests` rescales archive years 2000–2009 by the median ratio before joining.
+    - **GDAT dates:** 11,866 of 35,140 dams (34%) have no completion year, including 139 of 248 in Indonesia, 139 of 181 in Thailand and 112 of 198 in Vietnam. 25 world dams have only a decade ("195" = 1950s). Completions thin out after ~2005 because the database lags construction, and 2020–2040 entries are planned or under construction.
+    - **GDAT volume outlier:** 1921 has a reported volume of 11,969,027 million m³, about 1,000× any other year, so it is a data-entry error. The analysis uses dam counts, not volumes.
+    - **Seaborne trade:** the world row is goods loaded (= discharged at world level). Country rows are summed over both flows to give total tonnes handled.
+    - **Offshore structures start late:** platforms (2017) and wind (2016) overlap the fisheries data (to 2019) by only 3–4 years.
 
 ---
 
@@ -274,4 +300,10 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - Kennedy, J. J. et al. (2019). An ensemble data set of sea surface temperature change from 1850: the Met Office Hadley Centre HadSST.4.0.0.0 data set. *JGR Atmospheres*, 124. Via Our World in Data, "Sea surface temperature anomaly" [dataset], accessed 22 Nov 2026.
 - NOAA NCEI / IAP / MRI-JMA / CSIRO ocean heat content (0–700 m), via Our World in Data, "Ocean heat content in the upper 700 m" [dataset], accessed 22 Nov 2026.
 - Huang, B. et al. (2017). Extended Reconstructed Sea Surface Temperature, Version 5 (ERSSTv5). *Journal of Climate*, 30, 8179–8205. Data: NOAA PSL, https://psl.noaa.gov/data/gridded/data.noaa.ersst.v5.html, accessed 22 Nov 2026.
+- World Bank. *World Development Indicators*, IS.SHP.GOOD.TU (container port traffic, TEU) and IS.SHP.GCNW.XQ (liner shipping connectivity index), current release (updated 11 Nov 2026) and WDI Database Archives, December 2020 version. Original data: UNCTAD. https://data.worldbank.org, accessed 22 Nov 2026.
+- UNCTAD. *UNCTADstat*, "Seaborne trade by cargo type, annual" (US.SeaborneTrade), updated 17 Mar 2026. https://unctadstat.unctad.org/datacentre/dataviewer/US.SeaborneTrade, accessed 22 Nov 2026.
+- Zhang, A. T. & Gu, V. X. (2023). Global Dam Tracker: a database of more than 35,000 dams with location, catchment, and attribute information. *Scientific Data*, 10, 111. Data: https://doi.org/10.5281/zenodo.7616852, accessed 22 Nov 2026.
+- Hoeser, T., Feuerstein, S. & Kuenzer, C. (2022). DeepOWT: a global offshore wind turbine data set derived with deep learning from Sentinel-1 data. *Earth System Science Data*, 14, 4251–4270. Data: https://doi.org/10.5281/zenodo.5933967, accessed 22 Nov 2026.
+- Si, L., Zhou, S., Irakulis-Loitxate, I., Roger, J. & Guanter, L. (2026). Building a dataset of offshore oil and gas extraction platforms from satellite data (2017–2023). *Earth System Science Data*, 18, 6545–6564. Data: https://doi.org/10.5281/zenodo.18350974, accessed 22 Nov 2026.
+- CSIS Asia Maritime Transparency Initiative (AMTI). Island Tracker and reports "Vietnam's Major Spratly Expansion" (Dec 2022) and "Vietnam Ramps Up Spratly Island Dredging" (Nov 2023). https://amti.csis.org; US Department of Defense (2016), *Annual Report to Congress: Military and Security Developments Involving the People's Republic of China* (>3,200 acres reclaimed).
 - Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley. (MAD conformity thresholds)

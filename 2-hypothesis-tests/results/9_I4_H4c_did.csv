@@ -1,0 +1,10 @@
+spec,response,years,event_year,n_treated,n_control,did_beta,cluster_se,p_cluster,p_randomization,n_assignments,p_rand_holm
+main,% overexploited,2004–2019,2014,4,5,0.699767,4.460809,0.875347,0.912698,126,1.0
+main,mean trophic level,2004–2019,2014,4,5,-0.030067,0.038602,0.43605,0.47619,126,1.0
+main,log catch,2004–2019,2014,4,5,-0.083338,0.158089,0.598085,0.587302,126,1.0
+SCS edge EEZs counted as treated,% overexploited,2004–2019,2014,6,5,1.508044,4.235547,0.721807,0.701299,462,1.0
+SCS edge EEZs counted as treated,mean trophic level,2004–2019,2014,6,5,-0.021233,0.029989,0.478927,0.536797,462,1.0
+SCS edge EEZs counted as treated,log catch,2004–2019,2014,6,5,-0.04928,0.136199,0.717485,0.705628,462,1.0
+"placebo: fake event 2009, pre-period only",% overexploited,2004–2013,2009,4,5,-8.0434,8.346048,0.335178,0.285714,126,0.857143
+"placebo: fake event 2009, pre-period only",mean trophic level,2004–2013,2009,4,5,0.004,0.041042,0.922359,0.960317,126,1.0
+"placebo: fake event 2009, pre-period only",log catch,2004–2013,2009,4,5,-0.065178,0.134199,0.627191,0.634921,126,1.0

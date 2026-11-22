@@ -1,0 +1,6 @@
+driver,response,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,p_detrended_holm,p_quad_holm,consistent_link
+Container port traffic,SEA % overexploited,20,0.944361,0.0,0.303759,0.192914,-0.210526,0.37297,0.385828,1.0,False
+Seaborne trade volume,SEA % overexploited,20,0.921805,0.0,0.396992,0.083071,-0.01203,0.959853,0.249214,1.0,False
+Liner shipping connectivity,SEA % overexploited,14,0.824176,0.000289,-0.305495,0.28817,-0.182418,0.532509,0.385828,1.0,False
+Dams completed (cumulative),SEA % overexploited,70,0.994036,0.0,-0.587298,0.0,0.626944,0.0,0.0,0.0,False
+Aquaculture production,SEA % overexploited,60,0.994832,0.0,0.650458,0.0,0.216004,0.097398,0.0,0.389594,False

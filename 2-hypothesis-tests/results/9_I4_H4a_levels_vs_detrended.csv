@@ -1,0 +1,9 @@
+driver,response,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,p_detrended_holm,p_quad_holm,consistent_link
+Container port traffic,FAO % overexploited,22,0.931112,0.0,-0.129305,0.566299,-0.009599,0.966183,1.0,1.0,False
+Container port traffic,SAU % overexploited,20,0.981955,0.0,0.852632,2e-06,0.37594,0.102349,1.3e-05,0.511745,False
+Seaborne trade volume,FAO % overexploited,22,0.929983,0.0,-0.080745,0.720938,0.102202,0.650853,1.0,1.0,False
+Seaborne trade volume,SAU % overexploited,20,0.97594,0.0,0.652632,0.001814,0.291729,0.212026,0.009068,0.636079,False
+Dams completed (cumulative),FAO % overexploited,46,0.941042,0.0,0.555103,6.2e-05,0.555967,6e-05,0.000374,0.000362,True
+Dams completed (cumulative),SAU % overexploited,70,0.999283,0.0,-0.904715,0.0,-0.651649,0.0,0.0,0.0,True
+Aquaculture production,FAO % overexploited,48,0.948003,0.0,0.322188,0.025531,-0.223838,0.126166,0.102124,0.511745,False
+Aquaculture production,SAU % overexploited,60,0.998708,0.0,0.138705,0.290546,0.60628,0.0,0.871639,2e-06,False

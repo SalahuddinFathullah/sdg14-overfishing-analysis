@@ -1,0 +1,35 @@
+unit,driver,first,last,n_years,growth_per_year_pct,trend_per_year
+World,Container port traffic,2000,2024,25,5.811421,
+World,Seaborne trade volume,2000,2024,25,2.772749,
+World,Dams completed (cumulative),1900,2019,120,3.57773,
+World,Aquaculture production,1960,2024,65,7.516029,
+SEA,Container port traffic,2000,2024,25,7.043596,
+SEA,Seaborne trade volume,2000,2024,25,5.690712,
+SEA,Liner shipping connectivity,2006,2021,16,,1.644702
+SEA,Dams completed (cumulative),1900,2019,120,4.539496,
+SEA,Aquaculture production,1960,2024,65,8.674489,
+Malaysia,Container port traffic,2000,2024,25,6.458709,
+Malaysia,Seaborne trade volume,2000,2024,25,5.841215,
+Malaysia,Liner shipping connectivity,2006,2021,16,,1.882473
+Malaysia,Dams completed (cumulative),1900,2019,120,3.51842,
+Malaysia,Aquaculture production,1960,2024,65,6.224719,
+Indonesia,Container port traffic,2000,2024,25,6.304687,
+Indonesia,Seaborne trade volume,2000,2024,25,5.699002,
+Indonesia,Liner shipping connectivity,2006,2021,16,,0.3159
+Indonesia,Dams completed (cumulative),1914,2019,106,3.448425,
+Indonesia,Aquaculture production,1960,2024,65,9.867547,
+Thailand,Container port traffic,2000,2024,25,5.241094,
+Thailand,Seaborne trade volume,2000,2024,25,3.355849,
+Thailand,Liner shipping connectivity,2006,2021,16,,1.541284
+Thailand,Dams completed (cumulative),1964,2019,56,4.670463,
+Thailand,Aquaculture production,1960,2024,65,6.592218,
+Vietnam,Container port traffic,2000,2024,25,13.32713,
+Vietnam,Seaborne trade volume,2000,2024,25,8.872014,
+Vietnam,Liner shipping connectivity,2006,2021,16,,3.719688
+Vietnam,Dams completed (cumulative),1960,2019,60,6.232472,
+Vietnam,Aquaculture production,1960,2024,65,9.069089,
+Philippines,Container port traffic,2000,2024,25,5.304838,
+Philippines,Seaborne trade volume,2000,2024,25,5.890594,
+Philippines,Liner shipping connectivity,2006,2021,16,,0.764165
+Philippines,Dams completed (cumulative),1949,2019,71,3.131201,
+Philippines,Aquaculture production,1960,2024,65,6.9862,

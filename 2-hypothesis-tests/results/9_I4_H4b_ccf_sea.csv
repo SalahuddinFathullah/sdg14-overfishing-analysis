@@ -1,0 +1,493 @@
+unit,driver,response,pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm,p_holm_all
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,0,19,-0.052326,0.831526,0.036842,0.449655,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,1,18,0.310595,0.209679,0.102167,0.461976,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,2,17,-0.132152,0.613137,-0.134804,0.47537,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,3,16,-0.030811,0.909814,0.105882,0.49,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,4,15,0.393434,0.14682,0.546429,0.50607,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,5,14,-0.29395,0.30769,-0.424176,0.523832,1.0,False,1.0
+SEA,Container port traffic,Δ % overexploited,SEA: Container port traffic -> Δ % overexploited,6,13,0.26358,0.384229,-0.120879,0.543606,1.0,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,0,19,0.410481,0.080869,0.273684,0.449655,0.485214,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,1,18,-0.241478,0.334374,-0.174407,0.461976,1.0,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,2,17,0.259249,0.31499,0.397059,0.47537,1.0,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,3,16,0.044561,0.869836,0.035294,0.49,1.0,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,4,15,-0.574837,0.024987,-0.671429,0.50607,0.174908,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,5,14,0.057114,0.846229,0.032967,0.523832,1.0,False,1.0
+SEA,Container port traffic,Δ MTL,SEA: Container port traffic -> Δ MTL,6,13,0.159235,0.603332,0.307692,0.543606,1.0,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,0,19,-0.076988,0.754079,0.077193,0.449655,1.0,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,1,18,0.198121,0.430655,0.246646,0.461976,1.0,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,2,17,0.07229,0.782764,0.078431,0.47537,1.0,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,3,16,-0.036902,0.892076,-0.235294,0.49,1.0,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,4,15,0.38416,0.157447,0.267857,0.50607,0.94468,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,5,14,-0.433572,0.121431,-0.485714,0.523832,0.850014,False,1.0
+SEA,Seaborne trade volume,Δ % overexploited,SEA: Seaborne trade volume -> Δ % overexploited,6,13,0.107877,0.725745,-0.06044,0.543606,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,0,19,0.165451,0.498463,0.173684,0.449655,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,1,18,-0.383871,0.115798,-0.372549,0.461976,0.810586,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,2,17,-0.012848,0.960966,-0.04902,0.47537,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,3,16,0.014506,0.957479,-0.002941,0.49,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,4,15,-0.264677,0.340433,-0.317857,0.50607,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,5,14,0.315831,0.271325,0.30989,0.523832,1.0,False,1.0
+SEA,Seaborne trade volume,Δ MTL,SEA: Seaborne trade volume -> Δ MTL,6,13,0.292259,0.332565,0.434066,0.543606,1.0,False,1.0
+SEA,Liner shipping connectivity,Δ % overexploited,SEA: Liner shipping connectivity -> Δ % overexploited,0,13,-0.527458,0.063963,-0.423077,0.543606,0.319817,False,1.0
+SEA,Liner shipping connectivity,Δ % overexploited,SEA: Liner shipping connectivity -> Δ % overexploited,1,12,0.345431,0.271444,0.405594,0.565803,1.0,False,1.0
+SEA,Liner shipping connectivity,Δ % overexploited,SEA: Liner shipping connectivity -> Δ % overexploited,2,11,-0.215796,0.523941,0.081818,0.590962,1.0,False,1.0
+SEA,Liner shipping connectivity,Δ % overexploited,SEA: Liner shipping connectivity -> Δ % overexploited,3,10,-0.171849,0.634987,-0.2,0.619806,1.0,False,1.0
+SEA,Liner shipping connectivity,Δ % overexploited,SEA: Liner shipping connectivity -> Δ % overexploited,4,9,0.393468,0.294778,0.4,0.653333,1.0,False,1.0
+SEA,Liner shipping connectivity,Δ MTL,SEA: Liner shipping connectivity -> Δ MTL,0,13,0.354829,0.234183,0.32967,0.543606,0.835283,False,1.0
+SEA,Liner shipping connectivity,Δ MTL,SEA: Liner shipping connectivity -> Δ MTL,1,12,-0.28304,0.372695,-0.251748,0.565803,0.835283,False,1.0
+SEA,Liner shipping connectivity,Δ MTL,SEA: Liner shipping connectivity -> Δ MTL,2,11,-0.10079,0.768099,-0.172727,0.590962,0.835283,False,1.0
+SEA,Liner shipping connectivity,Δ MTL,SEA: Liner shipping connectivity -> Δ MTL,3,10,0.54484,0.103399,0.527273,0.619806,0.516994,False,1.0
+SEA,Liner shipping connectivity,Δ MTL,SEA: Liner shipping connectivity -> Δ MTL,4,9,-0.463566,0.208821,-0.583333,0.653333,0.835283,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,0,69,0.06092,0.619005,0.206661,0.235956,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,1,68,-0.063853,0.604936,0.013449,0.237685,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,2,67,0.022099,0.859113,0.166292,0.239452,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,3,66,0.11493,0.358143,0.233225,0.241259,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,4,65,-0.127652,0.310895,0.009757,0.243108,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,5,64,0.117234,0.356231,0.273823,0.245,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,6,63,0.117835,0.357696,0.196736,0.246937,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,7,62,-0.078374,0.544853,-0.017232,0.24892,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,8,61,-0.010848,0.93387,0.132049,0.250952,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,9,60,0.107034,0.415656,0.262805,0.253035,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ % overexploited,SEA: Dams completed (cumulative) -> Δ % overexploited,10,59,0.017138,0.897491,0.170376,0.25517,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,0,69,-0.06273,0.608608,-0.102795,0.235956,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,1,68,0.064163,0.603184,0.066225,0.237685,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,2,67,-0.160351,0.194895,-0.194735,0.239452,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,3,66,-0.000856,0.994555,-0.002192,0.241259,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,4,65,-0.032464,0.797393,-0.110179,0.243108,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,5,64,-0.185101,0.143109,-0.194125,0.245,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,6,63,-0.119605,0.35047,-0.134935,0.246937,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,7,62,-0.173437,0.177628,-0.203229,0.24892,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,8,61,-0.049277,0.706075,-0.147304,0.250952,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,9,60,-0.188026,0.150244,-0.238613,0.253035,1.0,False,1.0
+SEA,Dams completed (cumulative),Δ MTL,SEA: Dams completed (cumulative) -> Δ MTL,10,59,-0.199996,0.128834,-0.275539,0.25517,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,0,59,0.118016,0.373348,0.00678,0.25517,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,1,58,0.143757,0.281663,0.006429,0.257361,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,2,57,0.003529,0.979214,-0.084198,0.259608,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,3,56,0.063033,0.644429,-0.061107,0.261916,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,4,55,0.087121,0.52708,-0.018326,0.264286,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,5,54,0.17487,0.205968,0.058891,0.266722,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,6,53,0.014658,0.917031,-0.042977,0.269227,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,7,52,-0.064374,0.650267,-0.099548,0.271803,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,8,51,-0.028662,0.841749,-0.019729,0.274455,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,9,50,0.019574,0.892673,-0.145642,0.277186,1.0,False,1.0
+SEA,Aquaculture production,Δ % overexploited,SEA: Aquaculture production -> Δ % overexploited,10,49,0.013695,0.925589,-0.010714,0.28,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,0,59,-0.286084,0.028051,-0.09287,0.25517,0.308564,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,1,58,-0.112361,0.401049,-0.104002,0.257361,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,2,57,-0.084789,0.530598,-0.016399,0.259608,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,3,56,0.115144,0.398087,0.167601,0.261916,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,4,55,0.06666,0.628708,-0.005988,0.264286,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,5,54,-0.018197,0.896091,0.022832,0.266722,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,6,53,0.197744,0.155804,0.25899,0.269227,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,7,52,-0.082549,0.560707,-0.008879,0.271803,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,8,51,0.056972,0.691294,0.229683,0.274455,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,9,50,0.091415,0.527796,0.274718,0.277186,1.0,False,1.0
+SEA,Aquaculture production,Δ MTL,SEA: Aquaculture production -> Δ MTL,10,49,0.033975,0.816732,0.246531,0.28,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,0,19,-0.011416,0.963003,0.005263,0.449655,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,1,18,-0.095579,0.705979,-0.159959,0.461976,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,2,17,-0.145502,0.577387,-0.338235,0.47537,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,3,16,0.06235,0.818564,0.194118,0.49,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,4,15,0.176451,0.529302,0.389286,0.50607,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,5,14,0.071973,0.806838,-0.2,0.523832,1.0,False,1.0
+Malaysia,Container port traffic,Δ % overexploited,Malaysia: Container port traffic -> Δ % overexploited,6,13,0.580341,0.037581,-0.038462,0.543606,0.263066,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,0,19,0.119868,0.624989,-0.005263,0.449655,1.0,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,1,18,-0.038854,0.878346,-0.147575,0.461976,1.0,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,2,17,0.018249,0.944578,0.039216,0.47537,1.0,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,3,16,-0.307211,0.247099,-0.188235,0.49,1.0,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,4,15,-0.536021,0.039433,-0.614286,0.50607,0.276028,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,5,14,-0.151799,0.604426,-0.147253,0.523832,1.0,False,1.0
+Malaysia,Container port traffic,Δ MTL,Malaysia: Container port traffic -> Δ MTL,6,13,-0.087151,0.777097,0.065934,0.543606,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,0,19,-0.097129,0.692422,-0.164912,0.449655,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,1,18,0.115988,0.646723,0.182663,0.461976,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,2,17,-0.00995,0.969766,-0.031863,0.47537,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,3,16,0.065547,0.809416,0.041176,0.49,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,4,15,0.314939,0.252901,0.275,0.50607,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,5,14,-0.506388,0.064638,-0.397802,0.523832,0.452469,False,1.0
+Malaysia,Seaborne trade volume,Δ % overexploited,Malaysia: Seaborne trade volume -> Δ % overexploited,6,13,0.405684,0.169023,-0.071429,0.543606,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,0,19,0.009657,0.968701,0.07193,0.449655,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,1,18,-0.370913,0.129687,-0.465428,0.461976,0.778124,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,2,17,0.193357,0.457139,0.134804,0.47537,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,3,16,-0.01039,0.969537,0.147059,0.49,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,4,15,-0.169019,0.547056,-0.342857,0.50607,1.0,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,5,14,0.530922,0.050767,0.516484,0.523832,0.355367,False,1.0
+Malaysia,Seaborne trade volume,Δ MTL,Malaysia: Seaborne trade volume -> Δ MTL,6,13,-0.376858,0.204331,-0.049451,0.543606,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ % overexploited,Malaysia: Liner shipping connectivity -> Δ % overexploited,0,13,-0.053452,0.862315,0.214286,0.543606,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ % overexploited,Malaysia: Liner shipping connectivity -> Δ % overexploited,1,12,0.348057,0.267571,0.146853,0.565803,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ % overexploited,Malaysia: Liner shipping connectivity -> Δ % overexploited,2,11,-0.345145,0.298551,-0.418182,0.590962,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ % overexploited,Malaysia: Liner shipping connectivity -> Δ % overexploited,3,10,0.16004,0.658742,0.333333,0.619806,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ % overexploited,Malaysia: Liner shipping connectivity -> Δ % overexploited,4,9,0.275605,0.472878,0.3,0.653333,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ MTL,Malaysia: Liner shipping connectivity -> Δ MTL,0,13,-0.358904,0.228472,-0.335165,0.543606,0.91389,False,1.0
+Malaysia,Liner shipping connectivity,Δ MTL,Malaysia: Liner shipping connectivity -> Δ MTL,1,12,-0.268567,0.398648,-0.335664,0.565803,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ MTL,Malaysia: Liner shipping connectivity -> Δ MTL,2,11,0.497797,0.119191,0.627273,0.590962,0.595953,False,1.0
+Malaysia,Liner shipping connectivity,Δ MTL,Malaysia: Liner shipping connectivity -> Δ MTL,3,10,0.02957,0.935372,-0.054545,0.619806,1.0,False,1.0
+Malaysia,Liner shipping connectivity,Δ MTL,Malaysia: Liner shipping connectivity -> Δ MTL,4,9,-0.337032,0.37512,-0.483333,0.653333,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,0,69,-0.013434,0.91276,0.0019,0.235956,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,1,68,-0.024196,0.844723,0.044639,0.237685,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,2,67,-0.095647,0.441336,-0.057222,0.239452,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,3,66,-0.079599,0.525218,0.049408,0.241259,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,4,65,-0.062773,0.619359,-0.015092,0.243108,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,5,64,0.104153,0.412767,-0.061405,0.245,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,6,63,0.112813,0.378693,0.176821,0.246937,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,7,62,-0.12465,0.334397,0.021001,0.24892,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,8,61,-0.044956,0.730828,0.118323,0.250952,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,9,60,-0.112957,0.390168,-0.036133,0.253035,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ % overexploited,Malaysia: Dams completed (cumulative) -> Δ % overexploited,10,59,0.059951,0.651955,0.05912,0.25517,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,0,69,-0.24641,0.041248,-0.135638,0.235956,0.412482,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,1,68,-0.035863,0.771552,0.117288,0.237685,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,2,67,-0.00395,0.974695,0.06636,0.239452,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,3,66,-0.016793,0.893539,-0.034039,0.241259,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,4,65,0.046396,0.713623,0.0588,0.243108,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,5,64,0.27569,0.027456,-0.097028,0.245,0.302013,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,6,63,0.230023,0.069741,0.089409,0.246937,0.627665,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,7,62,0.164342,0.201816,0.212186,0.24892,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,8,61,0.230572,0.073817,0.235472,0.250952,0.627665,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,9,60,-0.042983,0.744353,0.129807,0.253035,1.0,False,1.0
+Malaysia,Dams completed (cumulative),Δ MTL,Malaysia: Dams completed (cumulative) -> Δ MTL,10,59,-0.045751,0.730788,-0.02683,0.25517,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,0,59,0.129754,0.32734,-0.013006,0.25517,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,1,58,0.003634,0.978401,-0.081698,0.257361,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,2,57,0.012416,0.926962,0.044298,0.259608,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,3,56,-0.025244,0.853484,-0.051587,0.261916,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,4,55,-0.161115,0.239949,-0.352712,0.264286,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,5,54,-0.167845,0.225063,-0.262231,0.266722,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,6,53,0.015801,0.910589,0.04101,0.269227,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,7,52,0.080826,0.568943,0.167691,0.271803,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,8,51,-0.245765,0.082144,-0.320505,0.274455,0.903588,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,9,50,-0.030709,0.832341,0.08389,0.277186,1.0,False,1.0
+Malaysia,Aquaculture production,Δ % overexploited,Malaysia: Aquaculture production -> Δ % overexploited,10,49,0.070507,0.630226,0.098776,0.28,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,0,59,0.025697,0.846811,0.08083,0.25517,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,1,58,0.022275,0.868184,0.014427,0.257361,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,2,57,-0.097061,0.4726,-0.11706,0.259608,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,3,56,0.004661,0.972804,0.065414,0.261916,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,4,55,0.138995,0.311509,0.053463,0.264286,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,5,54,-0.220546,0.109033,-0.12369,0.266722,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,6,53,-0.004522,0.974365,-0.104177,0.269227,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,7,52,-0.001747,0.990194,0.075728,0.271803,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,8,51,-0.253306,0.072893,-0.103891,0.274455,0.801824,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,9,50,-0.116649,0.419821,0.04048,0.277186,1.0,False,1.0
+Malaysia,Aquaculture production,Δ MTL,Malaysia: Aquaculture production -> Δ MTL,10,49,0.203106,0.161609,-0.023776,0.28,1.0,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,0,19,0.182395,0.45484,0.322807,0.449655,1.0,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,1,18,0.579091,0.011793,0.215686,0.461976,0.082549,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,2,17,-0.522306,0.03149,-0.171569,0.47537,0.188939,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,3,16,-0.094062,0.728969,0.002941,0.49,1.0,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,4,15,-0.019128,0.946056,0.157143,0.50607,1.0,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,5,14,0.00075,0.99797,-0.116484,0.523832,1.0,False,1.0
+Indonesia,Container port traffic,Δ % overexploited,Indonesia: Container port traffic -> Δ % overexploited,6,13,-0.039013,0.899308,-0.148352,0.543606,1.0,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,0,19,0.39766,0.091787,0.333333,0.449655,0.471149,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,1,18,0.286408,0.249225,0.469556,0.461976,0.996902,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,2,17,0.149733,0.566246,0.428922,0.47537,1.0,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,3,16,0.071308,0.792993,-0.029412,0.49,1.0,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,4,15,-0.481059,0.069466,-0.642857,0.50607,0.471149,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,5,14,0.139769,0.633675,0.169231,0.523832,1.0,False,1.0
+Indonesia,Container port traffic,Δ MTL,Indonesia: Container port traffic -> Δ MTL,6,13,0.521953,0.067307,0.39011,0.543606,0.471149,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,0,19,-0.054826,0.823596,-0.110526,0.449655,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,1,18,0.192563,0.443956,0.525284,0.461976,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,2,17,-0.016514,0.949842,-0.394608,0.47537,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,3,16,0.04727,0.861993,0.070588,0.49,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,4,15,0.143166,0.610744,0.117857,0.50607,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,5,14,-0.057187,0.846034,0.186813,0.523832,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ % overexploited,Indonesia: Seaborne trade volume -> Δ % overexploited,6,13,-0.011258,0.970882,-0.274725,0.543606,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,0,19,0.086035,0.726183,0.110526,0.449655,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,1,18,0.243329,0.330566,0.120743,0.461976,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,2,17,0.142154,0.586271,0.264706,0.47537,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,3,16,0.334268,0.205729,0.25,0.49,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,4,15,-0.30317,0.272022,-0.303571,0.50607,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,5,14,-0.194747,0.504661,-0.230769,0.523832,1.0,False,1.0
+Indonesia,Seaborne trade volume,Δ MTL,Indonesia: Seaborne trade volume -> Δ MTL,6,13,0.15117,0.622027,0.21978,0.543606,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ % overexploited,Indonesia: Liner shipping connectivity -> Δ % overexploited,0,13,-0.062346,0.839654,-0.351648,0.543606,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ % overexploited,Indonesia: Liner shipping connectivity -> Δ % overexploited,1,12,0.223067,0.485874,0.559441,0.565803,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ % overexploited,Indonesia: Liner shipping connectivity -> Δ % overexploited,2,11,-0.133098,0.696439,-0.072727,0.590962,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ % overexploited,Indonesia: Liner shipping connectivity -> Δ % overexploited,3,10,-0.110095,0.762064,0.018182,0.619806,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ % overexploited,Indonesia: Liner shipping connectivity -> Δ % overexploited,4,9,0.207905,0.59142,0.233333,0.653333,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ MTL,Indonesia: Liner shipping connectivity -> Δ MTL,0,13,0.045971,0.881453,0.373626,0.543606,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ MTL,Indonesia: Liner shipping connectivity -> Δ MTL,1,12,-0.001016,0.997501,0.027972,0.565803,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ MTL,Indonesia: Liner shipping connectivity -> Δ MTL,2,11,-0.132717,0.697273,-0.009091,0.590962,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ MTL,Indonesia: Liner shipping connectivity -> Δ MTL,3,10,0.177339,0.624042,-0.066667,0.619806,1.0,False,1.0
+Indonesia,Liner shipping connectivity,Δ MTL,Indonesia: Liner shipping connectivity -> Δ MTL,4,9,0.01722,0.964929,-0.116667,0.653333,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,0,69,-0.064167,0.600407,0.001295,0.235956,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,1,68,-0.054105,0.661231,0.075128,0.237685,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,2,67,-0.028392,0.819591,0.127114,0.239452,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,3,66,-0.127627,0.307152,-0.108898,0.241259,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,4,65,-0.029475,0.815704,0.156833,0.243108,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,5,64,0.003051,0.980909,0.105618,0.245,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,6,63,-0.024503,0.848822,0.049559,0.246937,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,7,62,-0.012413,0.923717,0.151683,0.24892,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,8,61,0.023899,0.854939,0.221969,0.250952,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,9,60,0.047453,0.718816,0.073279,0.253035,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ % overexploited,Indonesia: Dams completed (cumulative) -> Δ % overexploited,10,59,0.026259,0.843499,0.178488,0.25517,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,0,69,-0.092042,0.451937,-0.141864,0.235956,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,1,68,-0.045887,0.710209,-0.076693,0.237685,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,2,67,-0.098507,0.427737,-0.136269,0.239452,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,3,66,-0.034222,0.785017,-0.146802,0.241259,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,4,65,0.102993,0.414259,-0.01608,0.243108,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,5,64,-0.178263,0.158743,-0.196475,0.245,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,6,63,0.110414,0.388979,0.157381,0.246937,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,7,62,-6.7e-05,0.999589,-0.086491,0.24892,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,8,61,-0.195466,0.131129,-0.219613,0.250952,1.0,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,9,60,0.22492,0.084026,0.221935,0.253035,0.924289,False,1.0
+Indonesia,Dams completed (cumulative),Δ MTL,Indonesia: Dams completed (cumulative) -> Δ MTL,10,59,0.053273,0.68862,0.121522,0.25517,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,0,59,0.16284,0.217846,0.138547,0.25517,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,1,58,0.178346,0.180426,0.045864,0.257361,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,2,57,0.068847,0.610843,0.086661,0.259608,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,3,56,0.282823,0.034682,0.050034,0.261916,0.381507,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,4,55,0.09324,0.498356,0.072439,0.264286,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,5,54,0.059235,0.670492,0.126282,0.266722,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,6,53,-0.157504,0.260016,-0.249234,0.269227,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,7,52,-0.071106,0.616426,0.025527,0.271803,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,8,51,-0.084284,0.556509,-0.052127,0.274455,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,9,50,0.109653,0.448425,-0.007635,0.277186,1.0,False,1.0
+Indonesia,Aquaculture production,Δ % overexploited,Indonesia: Aquaculture production -> Δ % overexploited,10,49,-0.200616,0.166924,-0.056531,0.28,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,0,59,0.110964,0.402771,0.134132,0.25517,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,1,58,0.033947,0.800288,0.077609,0.257361,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,2,57,0.044688,0.74134,0.087957,0.259608,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,3,56,0.124098,0.362164,0.130895,0.261916,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,4,55,0.026712,0.846498,0.090332,0.264286,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,5,54,0.018427,0.894782,0.034953,0.266722,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,6,53,0.005375,0.969531,0.06894,0.269227,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,7,52,0.050978,0.719668,-0.007086,0.271803,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,8,51,0.123088,0.389507,0.112851,0.274455,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,9,50,0.031398,0.828632,0.076014,0.277186,1.0,False,1.0
+Indonesia,Aquaculture production,Δ MTL,Indonesia: Aquaculture production -> Δ MTL,10,49,-0.104214,0.476088,-0.068469,0.28,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,0,19,0.165767,0.497631,0.424561,0.449655,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,1,18,0.201357,0.423008,0.308566,0.461976,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,2,17,-0.279933,0.276498,-0.061275,0.47537,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,3,16,0.187111,0.487745,0.235294,0.49,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,4,15,0.529027,0.042586,0.517857,0.50607,0.2981,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,5,14,-0.176,0.547264,0.12967,0.523832,1.0,False,1.0
+Thailand,Container port traffic,Δ % overexploited,Thailand: Container port traffic -> Δ % overexploited,6,13,0.05959,0.846665,0.291209,0.543606,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,0,19,0.281356,0.243249,0.287719,0.449655,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,1,18,-0.181706,0.470535,-0.077399,0.461976,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,2,17,-0.10196,0.696988,-0.254902,0.47537,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,3,16,0.058395,0.829911,0.135294,0.49,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,4,15,-0.164128,0.558879,-0.267857,0.50607,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,5,14,0.230806,0.427261,0.147253,0.523832,1.0,False,1.0
+Thailand,Container port traffic,Δ MTL,Thailand: Container port traffic -> Δ MTL,6,13,-0.221616,0.466823,0.0,0.543606,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,0,19,0.167261,0.493707,0.157895,0.449655,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,1,18,-0.429026,0.075632,-0.407637,0.461976,0.453794,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,2,17,0.212658,0.412523,0.230392,0.47537,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,3,16,0.173387,0.520755,0.088235,0.49,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,4,15,0.496019,0.060041,0.610714,0.50607,0.42029,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,5,14,-0.133264,0.649702,0.072527,0.523832,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ % overexploited,Thailand: Seaborne trade volume -> Δ % overexploited,6,13,0.137801,0.653477,0.126374,0.543606,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,0,19,0.336815,0.158519,0.287719,0.449655,0.951115,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,1,18,-0.37795,0.122007,-0.442724,0.461976,0.854047,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,2,17,-0.165289,0.526094,-0.139706,0.47537,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,3,16,0.07068,0.794778,0.176471,0.49,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,4,15,-0.263046,0.343527,-0.275,0.50607,1.0,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,5,14,0.377684,0.183068,0.520879,0.523832,0.951115,False,1.0
+Thailand,Seaborne trade volume,Δ MTL,Thailand: Seaborne trade volume -> Δ MTL,6,13,0.030586,0.920989,-0.115385,0.543606,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ % overexploited,Thailand: Liner shipping connectivity -> Δ % overexploited,0,13,-0.343483,0.250533,-0.472527,0.543606,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ % overexploited,Thailand: Liner shipping connectivity -> Δ % overexploited,1,12,0.309894,0.32696,0.398601,0.565803,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ % overexploited,Thailand: Liner shipping connectivity -> Δ % overexploited,2,11,0.250549,0.457424,0.309091,0.590962,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ % overexploited,Thailand: Liner shipping connectivity -> Δ % overexploited,3,10,-0.646463,0.043406,-0.418182,0.619806,0.217032,False,1.0
+Thailand,Liner shipping connectivity,Δ % overexploited,Thailand: Liner shipping connectivity -> Δ % overexploited,4,9,0.058211,0.881748,-0.15,0.653333,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ MTL,Thailand: Liner shipping connectivity -> Δ MTL,0,13,0.041952,0.891759,0.016484,0.543606,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ MTL,Thailand: Liner shipping connectivity -> Δ MTL,1,12,-0.063327,0.844986,-0.125874,0.565803,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ MTL,Thailand: Liner shipping connectivity -> Δ MTL,2,11,0.207019,0.541352,0.290909,0.590962,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ MTL,Thailand: Liner shipping connectivity -> Δ MTL,3,10,0.023068,0.949565,0.078788,0.619806,1.0,False,1.0
+Thailand,Liner shipping connectivity,Δ MTL,Thailand: Liner shipping connectivity -> Δ MTL,4,9,-0.31383,0.410846,-0.333333,0.653333,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,0,55,0.00636,0.963245,0.002867,0.264286,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,1,54,-0.018476,0.894507,-0.142,0.266722,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,2,53,0.103565,0.460532,0.142009,0.269227,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,3,52,0.08375,0.554999,0.16738,0.271803,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,4,51,-0.030781,0.830221,0.034862,0.274455,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,5,50,-0.172515,0.230909,-0.065318,0.277186,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,6,49,0.031258,0.831166,0.130943,0.28,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,7,48,-0.065901,0.656304,-0.106475,0.282902,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,8,47,-0.048318,0.747061,0.014522,0.285895,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,9,46,-0.006324,0.966726,0.096652,0.288986,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ % overexploited,Thailand: Dams completed (cumulative) -> Δ % overexploited,10,45,0.157525,0.301398,0.271549,0.29218,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,0,55,0.155431,0.257159,-0.028149,0.264286,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,1,54,0.080479,0.562925,-0.095602,0.266722,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,2,53,0.138678,0.322022,0.088,0.269227,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,3,52,0.354707,0.009876,0.137175,0.271803,0.088884,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,4,51,-0.087797,0.540114,-0.156364,0.274455,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,5,50,-0.143712,0.319406,-0.038693,0.277186,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,6,49,0.456601,0.000975,0.257997,0.28,0.010723,True,0.479589
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,7,48,0.408221,0.003973,0.064523,0.282902,0.039726,True,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,8,47,0.009658,0.948625,0.023752,0.285895,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,9,46,-0.129874,0.389647,0.009476,0.288986,1.0,False,1.0
+Thailand,Dams completed (cumulative),Δ MTL,Thailand: Dams completed (cumulative) -> Δ MTL,10,45,-0.339371,0.022569,-0.130318,0.29218,0.180549,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,0,59,0.009931,0.94049,-0.025612,0.25517,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,1,58,-0.031679,0.813378,-0.038617,0.257361,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,2,57,-0.051194,0.705288,-0.028492,0.259608,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,3,56,0.115694,0.395825,0.1752,0.261916,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,4,55,-0.095005,0.490221,-0.157687,0.264286,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,5,54,0.185498,0.179299,0.202973,0.266722,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,6,53,-0.115244,0.411234,-0.049186,0.269227,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,7,52,0.141082,0.318462,0.193375,0.271803,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,8,51,0.126441,0.376622,0.251403,0.274455,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,9,50,0.098967,0.494114,0.037023,0.277186,1.0,False,1.0
+Thailand,Aquaculture production,Δ % overexploited,Thailand: Aquaculture production -> Δ % overexploited,10,49,-0.072919,0.618541,0.021633,0.28,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,0,59,-0.285732,0.028254,-0.070251,0.25517,0.310791,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,1,58,0.005448,0.967624,0.063705,0.257361,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,2,57,0.189984,0.156922,0.182396,0.259608,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,3,56,0.163736,0.227891,0.199727,0.261916,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,4,55,-0.017477,0.89922,-0.113636,0.264286,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,5,54,-0.094081,0.498608,-0.15365,0.266722,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,6,53,0.084314,0.548338,0.095388,0.269227,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,7,52,-0.006765,0.962034,-0.190045,0.271803,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,8,51,0.046439,0.746244,0.13819,0.274455,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,9,50,-0.023202,0.872931,0.039904,0.277186,1.0,False,1.0
+Thailand,Aquaculture production,Δ MTL,Thailand: Aquaculture production -> Δ MTL,10,49,-0.011317,0.938481,-0.044082,0.28,1.0,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,0,19,-0.023576,0.923678,-0.02807,0.449655,1.0,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,1,18,-0.164432,0.5144,-0.219814,0.461976,1.0,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,2,17,0.074576,0.776058,0.169118,0.47537,1.0,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,3,16,-0.422136,0.103363,-0.405882,0.49,0.620175,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,4,15,0.537817,0.038652,0.592857,0.50607,0.270562,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,5,14,-0.411645,0.143629,-0.362637,0.523832,0.718146,False,1.0
+Vietnam,Container port traffic,Δ % overexploited,Vietnam: Container port traffic -> Δ % overexploited,6,13,0.028098,0.927399,0.142857,0.543606,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,0,19,0.051375,0.834547,0.01525,0.449655,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,1,18,0.00851,0.973266,-0.290117,0.461976,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,2,17,-0.035211,0.893274,0.155229,0.47537,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,3,16,-0.350014,0.18385,-0.537656,0.49,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,4,15,0.555813,0.03145,0.308756,0.50607,0.220151,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,5,14,-0.084958,0.77276,-0.196676,0.523832,1.0,False,1.0
+Vietnam,Container port traffic,Δ MTL,Vietnam: Container port traffic -> Δ MTL,6,13,-0.261203,0.388689,-0.233676,0.543606,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,0,19,0.522293,0.021789,0.438596,0.449655,0.152526,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,1,18,-0.175169,0.48691,-0.230134,0.461976,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,2,17,0.050119,0.848505,0.120098,0.47537,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,3,16,-0.130984,0.628721,-0.058824,0.49,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,4,15,0.167519,0.550671,0.060714,0.50607,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,5,14,-0.435683,0.119425,-0.265934,0.523832,0.71655,False,1.0
+Vietnam,Seaborne trade volume,Δ % overexploited,Vietnam: Seaborne trade volume -> Δ % overexploited,6,13,0.341681,0.253192,0.192308,0.543606,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,0,19,0.474158,0.040266,0.556194,0.449655,0.281864,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,1,18,-0.269371,0.279726,-0.252276,0.461976,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,2,17,-0.373964,0.139214,0.051326,0.47537,0.835284,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,3,16,0.110281,0.684313,0.141172,0.49,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,4,15,0.0472,0.86734,-0.252121,0.50607,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,5,14,-0.169017,0.563517,-0.22126,0.523832,1.0,False,1.0
+Vietnam,Seaborne trade volume,Δ MTL,Vietnam: Seaborne trade volume -> Δ MTL,6,13,0.100967,0.74276,-0.147439,0.543606,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ % overexploited,Vietnam: Liner shipping connectivity -> Δ % overexploited,0,13,-0.408483,0.16582,-0.208791,0.543606,0.829099,False,1.0
+Vietnam,Liner shipping connectivity,Δ % overexploited,Vietnam: Liner shipping connectivity -> Δ % overexploited,1,12,0.161621,0.615793,-0.055944,0.565803,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ % overexploited,Vietnam: Liner shipping connectivity -> Δ % overexploited,2,11,0.201675,0.55207,0.245455,0.590962,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ % overexploited,Vietnam: Liner shipping connectivity -> Δ % overexploited,3,10,0.413444,0.234977,0.478788,0.619806,0.939907,False,1.0
+Vietnam,Liner shipping connectivity,Δ % overexploited,Vietnam: Liner shipping connectivity -> Δ % overexploited,4,9,0.010677,0.978252,-0.033333,0.653333,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ MTL,Vietnam: Liner shipping connectivity -> Δ MTL,0,13,-0.160659,0.600053,-0.133529,0.543606,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ MTL,Vietnam: Liner shipping connectivity -> Δ MTL,1,12,0.519445,0.083488,0.296836,0.565803,0.417442,False,1.0
+Vietnam,Liner shipping connectivity,Δ MTL,Vietnam: Liner shipping connectivity -> Δ MTL,2,11,0.176334,0.604006,0.124436,0.590962,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ MTL,Vietnam: Liner shipping connectivity -> Δ MTL,3,10,-0.007821,0.982893,0.146795,0.619806,1.0,False,1.0
+Vietnam,Liner shipping connectivity,Δ MTL,Vietnam: Liner shipping connectivity -> Δ MTL,4,9,-0.212878,0.582374,-0.270064,0.653333,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,0,59,0.005678,0.965956,0.061291,0.25517,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,1,58,-0.058275,0.663914,-0.078207,0.257361,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,2,57,0.01633,0.904033,-0.026769,0.259608,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,3,56,-0.045875,0.737072,0.062005,0.261916,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,4,55,-0.03778,0.784203,-0.068225,0.264286,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,5,54,0.047591,0.732552,0.098943,0.266722,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,6,53,-0.029019,0.836582,-0.062394,0.269227,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,7,52,-0.054718,0.700036,-0.131854,0.271803,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,8,51,-0.018373,0.898174,-0.086013,0.274455,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,9,50,0.102189,0.480087,0.29119,0.277186,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ % overexploited,Vietnam: Dams completed (cumulative) -> Δ % overexploited,10,49,0.004427,0.975915,-0.178769,0.28,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,0,59,-0.079613,0.548912,-0.084657,0.25517,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,1,58,0.08415,0.529984,0.220097,0.257361,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,2,57,-0.02491,0.854072,-0.074856,0.259608,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,3,56,-0.021538,0.874803,0.079792,0.261916,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,4,55,-0.027792,0.840375,0.03734,0.264286,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,5,54,0.050632,0.716159,0.11864,0.266722,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,6,53,-0.168579,0.22756,-0.00218,0.269227,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,7,52,-0.190367,0.176444,-0.12064,0.271803,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,8,51,0.0679,0.635909,0.16495,0.274455,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,9,50,-0.218137,0.128048,0.009499,0.277186,1.0,False,1.0
+Vietnam,Dams completed (cumulative),Δ MTL,Vietnam: Dams completed (cumulative) -> Δ MTL,10,49,-0.05899,0.687226,-0.034107,0.28,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,0,59,0.022735,0.864288,0.064556,0.25517,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,1,58,-0.083629,0.532543,-0.052396,0.257361,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,2,57,-0.139079,0.302173,-0.259515,0.259608,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,3,56,-0.250879,0.062179,-0.061401,0.261916,0.683971,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,4,55,0.014039,0.918969,-0.051639,0.264286,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,5,54,-0.01178,0.932627,-0.053132,0.266722,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,6,53,-0.102136,0.466775,-0.045818,0.269227,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,7,52,0.023674,0.867694,0.120746,0.271803,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,8,51,-0.120426,0.399919,-0.217395,0.274455,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,9,50,-0.121589,0.400266,0.030399,0.277186,1.0,False,1.0
+Vietnam,Aquaculture production,Δ % overexploited,Vietnam: Aquaculture production -> Δ % overexploited,10,49,0.009951,0.945895,-0.123074,0.28,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,0,59,-0.229462,0.080425,-0.015181,0.25517,0.884673,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,1,58,-0.123832,0.354384,-0.132356,0.257361,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,2,57,0.112044,0.406659,0.092228,0.259608,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,3,56,-0.068861,0.614059,-0.148388,0.261916,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,4,55,0.058949,0.669009,0.107074,0.264286,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,5,54,0.150447,0.277531,-0.143159,0.266722,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,6,53,-0.059017,0.674654,-0.094937,0.269227,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,7,52,0.111844,0.429883,-0.109784,0.271803,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,8,51,0.121883,0.3942,-0.034158,0.274455,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,9,50,-0.090975,0.529793,-0.137853,0.277186,1.0,False,1.0
+Vietnam,Aquaculture production,Δ MTL,Vietnam: Aquaculture production -> Δ MTL,10,49,0.06837,0.640655,-0.080385,0.28,1.0,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,0,19,-0.495382,0.031029,-0.403509,0.449655,0.217203,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,1,18,0.029751,0.906712,-0.03612,0.461976,1.0,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,2,17,0.43215,0.083213,0.519608,0.47537,0.499276,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,3,16,-0.031119,0.908917,0.079412,0.49,1.0,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,4,15,0.020649,0.941774,-0.117857,0.50607,1.0,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,5,14,-0.180336,0.537277,-0.274725,0.523832,1.0,False,1.0
+Philippines,Container port traffic,Δ % overexploited,Philippines: Container port traffic -> Δ % overexploited,6,13,0.166106,0.587577,0.247253,0.543606,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,0,19,0.008711,0.971766,-0.021939,0.449655,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,1,18,-0.485302,0.041199,-0.320083,0.461976,0.288396,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,2,17,0.207525,0.424156,0.190067,0.47537,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,3,16,0.179032,0.507054,0.232524,0.49,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,4,15,-0.229582,0.410445,-0.189286,0.50607,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,5,14,0.033602,0.909208,0.094505,0.523832,1.0,False,1.0
+Philippines,Container port traffic,Δ MTL,Philippines: Container port traffic -> Δ MTL,6,13,0.393488,0.183446,0.296703,0.543606,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,0,19,0.028933,0.906402,0.180702,0.449655,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,1,18,-0.219867,0.380677,-0.081527,0.461976,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,2,17,0.204929,0.430104,0.208333,0.47537,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,3,16,0.149142,0.581444,0.188235,0.49,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,4,15,0.070362,0.803223,-0.235714,0.50607,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,5,14,-0.205485,0.480967,-0.415385,0.523832,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ % overexploited,Philippines: Seaborne trade volume -> Δ % overexploited,6,13,-0.044206,0.885979,0.06044,0.543606,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,0,19,0.122256,0.618061,0.136025,0.449655,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,1,18,-0.194489,0.439322,-0.057821,0.461976,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,2,17,0.078102,0.765743,0.051502,0.47537,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,3,16,0.236178,0.378517,0.03532,0.49,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,4,15,-0.033126,0.906703,-0.157143,0.50607,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,5,14,-0.320697,0.263602,-0.204396,0.523832,1.0,False,1.0
+Philippines,Seaborne trade volume,Δ MTL,Philippines: Seaborne trade volume -> Δ MTL,6,13,0.115612,0.706837,0.225275,0.543606,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ % overexploited,Philippines: Liner shipping connectivity -> Δ % overexploited,0,13,-0.30432,0.312052,-0.142857,0.543606,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ % overexploited,Philippines: Liner shipping connectivity -> Δ % overexploited,1,12,0.253082,0.427397,0.307692,0.565803,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ % overexploited,Philippines: Liner shipping connectivity -> Δ % overexploited,2,11,0.527559,0.095352,0.490909,0.590962,0.476761,False,1.0
+Philippines,Liner shipping connectivity,Δ % overexploited,Philippines: Liner shipping connectivity -> Δ % overexploited,3,10,-0.39776,0.254986,-0.50303,0.619806,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ % overexploited,Philippines: Liner shipping connectivity -> Δ % overexploited,4,9,-0.21429,0.579814,-0.216667,0.653333,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ MTL,Philippines: Liner shipping connectivity -> Δ MTL,0,13,0.331269,0.268877,0.362637,0.543606,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ MTL,Philippines: Liner shipping connectivity -> Δ MTL,1,12,0.18042,0.574712,0.300699,0.565803,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ MTL,Philippines: Liner shipping connectivity -> Δ MTL,2,11,-0.169842,0.617594,-0.445455,0.590962,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ MTL,Philippines: Liner shipping connectivity -> Δ MTL,3,10,0.28139,0.430927,0.248485,0.619806,1.0,False,1.0
+Philippines,Liner shipping connectivity,Δ MTL,Philippines: Liner shipping connectivity -> Δ MTL,4,9,0.10123,0.795529,0.366667,0.653333,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,0,69,-0.127315,0.297186,-0.178726,0.235956,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,1,68,-0.065885,0.593475,-0.111661,0.237685,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,2,67,0.028733,0.81746,0.054296,0.239452,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,3,66,-0.028842,0.818179,0.000792,0.241259,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,4,65,-0.005037,0.968234,0.003082,0.243108,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,5,64,-0.012315,0.923058,0.116649,0.245,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,6,63,-0.143532,0.261753,-0.253997,0.246937,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,7,62,0.020688,0.873195,0.174589,0.24892,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,8,61,-0.046384,0.722616,-0.075956,0.250952,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,9,60,-0.062886,0.633123,-0.131485,0.253035,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ % overexploited,Philippines: Dams completed (cumulative) -> Δ % overexploited,10,59,-0.047494,0.720941,-0.142052,0.25517,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,0,69,0.075058,0.539908,0.085103,0.235956,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,1,68,0.063977,0.604236,0.161737,0.237685,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,2,67,0.014405,0.907892,-0.067878,0.239452,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,3,66,0.020759,0.868596,0.029803,0.241259,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,4,65,0.0813,0.519699,0.05843,0.243108,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,5,64,-0.019575,0.877982,-0.047148,0.245,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,6,63,0.030678,0.811354,0.042979,0.246937,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,7,62,-0.03069,0.812819,-0.159775,0.24892,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,8,61,-0.040048,0.759271,-0.155634,0.250952,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,9,60,-0.068669,0.602133,-0.002553,0.253035,1.0,False,1.0
+Philippines,Dams completed (cumulative),Δ MTL,Philippines: Dams completed (cumulative) -> Δ MTL,10,59,0.016089,0.903732,0.061359,0.25517,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,0,59,-0.022406,0.866234,-0.018209,0.25517,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,1,58,-0.133312,0.318455,-0.161187,0.257361,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,2,57,0.015302,0.910052,-0.009083,0.259608,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,3,56,-0.078556,0.564957,0.017339,0.261916,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,4,55,0.015215,0.912211,0.089816,0.264286,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,5,54,0.019534,0.888501,0.197838,0.266722,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,6,53,-0.153774,0.271615,-0.14199,0.269227,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,7,52,-0.018669,0.895489,0.00333,0.271803,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,8,51,0.093535,0.513853,0.064399,0.274455,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,9,50,-0.03471,0.810873,-0.015944,0.277186,1.0,False,1.0
+Philippines,Aquaculture production,Δ % overexploited,Philippines: Aquaculture production -> Δ % overexploited,10,49,0.272293,0.058387,0.247729,0.28,0.642254,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,0,59,-0.00292,0.982487,-0.007851,0.25517,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,1,58,0.123411,0.356035,0.275228,0.257361,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,2,57,0.123492,0.360086,0.133091,0.259608,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,3,56,-0.116486,0.392576,-0.157785,0.261916,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,4,55,-0.059499,0.666105,-0.056171,0.264286,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,5,54,-0.084998,0.541133,-0.194402,0.266722,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,6,53,0.099132,0.480048,0.049345,0.269227,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,7,52,-0.030448,0.830335,-0.006284,0.271803,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,8,51,-0.090993,0.52541,-0.145398,0.274455,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,9,50,-0.102114,0.480413,-0.132712,0.277186,1.0,False,1.0
+Philippines,Aquaculture production,Δ MTL,Philippines: Aquaculture production -> Δ MTL,10,49,0.040793,0.780786,-0.026568,0.28,1.0,False,1.0

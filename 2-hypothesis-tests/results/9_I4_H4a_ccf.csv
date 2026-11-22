@@ -1,0 +1,75 @@
+driver,response,pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm,p_holm_all
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,0,21,0.186487,0.418284,0.006504,0.427707,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,1,20,0.345138,0.136129,0.34161,0.438269,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,2,19,0.258083,0.286065,0.355575,0.449655,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,3,18,0.095433,0.70641,0.315953,0.461976,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,4,17,-0.141359,0.588387,0.01962,0.47537,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,5,16,-0.01064,0.968804,0.082414,0.49,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,6,15,-0.062226,0.825633,-0.098302,0.50607,1.0,False,1.0
+Container port traffic,FAO % overexploited,Δlog Container port traffic -> Δ FAO % overexploited,7,14,-0.194524,0.505159,-0.19582,0.523832,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,0,19,0.534327,0.018436,0.492982,0.449655,0.129055,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,1,18,0.152326,0.546238,0.162023,0.461976,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,2,17,0.192227,0.459824,0.117647,0.47537,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,3,16,0.057097,0.833644,0.079412,0.49,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,4,15,-0.089834,0.750191,-0.085714,0.50607,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,5,14,0.095838,0.744492,0.050549,0.523832,1.0,False,1.0
+Container port traffic,SAU % overexploited,Δlog Container port traffic -> Δ SAU % overexploited,6,13,0.30881,0.304602,0.093407,0.543606,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,0,21,0.234805,0.305581,-0.005854,0.427707,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,1,20,0.318761,0.170748,0.342363,0.438269,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,2,19,0.568394,0.011112,0.698859,0.449655,0.088892,False,0.81114
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,3,18,0.111035,0.660936,0.432628,0.461976,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,4,17,-0.198994,0.443865,-0.080932,0.47537,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,5,16,-0.257966,0.334734,-0.338484,0.49,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,6,15,-0.267222,0.335635,-0.430742,0.50607,1.0,False,1.0
+Seaborne trade volume,FAO % overexploited,Δlog Seaborne trade volume -> Δ FAO % overexploited,7,14,-0.00698,0.981106,0.041804,0.523832,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,0,19,0.392066,0.096874,0.273684,0.449655,0.678119,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,1,18,0.054551,0.829781,0.201238,0.461976,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,2,17,0.322185,0.207244,0.338235,0.47537,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,3,16,-0.187208,0.487516,-0.138235,0.49,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,4,15,-0.207077,0.458988,-0.257143,0.50607,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,5,14,-0.003018,0.991831,-0.186813,0.523832,1.0,False,1.0
+Seaborne trade volume,SAU % overexploited,Δlog Seaborne trade volume -> Δ SAU % overexploited,6,13,0.229231,0.451243,0.098901,0.543606,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,0,45,0.074695,0.625797,0.087968,0.29218,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,1,44,0.099629,0.519939,0.127591,0.295481,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,2,43,0.08114,0.604985,0.154381,0.298897,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,3,42,0.149722,0.343959,0.248278,0.302435,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,4,41,0.128338,0.423904,0.258452,0.306101,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,5,40,0.011915,0.941832,0.147804,0.309903,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,6,39,0.059558,0.718729,0.228939,0.313851,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,7,38,0.061069,0.715692,0.268637,0.317954,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,8,37,0.074203,0.662495,0.260436,0.322222,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,9,36,0.082867,0.630885,0.221221,0.326667,1.0,False,1.0
+Dams completed (cumulative),FAO % overexploited,Δlog Dams completed (cumulative) -> Δ FAO % overexploited,10,35,-0.032388,0.853467,0.154008,0.3313,1.0,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,0,69,-0.270102,0.024798,-0.284,0.235956,0.272773,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,1,68,-0.268186,0.027023,-0.276923,0.237685,0.272773,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,2,67,-0.241168,0.049296,-0.261187,0.239452,0.443665,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,3,66,-0.221011,0.074534,-0.232345,0.241259,0.596273,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,4,65,-0.207766,0.096765,-0.218519,0.243108,0.677357,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,5,64,-0.174744,0.167263,-0.197422,0.245,0.890813,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,6,63,-0.184175,0.148469,-0.21643,0.246937,0.890813,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,7,62,-0.152313,0.237278,-0.178119,0.24892,0.890813,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,8,61,-0.161406,0.213974,-0.180042,0.250952,0.890813,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,9,60,-0.162243,0.215525,-0.173692,0.253035,0.890813,False,1.0
+Dams completed (cumulative),SAU % overexploited,Δlog Dams completed (cumulative) -> Δ SAU % overexploited,10,59,-0.120581,0.362974,-0.133318,0.25517,0.890813,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,0,47,0.271603,0.064782,0.317488,0.285895,0.712603,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,1,46,0.041279,0.78533,0.08926,0.288986,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,2,45,0.017302,0.910185,0.149117,0.29218,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,3,44,-0.082476,0.594559,0.051036,0.295481,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,4,43,-0.093285,0.551854,0.041692,0.298897,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,5,42,-0.103346,0.514856,-0.010213,0.302435,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,6,41,0.019032,0.905985,0.15833,0.306101,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,7,40,-0.024828,0.87913,0.026652,0.309903,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,8,39,-0.054119,0.743502,-0.169401,0.313851,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,9,38,-0.043995,0.793113,-0.109469,0.317954,1.0,False,1.0
+Aquaculture production,FAO % overexploited,Δlog Aquaculture production -> Δ FAO % overexploited,10,37,-0.234091,0.163164,-0.264706,0.322222,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,0,59,-0.076587,0.564253,-0.01996,0.25517,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,1,58,-0.086709,0.517503,-0.129168,0.257361,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,2,57,0.137279,0.308533,0.189431,0.259608,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,3,56,0.027097,0.842857,0.06603,0.261916,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,4,55,0.107955,0.432733,0.05332,0.264286,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,5,54,0.385042,0.00404,0.411481,0.266722,0.044441,True,0.298967
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,6,53,0.209306,0.132542,0.218518,0.269227,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,7,52,-0.029501,0.835532,-0.053147,0.271803,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,8,51,0.141623,0.321528,0.180457,0.274455,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,9,50,0.063875,0.659438,0.048933,0.277186,1.0,False,1.0
+Aquaculture production,SAU % overexploited,Δlog Aquaculture production -> Δ SAU % overexploited,10,49,0.053713,0.713955,-0.029031,0.28,1.0,False,1.0

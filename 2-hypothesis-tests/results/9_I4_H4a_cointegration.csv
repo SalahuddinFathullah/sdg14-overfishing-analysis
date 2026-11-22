@@ -1,0 +1,13 @@
+response,driver,trend_term,years,n,t_stat,p,note
+FAO % overexploited,Container port traffic,–,2000–2021,22,,,too short (< 30 years)
+SAU % overexploited,Container port traffic,–,2000–2019,20,,,too short (< 30 years)
+FAO % overexploited,Seaborne trade volume,–,2000–2021,22,,,too short (< 30 years)
+SAU % overexploited,Seaborne trade volume,–,2000–2019,20,,,too short (< 30 years)
+FAO % overexploited,Dams completed (cumulative),c,1974–2019,46,-2.725553,0.190523,
+FAO % overexploited,Dams completed (cumulative),ct,1974–2019,46,-3.69511,0.062363,
+SAU % overexploited,Dams completed (cumulative),c,1950–2019,70,-1.754246,0.651668,
+SAU % overexploited,Dams completed (cumulative),ct,1950–2019,70,-1.269887,0.955039,
+FAO % overexploited,Aquaculture production,c,1974–2021,48,-2.772579,0.174566,
+FAO % overexploited,Aquaculture production,ct,1974–2021,48,-2.857551,0.329724,
+SAU % overexploited,Aquaculture production,c,1960–2019,60,-1.950742,0.554069,
+SAU % overexploited,Aquaculture production,ct,1960–2019,60,-2.54669,0.494438,

@@ -54,6 +54,18 @@ Sources
    - validation/climate/sea_eez_sst_ersst.csv   annual EEZ-mean SST per SEA5 country and 'SEA'
                                                 from NOAA ERSST v5 (PSL OPeNDAP), 1950-2025
 
+7. Human use of the sea (iteration 4 of the analysis)  ->  data/raw/validation/human_use/
+   - wb_shipping.csv            World Bank WDI: container port traffic (TEU, UNCTAD data) and liner
+                                shipping connectivity index; current WDI + the WDI Dec-2020 archive
+                                (source 57), which still holds container data for 2000-2009
+   - unctad_seaborne_trade.csv  UNCTADstat US.SeaborneTrade, goods loaded / discharged, 2000-2024
+   - gdat_dams_by_year.csv      Global Dam Tracker v1 (Zhang & Gu 2023, Zenodo 7616852, CC BY 4.0),
+                                dam counts and reported reservoir volume by completion year
+   - deepowt_offshore_wind.csv  DeepOWT (Hoeser et al. 2022, Zenodo 5933967, CC BY 4.0), quarterly
+                                offshore wind turbine counts, World and Vietnam, 2016Q3-2021Q2
+   - oogp_platforms.csv         OOGP (Si et al. 2026, Zenodo 18350974, CC BY 4.0), offshore oil & gas
+                                platforms detected per year, 6 basins incl. the Gulf of Thailand
+
 Usage
 -----
     python src/download_data.py                   # download everything
@@ -63,6 +75,7 @@ Usage
     python src/download_data.py --only integrity    # SDG 14.7.1/GDP, Comtrade, Benford (slow)
     python src/download_data.py --only effort       # streams ~110 MB of IMAS CSVs
     python src/download_data.py --only climate      # OWID SST/ocean heat + NOAA ERSST v5 for SEA EEZs
+    python src/download_data.py --only human_use    # shipping, dams, offshore wind/platforms (~20 MB)
 
 Notes
 -----
@@ -599,6 +612,157 @@ def download_climate() -> None:
     (out / "sea_eez_sst_ersst.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
 
 
+WB_API = "https://api.worldbank.org/v2"
+WB_ISO = "WLD;MYS;IDN;THA;VNM;PHL"
+UNCTAD_FACTS = "https://unctadstat-api.unctad.org/datamart-api/US.SeaborneTrade/10003/Facts"
+GDAT_ZIP = "https://zenodo.org/api/records/7616852/files/GDAT_data_v1.zip/content"
+DEEPOWT = "https://zenodo.org/api/records/5933967/files/DeepOWT.geojson/content"
+OOGP_ZIP = "https://zenodo.org/api/records/18350974/files/OOGPs_v1.0.0.zip/content"
+
+
+def _num(x: float) -> str:
+    """Write numbers as JavaScript does (3797948 not 3797948.0), matching the committed files."""
+    return str(int(x)) if float(x).is_integer() else repr(float(x))
+
+
+def _round1(x: float) -> str:
+    return _num(int(x * 10 + 0.5) / 10)        # Math.round(x*10)/10, half away from zero for x ≥ 0
+
+
+def _read_dbf(raw: bytes, columns: list[str]) -> list[dict]:
+    """Minimal dBASE III reader: returns the requested character/numeric columns as stripped strings."""
+    n, hlen, rlen = int.from_bytes(raw[4:8], "little"), int.from_bytes(raw[8:10], "little"), \
+        int.from_bytes(raw[10:12], "little")
+    fields, p, off = {}, 32, 1
+    while raw[p] != 0x0D:
+        name = raw[p:p + 11].split(b"\0")[0].decode()
+        size = raw[p + 16]
+        fields[name] = (off, size)
+        off += size
+        p += 32
+    rows = []
+    for i in range(n):
+        base = hlen + i * rlen
+        if raw[base] == 0x2A:                     # deleted record
+            continue
+        rows.append({c: raw[base + fields[c][0]: base + fields[c][0] + fields[c][1]].decode("utf-8", "replace").strip()
+                     for c in columns})
+    return rows
+
+
+def download_human_use() -> None:
+    """
+    Iteration 4 drivers -> data/raw/validation/human_use/
+      wb_shipping.csv             WDI container port traffic (IS.SHP.GOOD.TU) and liner shipping
+                                  connectivity (IS.SHP.GCNW.XQ): current WDI + WDI Dec-2020 archive
+      unctad_seaborne_trade.csv   UNCTADstat seaborne trade, goods loaded/discharged (thousand t)
+      gdat_dams_by_year.csv       Global Dam Tracker v1: dams and reported reservoir volume by
+                                  completion year (exact / decade-only / undated), World + SEA5
+      deepowt_offshore_wind.csv   DeepOWT turbine counts by quarter: World and Vietnam (102-108E, 8-21.5N)
+      oogp_platforms.csv          OOGP platforms detected / installed / removed per year, 6 basins + SEA
+    """
+    out = RAW_DIR / "validation" / "human_use"
+    out.mkdir(parents=True, exist_ok=True)
+
+    print("World Bank: container port traffic + liner shipping connectivity")
+    rows = []
+    for ind in ["IS.SHP.GOOD.TU", "IS.SHP.GCNW.XQ"]:
+        cur = json.loads(get(f"{WB_API}/country/{WB_ISO}/indicator/{ind}?format=json&per_page=2000&date=1960:2025"))
+        rows += [("WDI_current", x["countryiso3code"], int(x["date"]), ind, x["value"])
+                 for x in cur[1] if x["value"] is not None]
+        arc = json.loads(get(f"{WB_API}/sources/57/country/{WB_ISO}/series/{ind}/version/202012/time/all"
+                             "?format=json&per_page=2000"))
+        for d in arc["source"]["data"]:
+            if d["value"] is None:
+                continue
+            var = {q["concept"]: q["id"] for q in d["variable"]}
+            rows.append(("WDI_archive_202012", var["Country"], int(var["Time"][2:]), ind, d["value"]))
+    rows.sort(key=lambda r: (r[3] + r[0] + r[1], r[2]))
+    (out / "wb_shipping.csv").write_text("source,iso3,year,indicator,value\n" + "".join(
+        f"{s},{c},{y},{i},{_num(val)}\n" for s, c, y, i, val in rows), encoding="utf-8")
+
+    print("UNCTADstat: seaborne trade")
+    q = ("$select=Economy/Code,CargoType/Code,Year,M2200/Value&$filter=Economy/Code in "
+         "('0000','360','960','458','608','764','704') and CargoType/Code in ('10','20')"
+         "&$orderby=Economy/Code,CargoType/Code,Year&$format=csv&compress=false")
+    text = get(UNCTAD_FACTS + "?" + q.replace(" ", "%20").replace("'", "%27")).decode("utf-8")
+    iso = {"0000": "WLD", "360": "IDN", "960": "IDN", "458": "MYS", "608": "PHL", "764": "THA", "704": "VNM"}
+    flow = {"10": "loaded", "20": "discharged"}
+    lines = ["iso3,year,flow,thousand_tonnes"]
+    for ln in text.strip().split("\n")[1:]:
+        e, c, y, val = ln.split(",")
+        if val != "":
+            lines.append(f"{iso[e]},{y},{flow[c]},{int(float(val) / 1000 + 0.5)}")
+    (out / "unctad_seaborne_trade.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    print("GDAT v1 dams (Zenodo, ~14 MB zip)")
+    z = zipfile.ZipFile(io.BytesIO(get(GDAT_ZIP)))
+    dams = _read_dbf(z.read("GDAT_data_v1/data/GDAT_v1_dams.dbf"), ["Admin0", "Year_Fin", "Volume_Rep"])
+    sea = {"Indonesia": "IDN", "Malaysia": "MYS", "Philippines": "PHL", "Thailand": "THA", "Vietnam": "VNM"}
+    agg: dict = {}
+    for r in dams:
+        y = r["Year_Fin"]
+        yr, prec = (int(y), "exact") if re.fullmatch(r"\d{4}", y) else \
+            ((int(y) * 10, "decade") if re.fullmatch(r"\d{3}", y) else ("", "undated"))
+        try:
+            vol = float(r["Volume_Rep"]) if r["Volume_Rep"] and not r["Volume_Rep"].startswith("*") else None
+        except ValueError:
+            vol = None
+        for reg in ["WLD", sea.get(r["Admin0"])]:
+            if reg:
+                a = agg.setdefault((reg, yr, prec), [0, 0, 0.0])
+                a[0] += 1
+                if vol is not None:
+                    a[1] += 1
+                    a[2] += vol
+    keys = sorted(agg, key=lambda k: (k[0], 1e9 if k[1] == "" else k[1], k[2]))
+    (out / "gdat_dams_by_year.csv").write_text("region,year,year_precision,n_dams,n_with_volume,volume_mcm\n" + "".join(
+        f"{r},{y},{p},{agg[(r, y, p)][0]},{agg[(r, y, p)][1]},{_round1(agg[(r, y, p)][2])}\n" for r, y, p in keys),
+        encoding="utf-8")
+
+    print("DeepOWT offshore wind turbines (Zenodo)")
+    feats = json.loads(get(DEEPOWT))["features"]
+    quarters = list(feats[0]["properties"])
+    lines = ["region,year,quarter,n_class1,n_class2,n_class3"]
+    for reg in ["WLD", "VNM"]:
+        for k in quarters:
+            n = [0, 0, 0]
+            for f in feats:
+                lon, lat = f["geometry"]["coordinates"][:2]
+                if reg == "VNM" and not (102 <= lon < 108 and 8 <= lat <= 21.5):
+                    continue
+                c = f["properties"][k]
+                if c >= 1:
+                    n[c - 1] += 1
+            lines.append(f"{reg},{k[1:5]},{k[5:]},{n[0]},{n[1]},{n[2]}")
+    (out / "deepowt_offshore_wind.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    print("OOGP offshore oil & gas platforms (Zenodo GeoPackage)")
+    import sqlite3
+    import tempfile
+    z = zipfile.ZipFile(io.BytesIO(get(OOGP_ZIP)))
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "oogp.gpkg"
+        path.write_bytes(z.read("OOGPs_all_v1.0.0.gpkg"))
+        con = sqlite3.connect(path)
+        plat = con.execute("SELECT Country, Installation_date, Removal_date, Year_label FROM platforms").fetchall()
+        con.close()
+    iso2 = {"Malaysia": "MYS", "Thailand": "THA", "Vietnam": "VNM", "Indonesia": "IDN", "Cambodia": "KHM"}
+    agg = {}
+    for country, inst, rem, label in plat:
+        for reg in ["ALL6", iso2.get(country)]:
+            if not reg:
+                continue
+            for y in [s.strip() for s in (label or "").split(",") if s.strip()]:
+                agg.setdefault((reg, int(y)), [0, 0, 0])[0] += 1
+            if inst:
+                agg.setdefault((reg, int(inst[:4])), [0, 0, 0])[1] += 1
+            if rem:
+                agg.setdefault((reg, int(rem[:4])), [0, 0, 0])[2] += 1
+    (out / "oogp_platforms.csv").write_text("region,year,n_platforms_detected,n_installed,n_removed\n" + "".join(
+        f"{r},{y},{a[0]},{a[1]},{a[2]}\n" for (r, y), a in sorted(agg.items())), encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -612,11 +776,11 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate"],
+    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate", "human_use"],
                         help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate", "human_use"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
@@ -629,6 +793,8 @@ def main() -> None:
         download_effort()
     if "climate" in parts:
         download_climate()
+    if "human_use" in parts:
+        download_human_use()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

@@ -1,0 +1,10 @@
+series,n,level_adf_p,level_kpss_p,transformation_used,transformed_adf_p,transformed_kpss_p,stationary_after
+World: Container port traffic,25,0.137679,0.020564,Δlog (growth rate),0.003546,0.026619,"ADF yes, KPSS no"
+World: Seaborne trade volume,25,0.792394,0.030579,Δlog (growth rate),3.4e-05,0.1,yes
+World: Dams completed (cumulative),120,1.0,0.01,detrended Δlog (growth rate),0.135091,0.1,no
+World: Aquaculture production,65,0.997011,0.01,detrended Δlog (growth rate),0.001877,0.1,yes
+SEA: Container port traffic,25,0.378011,0.016932,Δlog (growth rate),0.00045,0.024148,"ADF yes, KPSS no"
+SEA: Seaborne trade volume,25,0.732407,0.025622,Δlog (growth rate),7.4e-05,0.1,yes
+SEA: Liner shipping connectivity,16,0.961537,0.1,detrended first difference,0.542917,0.093549,no
+SEA: Dams completed (cumulative),120,0.234898,0.01,detrended Δlog (growth rate),0.20767,0.1,no
+SEA: Aquaculture production,65,0.222746,0.04595,Δlog (growth rate),0.000425,0.1,yes
