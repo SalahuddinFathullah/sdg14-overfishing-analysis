@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟢 Analysis complete — data collected and cleaned ([`data/processed/`](data/processed/)), validation and integrity formally tested ([`3-data-quality/`](3-data-quality/)), 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in five iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
+> **Status:** 🟢 Analysis complete — data collected and cleaned ([`data/processed/`](data/processed/)), validation and integrity formally tested ([`3-data-quality/`](3-data-quality/)), 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in five iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; overview figures for every test and a 68-figure catalogue ([`4-overview/`](4-overview/)) plus an [interactive results dashboard](https://claude.ai/artifact/5Ggtp6LYx4CseyBpFX4Trp); only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
 
 ---
 
@@ -250,6 +250,12 @@ sdg14-overfishing-analysis/
 │   ├── README.md        ← cleaning rules, validation and integrity results
 │   ├── results/         ← one CSV per test
 │   └── figures/         ← V.01 validation summary, I.01 integrity summary
+├── 4-overview/
+│   ├── overview.py      ← run last: reads result tables only; analysis map, stationarity, assumption
+│   │                       checks, long-run tests; builds the figure catalogue
+│   ├── README.md        ← what each overview figure shows + link to the interactive dashboard
+│   ├── figure_index.csv ← all 68 figures: section, step, hypotheses, message, report role
+│   └── figures/         ← O.01–O.04
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
@@ -285,6 +291,8 @@ python 2-hypothesis-tests/hypothesis_tests.py
 # build the cleaned tables and run the validation / integrity tests:
 python 3-data-quality/clean_data.py
 python 3-data-quality/quality_tests.py
+# overview figures + figure catalogue (run last; reads the result tables above):
+python 4-overview/overview.py
 jupyter lab
 ```
 
@@ -316,6 +324,7 @@ jupyter lab
 | **Iteration 4:** shipping and built structures — ports, seaborne trade, liner connectivity, dams, aquaculture, offshore platforms & wind, artificial islands (new H4a global, H4b SEA, H4c island-building DiD) | 1–2 | ✅ Done — shared trend only; island building shows no effect; platforms/wind too recent to test | `2-hypothesis-tests/` §9, `data/raw/validation/human_use/` |
 | **Iteration 5:** pooled panel with fixed effects (H5a), stock rebuilding after 2015 (H5b), Fishing-in-Balance index (H5c), forecast to 2030 (H5d) | 1–2 | ✅ Done — no pressure effect even pooled; SEA rebuilding stalled; FiB rising (expansion), falling only in Thailand; world ~41% overexploited by 2030 | `2-hypothesis-tests/` §11 |
 | Final figure selection (15 figures mapped to report sections; report outline drafted) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
+| Overview: analysis map, figures for the table-only tests (stationarity, assumption checks, cointegration/Granger), 68-figure catalogue, interactive results dashboard | — | ✅ Done — every test now has a figure | [`4-overview/`](4-overview/) |
 | Report write-up (~10 pages) | — | ⬜ Team task | — |
 
 ### Findings so far
@@ -374,6 +383,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 
 | Date | Author | Change |
 |------|--------|--------|
+| 2026-11-23 | Salah | Added `4-overview/` (overview.py, README, figure_index.csv): O.01 analysis map with verdicts read from `decisions.csv`, O.02 stationarity of all 42 series, O.03 assumption checks and test choice, O.04 long-run tests; catalogue of all 68 figures with report roles; interactive results dashboard (verdicts, 2030 forecast, filterable figure gallery) |
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
 | 2026-11-22 | Salah | Completed remaining steps: `3-data-quality/` (clean_data.py → `data/processed/` with cleaning log; quality_tests.py → formal validation of 21 source pairs and integrity tests, 2 figures, 6 tables); final figure set in `figures/README.md`; README progress/status/findings updated |
