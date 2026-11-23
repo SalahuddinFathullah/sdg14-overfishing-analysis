@@ -1,0 +1,3 @@
+response,years,n_years,r2_trend_only,r2_all_drivers,r2_added_by_all,bic_best_subset,r2_added_by_best,p_best_subset_hac,p_all_drivers_hac,p_all_drivers_circular_shift,lasso_selected,oos_years,rmse_all_drivers,rmse_best_subset_bic,rmse_lasso,rmse_trend_only,best_subset_beats_trend_oos,bic_subsets_chosen_oos
+FAO,1975–2017,43,0.0,0.16964,0.16964,(trend only),0.0,,0.01288,0.228571,(none),1995–2017,1.663123,1.602518,1.482399,1.448526,False,(trend only) ×16; Catch ×7
+SAU,1961–2017,57,0.0,0.147166,0.147166,Catch (FAO capture),0.098108,0.009055,0.020783,0.469388,Catch (FAO capture),1981–2017,0.973667,0.994359,0.981148,0.945624,False,"Dams ×11; Catch, Dams ×10; SST ×7; Catch ×6; (trend only) ×1; SST, Dams ×1; Dams, Aquaculture ×1"

@@ -125,7 +125,7 @@ def section_map() -> None:
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    cols = [(2, "1 · Data"), (36, "2 · Prepare & check"), (68, "3 · Explore"), (100, "4 · Test (5 iterations)"),
+    cols = [(2, "1 · Data"), (36, "2 · Prepare & check"), (68, "3 · Explore"), (100, "4 · Test (6 iterations)"),
             (158, "5 · Answer")]
     for x, t in cols:
         ax.text(x, 99, t, ha="left", va="top", fontsize=11.5, fontweight="bold", color=v.INK)
@@ -134,7 +134,7 @@ def section_map() -> None:
     data = [("FAO via OWID", "% stocks overexploited (world 1974–2021, FAO areas), capture, aquaculture"),
             ("Sea Around Us", "Stock status, mean trophic level, catch by sector and fleet; 11 SEA EEZs, 1950–2019"),
             ("Validation & integrity", "UN SDG 14.4.1, World Bank, SAU regions, UN Comtrade, GDP, Benford digits"),
-            ("Driver data (iterations 2–5)", "Effort (IMAS), warming (HadSST, ERSST), shipping (WDI, UNCTAD), "
+            ("Driver data (iterations 2–6)", "Effort (IMAS), warming (HadSST, ERSST), shipping (WDI, UNCTAD), "
                                              "dams (GDAT), platforms (OOGP), wind (DeepOWT)")]
     ys = [78, 60, 42, 20]
     hs = [14, 14, 14, 18]
@@ -162,8 +162,9 @@ def section_map() -> None:
              ("Iteration 2", "fishing effort", ["H1b·e", "H2b·e", "CPUE"]),
              ("Iteration 3", "ocean warming", ["H3a", "H3b"]),
              ("Iteration 4", "shipping & structures", ["H4a", "H4b", "H4c"]),
-             ("Iteration 5", "panel, rebuilding, FiB, 2030", ["H5a", "H5b", "H5c", "H5d"])]
-    lane_h, gap, top = 12.2, 1.6, 92
+             ("Iteration 5", "panel, rebuilding, FiB, 2030", ["H5a", "H5b", "H5c", "H5d"]),
+             ("Iteration 6", "drivers in combination", ["H6a", "H6b", "H6c"])]
+    lane_h, gap, top = 10.3, 1.4, 92
     lane_y = []
     for i, (t, sub, hyps) in enumerate(lanes):
         y = top - (i + 1) * lane_h - i * gap
@@ -188,9 +189,9 @@ def section_map() -> None:
     ans = [("Is overfishing getting worse?", "Yes. World +0.55 pp/yr (1974–2021), SEA +7.4 pp/decade; "
                                              "no slowdown after 2015. Indonesia, Thailand, Malaysia worsen "
                                              "faster than the world."),
-           ("What drives it?", "No single yearly driver: catch, effort, warming, shipping, dams, aquaculture "
-                               "share only the trend. More effort for less fish (CPUE −35% world, −50% SEA) "
-                               "→ slow, cumulative depletion."),
+           ("What drives it?", "No single yearly driver, pair or combination: catch, effort, warming, "
+                               "shipping, dams, aquaculture share only the trend. More effort for less fish "
+                               "(CPUE −35% world, −50% SEA) → slow, cumulative depletion."),
            ("SDG 14.4?", "Missed. Rebuilding stalled in SEA after 2015; world on course for ~41% "
                          "overexploited by 2030.")]
     for (t, b), y in zip(ans, [70, 40, 16]):
@@ -213,12 +214,13 @@ def section_map() -> None:
         ax.text(lx + 4.2, 5.5, c, ha="left", va="center", fontsize=8.6, color=v.INK_2)
         lx += 30
     ax.text(lx + 2, 5.5, "Verdicts read from 2-hypothesis-tests/results/decisions.csv; "
-                         "H2c, H5b, H5c are mixed (true for some countries or the world, not SEA as a whole)",
+                         "H2c, H5b, H5c are mixed (true for some countries or the world, not SEA as a whole); "
+                         "H6a is weak (one data source only)",
             ha="left", va="center", fontsize=8.2, color=v.MUTED)
 
     v.suptitle(fig, "Analysis map — from data to answers, with every hypothesis verdict",
-               "Overfishing is confirmed and worsening; five rounds of driver tests find no single yearly cause, "
-               "and the evidence points to slow, cumulative depletion")
+               "Overfishing is confirmed and worsening; six rounds of driver tests find no yearly cause, alone or in "
+               "combination, and the evidence points to slow, cumulative depletion")
     save(fig, "O.01_analysis_map", "this repository's result tables")
 
 
@@ -432,7 +434,7 @@ REPORT_FIG = {"1.07": 1, "A.01": 2, "3.10": 3, "V.01": 4, "I.01": 5, "1.03": 6, 
               "B.01": 10, "H1a.01": 11, "H1b.01": 12, "H2a.01": 13, "H2c.01": 14, "S.01": 15, "I4.03": 16,
               "I2.01": 17, "I5.02": 18, "I5.03": 19, "I5.04": 20}
 APPENDIX = {"1.01", "D.01 (residuals)", "H2b.01", "I2.02", "I2.03", "I3.02", "I4.02", "I3.01", "I4.01", "C.01",
-            "D.01 (chi-square)", "I4.04", "I5.01"}
+            "D.01 (chi-square)", "I4.04", "I5.01", "I6.01", "I6.02", "I6.03"}
 
 # id: (title, rubric section, hypotheses, iteration, message) for figures outside 0-visualisation
 CAPTIONS = {
@@ -448,6 +450,9 @@ CAPTIONS = {
     "I5.01": ("Pooled panel, fixed effects", "Statistical Analysis", "H5a", "5", "Pooling 11 EEZs with the trend removed still finds no pressure effect (0 of 36)"),
     "I5.02": ("Stock rebuilding before/after 2015", "Statistical Analysis", "H5b", "5", "Rebuilding sped up worldwide after 2015 but stalled in SEA"),
     "I5.03": ("Fishing-in-Balance index", "Discussion", "H5c", "5", "SEA catches still expanding, which explains its rising trophic level; Thailand past that phase"),
+    "I6.01": ("Pairs of drivers (joint tests)", "Statistical Analysis", "H6a", "6", "No pair of drivers explains overexploitation in both data sources; levels-with-trend 'links' are spurious"),
+    "I6.02": ("Interactions between pressures", "Statistical Analysis", "H6b", "6", "No pressure changes the effect of another in the SEA country panel (0 of 16)"),
+    "I6.03": ("Best combination of drivers", "Statistical Analysis", "H6c", "6", "No combination predicts unseen years better than the trend alone"),
     "I5.04": ("Forecast to 2030", "Conclusion", "H5d", "5", "World on course for ~41% overexploited by 2030; SEA levelled off, no improvement"),
     "H1a.01": ("World trend tests", "Statistical Analysis", "H1a", "1", "Significant rise (+0.55 pp/yr); no slowdown after 2015"),
     "H1b.01": ("Catch CCF", "Statistical Analysis", "H1b", "1", "World catch does not lead overexploitation at any lag"),
@@ -466,7 +471,7 @@ CAPTIONS = {
     "I4.04": ("Offshore platforms and wind", "Statistical Analysis", "H4", "4", "Satellite records start too late to test (3–4 overlapping years)"),
     "I.01": ("Integrity summary", "Data Understanding & Preparation", "", "", "Digits genuine; under-reporting and trade gaps are the issue"),
     "V.01": ("Validation summary", "Data Understanding & Preparation", "", "", "Independent sources agree on trend; level gaps explained"),
-    "O.01": ("Analysis map", "Introduction", "all", "1–5", "Data → preparation → EDA → 5 test iterations → answers, with every verdict"),
+    "O.01": ("Analysis map", "Introduction", "all", "1–6", "Data → preparation → EDA → 6 test iterations → answers, with every verdict"),
     "O.02": ("Stationarity of every series", "Statistical Analysis", "", "1–4", "Almost every series trends in levels and is fixed by differencing"),
     "O.03": ("Assumption checks and test choice", "Statistical Analysis", "", "", "Assumption checks decided which tests were valid; here they change the answer"),
     "O.04": ("Long-run tests", "Statistical Analysis", "H1b H3a H4a", "1–4", "Only 2 of 23 cointegration tests pass, neither in both sources"),

@@ -1,0 +1,49 @@
+response,spec,driver,n_years,beta,p,partial_r2,p_coint,p_holm,p_coint_holm,significant_holm,supported
+FAO,linear,Catch (FAO capture),48,11.679678,0.00454,0.218183,0.199015,0.031778,1.0,True,False
+FAO,linear,Fishing effort (nominal),44,8.290748,0.532887,0.014855,0.21494,1.0,1.0,False,False
+FAO,linear,Sea-surface temperature,48,-2.368255,0.557748,0.005412,0.359334,1.0,1.0,False,False
+FAO,linear,Ocean heat content,48,-0.755609,7.5e-05,0.292055,0.037873,0.000821,0.605975,True,False
+FAO,linear,Container port traffic,22,0.301544,0.944222,0.000458,0.515296,1.0,1.0,False,False
+FAO,linear,Seaborne trade volume,22,1.489589,0.85786,0.002027,0.536841,1.0,1.0,False,False
+FAO,linear,Dams completed (cumulative),46,19.278211,0.003028,0.265399,0.062363,0.024223,0.935446,True,False
+FAO,linear,Aquaculture production,48,4.548351,0.080181,0.055433,0.329724,0.481086,1.0,False,False
+FAO,quadratic,Catch (FAO capture),48,13.431867,0.011014,0.06796,0.364855,0.110135,1.0,False,False
+FAO,quadratic,Fishing effort (nominal),44,-79.533622,2e-06,0.4171,0.000439,2.8e-05,0.006581,True,True
+FAO,quadratic,Sea-surface temperature,48,-3.267996,0.319695,0.012246,0.268085,1.0,1.0,False,False
+FAO,quadratic,Ocean heat content,48,-0.765212,0.00425,0.154765,0.094283,0.051004,1.0,False,False
+FAO,quadratic,Container port traffic,22,9.644077,0.201506,0.0683,0.120621,1.0,1.0,False,False
+FAO,quadratic,Seaborne trade volume,22,7.21818,0.360795,0.023169,0.034219,1.0,0.479069,False,False
+FAO,quadratic,Dams completed (cumulative),46,125.406334,0.000667,0.382977,0.000274,0.01,0.004388,True,True
+FAO,quadratic,Aquaculture production,48,-7.803578,0.176711,0.052567,0.064066,1.0,0.832861,False,False
+FAO,changes,Catch (FAO capture),47,10.638469,0.173057,0.04303,,1.0,,False,False
+FAO,changes,Fishing effort (nominal),43,-20.172054,0.08842,0.026697,,1.0,,False,False
+FAO,changes,Sea-surface temperature,47,-4.057428,0.312937,0.032821,,1.0,,False,False
+FAO,changes,Ocean heat content,47,-0.120252,0.506495,0.007454,,1.0,,False,False
+FAO,changes,Container port traffic,21,4.445697,0.515633,0.034778,,1.0,,False,False
+FAO,changes,Seaborne trade volume,21,8.052856,0.280427,0.055133,,1.0,,False,False
+FAO,changes,Dams completed (cumulative),45,12.94688,0.504529,0.005579,,1.0,,False,False
+FAO,changes,Aquaculture production,47,14.337826,0.192526,0.073768,,1.0,,False,False
+SAU,linear,Catch (FAO capture),60,-12.087729,0.000656,0.342254,0.902908,0.005905,1.0,True,False
+SAU,linear,Fishing effort (nominal),68,-35.690991,1e-06,0.646225,0.547988,8e-06,1.0,True,False
+SAU,linear,Sea-surface temperature,70,15.721048,4.8e-05,0.238609,0.794228,0.000577,1.0,True,False
+SAU,linear,Ocean heat content,65,0.824592,0.0,0.569453,0.198516,2e-06,1.0,True,False
+SAU,linear,Container port traffic,20,11.457743,0.0,0.763805,0.997814,0.0,1.0,True,False
+SAU,linear,Seaborne trade volume,20,20.275775,0.000545,0.421056,0.997814,0.005447,1.0,True,False
+SAU,linear,Dams completed (cumulative),70,-16.411559,0.0,0.797994,0.955039,0.0,1.0,True,False
+SAU,linear,Aquaculture production,60,1.328882,0.734836,0.003554,0.494438,1.0,1.0,False,False
+SAU,quadratic,Catch (FAO capture),60,-0.821743,0.786607,0.000963,0.987947,1.0,1.0,False,False
+SAU,quadratic,Fishing effort (nominal),68,35.303993,0.001614,0.253348,0.809587,0.022599,1.0,True,False
+SAU,quadratic,Sea-surface temperature,70,1.699014,0.462644,0.00811,0.99731,1.0,1.0,False,False
+SAU,quadratic,Ocean heat content,65,0.265809,0.080495,0.040421,0.983786,0.563466,1.0,False,False
+SAU,quadratic,Container port traffic,20,7.384863,0.013506,0.208643,0.999741,0.12155,1.0,False,False
+SAU,quadratic,Seaborne trade volume,20,6.801256,0.022409,0.112346,0.999741,0.179269,1.0,False,False
+SAU,quadratic,Dams completed (cumulative),70,-59.138906,0.002438,0.411297,0.150171,0.031688,1.0,True,False
+SAU,quadratic,Aquaculture production,60,9.996607,0.006533,0.312563,0.789036,0.071867,1.0,False,False
+SAU,changes,Catch (FAO capture),59,-4.237398,0.105721,0.045381,,1.0,,False,False
+SAU,changes,Fishing effort (nominal),67,-2.605824,0.646755,0.002938,,1.0,,False,False
+SAU,changes,Sea-surface temperature,69,0.552569,0.598858,0.00423,,1.0,,False,False
+SAU,changes,Ocean heat content,64,-0.000413,0.99299,0.0,,1.0,,False,False
+SAU,changes,Container port traffic,19,9.384484,0.000334,0.285505,,0.005342,,True,True
+SAU,changes,Seaborne trade volume,19,9.95222,0.001325,0.153716,,0.019877,,True,True
+SAU,changes,Dams completed (cumulative),69,-12.099433,0.013082,0.072955,,0.183144,,False,False
+SAU,changes,Aquaculture production,59,-1.834602,0.584624,0.005866,,1.0,,False,False

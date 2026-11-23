@@ -6,7 +6,7 @@
 - **Analysis map** (figure O.01).
 - **Verdict table**: every hypothesis (H1a–H5d, the CPUE explanation and the stage rules). Click a row to read its question, evidence and note; the figure gallery then shows only that hypothesis's figures.
 - **Forecast to 2030 (H5d)**: choose any of the 8 series to see the observed values, the chosen model's forecast and its 95% interval (hover for values), plus the back-test table.
-- **Figure gallery**: all 68 figures, filterable by report section, pipeline step and hypothesis, or limited to the 20 main-body figures. Click a figure to enlarge it.
+- **Figure gallery**: all 71 figures, filterable by report section, pipeline step and hypothesis, or limited to the 20 main-body figures. Click a figure to enlarge it.
 
 ## Open it
 

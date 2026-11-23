@@ -1,21 +1,22 @@
-# 2-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures) and H5 (panel, rebuilding, FiB, 2030 forecast)
+# 2-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures), H5 (panel, rebuilding, FiB, 2030 forecast) and H6 (drivers in combination)
 
 `hypothesis_tests.py` runs the analysis pipeline from the main README (§4) on `data/raw/`. It reuses the data builders from [`1-statistical-tests/stat_tests.py`](../1-statistical-tests/stat_tests.py) and the chart style from [`0-visualisation/visualise.py`](../0-visualisation/visualise.py).
 
 ```bash
-python 2-hypothesis-tests/hypothesis_tests.py                 # everything (~10 s)
+python 2-hypothesis-tests/hypothesis_tests.py                 # everything (~2 min)
 python 2-hypothesis-tests/hypothesis_tests.py --only h1a h2c
 python 2-hypothesis-tests/hypothesis_tests.py --only i2_cpue i2_h1b i2_h2b   # iteration 2 (effort)
 python 2-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # iteration 3 (warming)
 python 2-hypothesis-tests/hypothesis_tests.py --only i4_data i4_h4a i4_h4b i4_h4c i4_descriptive   # iteration 4
 python 2-hypothesis-tests/hypothesis_tests.py --only i5_h5a i5_h5b i5_h5c i5_h5d   # iteration 5
+python 2-hypothesis-tests/hypothesis_tests.py --only i6_h6a i6_h6b i6_h6c          # iteration 6 (combinations)
 python 2-hypothesis-tests/hypothesis_tests.py --only summary                  # all drivers, one figure
 ```
 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 20 figures (6 for iteration 1, 3 + 2 + 4 + 4 for iterations 2–5, 1 summary).
+- `figures/<section>/*.png`: 23 figures (6 for iteration 1, 3 + 2 + 4 + 4 + 3 for iterations 2–6, 1 summary).
 
 ## Verdicts
 
@@ -171,6 +172,45 @@ Iterations 1–4 tested each driver on one short yearly series, so the obvious o
 | ![](figures/11_iteration5/I5.04_h5d_forecast_2030.png) | | |
 
 Tables: `11_I5_H5a_panel_fixed_effects.csv`, `11_I5_H5b_rebuilding_by_eez.csv`, `11_I5_H5b_rebuilding_trends.csv`, `11_I5_H5c_fishing_in_balance.csv`, `11_I5_H5d_forecast_backtest.csv`, `11_I5_H5d_forecast_2030.csv`, `11_I5_H5d_forecast_all_models.csv`, `11_I5_H5d_forecast_paths.csv`. Verdicts are rows in `decisions.csv`. Iteration 5 reads the cleaned table `data/processed/sea_eez_annual.csv` (built by `3-data-quality/clean_data.py`).
+
+## Iteration 6 — drivers in combination (new hypothesis H6)
+
+Iterations 1–5 tested one driver at a time. Two drivers could matter only together: small effects can add up, one driver can mask another, or the effect of one can depend on the level of the other. Iteration 6 tests that in three ways:
+- **H6a (pairs, world):** all 28 pairs of the 8 world drivers from S.01. Joint Newey-West (HAC) F-test that both coefficients are zero, Holm within specification, for FAO and Sea Around Us.
+- **H6b (interactions, SEA):** 4 pairs chosen in advance on ecological grounds, in the 5-country panel 1960–2017 with country and year fixed effects:
+  - effort × sea temperature
+  - effort × aquaculture
+  - effort × foreign-fleet share
+  - industrial share × sea temperature
+
+  The interaction term is tested with both main effects held constant (wild cluster bootstrap, Holm across 16).
+- **H6c (best combination, world):** all 64 combinations of the 6 long-run drivers (catch, effort, SST, ocean heat, dams, aquaculture), ranked by BIC, plus LASSO. The real test is held-out years: each year is predicted from a model fitted only on the years before it, with the driver choice redone each time. Shapley R² splits the explained variation fairly between overlapping drivers.
+
+| Test | Result |
+|---|---|
+| **H6a pairs** | **Weak, not supported in both sources.** Year-to-year changes (the main test): **0 of 28 pairs significant in FAO**. In Sea Around Us, 10 of 28 are significant, but every one contains container traffic or seaborne trade (2000–2019, n ≈ 19), and both are already significant alone in that window. Pairing adds nothing; it is a short-window effect seen in one source only. Only 1 pair test is significant where neither driver is alone. |
+| | **Levels with a trend are spurious.** 51 of 112 level F-tests look significant, and single drivers flip sign between specifications (effort: −79 in FAO with a quadratic trend, +35 in SAU with a quadratic trend). Only 4 pass the Engle-Granger cointegration check, all in FAO and none in SAU, so no levels result holds in both sources. |
+| **H6b interactions** | **Fail to reject H₀.** 0 of 16 interaction terms significant after Holm. The smallest raw p is effort × sea temperature → mean trophic level (p = 0.046, Holm 0.73), and it vanishes once each country gets its own trend (p = 0.81). |
+| **H6c best combination** | **Fail to reject H₀.** All 6 drivers together explain 17% (FAO) and 15% (SAU) of year-to-year changes. A circular-shift permutation (p = 0.23 and 0.47) shows that is no more than chance, although the HAC F-test says p = 0.01–0.02. BIC keeps no driver for FAO, and catch alone for SAU, which is partly circular because SAU stock status is derived from catch. On held-out years the trend alone predicts best in both sources: RMSE 1.45 pp FAO and 0.95 pp SAU, against 1.60 and 0.99 pp for the BIC model. LASSO and the 6-driver model are also worse than trend only. |
+
+**What the sixth iteration adds:**
+- The "no driver" result of iterations 1–5 is not an artefact of testing one at a time. No pair, interaction or combination explains overexploitation in both data sources, or predicts unseen years better than the trend.
+- It confirms why the analysis works on changes, not levels. With trending series, a levels regression with a trend finds "links" for about half of all pairs, and they are spurious.
+- The remaining reading is still slow, cumulative depletion. Overexploitation rises steadily, and yearly fluctuations in pressure, warming or human use don't move it.
+
+**Method choices:**
+- **Year-to-year changes as the main test.** Differenced series are stationary (O.02), so a joint F-test on them is valid. A levels result counts only if the same model is cointegrated (Engle-Granger, MacKinnon p, Holm), i.e. its residual is stationary.
+- **Joint F-test with HAC covariance** rather than two separate t-tests. It asks the actual question ("do these two add anything together?") and keeps the false-positive rate right when the residuals are autocorrelated.
+- **Interactions only in the panel, and only for pre-chosen pairs.** One world series of about 45 years cannot estimate interactions reliably, and testing all 28 × lags would make a chance hit almost certain. Drivers are centred before multiplying, so the main effects stay interpretable. Main effects and fixed effects are partialled out (Frisch-Waugh-Lovell) before the wild cluster bootstrap.
+- **BIC + held-out years + LASSO** rather than in-sample fit alone. With 64 candidate models, the best in-sample fit is always optimistic. Redoing the choice inside every training window gives an honest test.
+- **Circular-shift permutation** for the joint R². It rotates the drivers against the response, keeping each series' autocorrelation and the drivers' correlation with each other, which a plain shuffle would destroy. Here it is more trustworthy than the HAC F-test, which is too liberal with 6 regressors on about 45 years.
+- **Shapley R²:** the only way to split explained variation between correlated drivers that doesn't depend on the order they are added.
+
+| | | |
+|---|---|---|
+| ![](figures/12_iteration6/I6.01_h6a_driver_pairs.png) | ![](figures/12_iteration6/I6.02_h6b_interactions.png) | ![](figures/12_iteration6/I6.03_h6c_best_combination.png) |
+
+Tables: `12_I6_H6a_pairs.csv`, `12_I6_H6a_single_drivers.csv`, `12_I6_H6b_interactions.csv`, `12_I6_H6c_best_combination.csv`, `12_I6_H6c_shapley_r2.csv`, `12_I6_H6c_rolling_origin_predictions.csv`. Verdicts are rows in `decisions.csv`.
 
 ## Summary across iterations — all drivers on one method
 

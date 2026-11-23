@@ -84,7 +84,7 @@
 <main>
   <header>
     <h1>SDG 14 overfishing — results dashboard</h1>
-    <p class="lead">Of <b id="n-all">—</b> hypothesis tests across five iterations, <b id="n-reject">—</b> reject H0,
+    <p class="lead">Of <b id="n-all">—</b> hypothesis tests across <b id="n-iter">—</b> iterations, <b id="n-reject">—</b> reject H0,
       <b id="n-mixed">—</b> are mixed or weak and <b id="n-fail">—</b> fail to reject. The world share of overexploited
       stocks is projected at <b id="w2030">—</b>% by 2030.</p>
     <p class="muted" style="margin-top:6px">KIE4033 Assignment 1 · FAO SOFIA and Sea Around Us data · SEA = Malaysia, Indonesia, Thailand, Vietnam, Philippines.</p>
@@ -104,7 +104,7 @@
 
   <section class="map" id="map">
     <h2>How the analysis fits together</h2>
-    <p class="sub">Data sources, the five test iterations and the verdict each hypothesis reached (figure O.01).</p>
+    <p class="sub">Data sources, the test iterations and the verdict each hypothesis reached (figure O.01).</p>
     <div id="map-img"></div>
   </section>
 
@@ -167,6 +167,7 @@ function drawSummary() {
   const mixed = n((r) => r.verdict === 'Mixed' || r.verdict === 'Weak');
   const fail = n((r) => r.verdict === 'Fail to reject H0');
   $('n-all').textContent = tests.length;
+  $('n-iter').textContent = Math.max(...DATA.verdicts.map((r) => +r.iteration));
   $('n-reject').textContent = $('t-reject').textContent = reject;
   $('n-mixed').textContent = $('t-mixed').textContent = mixed;
   $('n-fail').textContent = $('t-fail').textContent = fail;

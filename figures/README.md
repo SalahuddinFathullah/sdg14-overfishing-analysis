@@ -32,3 +32,4 @@ This is the shortlist of figures for the ~10-page report, in reading order and m
 - [I4.02 SEA shipping & structures CCF](../2-hypothesis-tests/figures/9_iteration4_human_use/I4.02_h4b_sea_ccf_heatmap.png), [I4.04 Platforms and wind](../2-hypothesis-tests/figures/9_iteration4_human_use/I4.04_structures_descriptive.png)
 - [I3.02 SEA warming CCF](../2-hypothesis-tests/figures/8_iteration3_warming/I3.02_h3b_sea_sst_ccf.png)
 - [5.04 Mirror trade](../0-visualisation/figures/5_integrity/5.04_mirror_trade_hs03.png)
+- [I6.01 Pairs of drivers](../2-hypothesis-tests/figures/12_iteration6/I6.01_h6a_driver_pairs.png), [I6.02 Interactions](../2-hypothesis-tests/figures/12_iteration6/I6.02_h6b_interactions.png), [I6.03 Best combination](../2-hypothesis-tests/figures/12_iteration6/I6.03_h6c_best_combination.png): iteration 6, drivers in combination (one sentence in Statistical Analysis: no pair, interaction or combination helps; figures in the appendix)

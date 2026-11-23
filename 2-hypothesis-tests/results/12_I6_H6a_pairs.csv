@@ -1,0 +1,169 @@
+response,spec,driver_1,driver_2,years,n_years,F_joint,p_joint,partial_r2,beta_1,p_1_in_pair,beta_2,p_2_in_pair,r_drivers_after_trend,vif,p_coint,p_joint_holm,p_coint_holm,significant_holm,supported,neither_alone
+FAO,linear,Catch (FAO capture),Fishing effort (nominal),1974–2017,44,6.442305,0.003755,0.35811,23.26713,0.00102,-33.457604,0.021825,0.723333,2.097365,0.229621,0.071346,1.0,False,False,True
+FAO,linear,Catch (FAO capture),Sea-surface temperature,1974–2021,48,6.859014,0.002553,0.2221,11.642825,0.005,-2.015344,0.532794,-0.023543,1.000555,0.341831,0.051067,1.0,False,False,True
+FAO,linear,Catch (FAO capture),Ocean heat content,1974–2021,48,9.511027,0.000369,0.305732,4.167415,0.410375,-0.58958,0.031073,-0.712478,2.030973,0.139324,0.009596,1.0,True,False,True
+FAO,linear,Catch (FAO capture),Container port traffic,2000–2021,22,0.10101,0.904433,0.004847,-4.811002,0.669604,0.091612,0.982458,-0.219357,1.05055,0.576353,1.0,1.0,False,False,True
+FAO,linear,Catch (FAO capture),Seaborne trade volume,2000–2021,22,0.066557,0.935839,0.007612,-5.326485,0.721951,1.762656,0.84136,0.109793,1.012201,0.004443,1.0,0.244383,False,False,True
+FAO,linear,Catch (FAO capture),Dams completed (cumulative),1974–2019,46,5.689403,0.006509,0.269056,3.418027,0.479214,15.009062,0.113951,0.883542,4.558866,0.185695,0.097629,1.0,False,False,True
+FAO,linear,Catch (FAO capture),Aquaculture production,1974–2021,48,9.721499,0.000319,0.377278,31.282392,0.000922,-16.992358,0.011298,0.891274,4.863094,0.029309,0.008608,1.0,True,False,True
+FAO,linear,Fishing effort (nominal),Sea-surface temperature,1974–2017,44,0.710749,0.497375,0.024168,9.007897,0.499765,-3.158412,0.40045,0.1086,1.011935,0.410788,1.0,1.0,False,False,True
+FAO,linear,Fishing effort (nominal),Ocean heat content,1974–2017,44,12.882767,4.8e-05,0.348479,-10.306928,0.119438,-0.988752,1.1e-05,-0.427834,1.224053,0.03004,0.001584,1.0,True,False,True
+FAO,linear,Fishing effort (nominal),Container port traffic,2000–2017,18,20.834286,6.4e-05,0.399351,-59.536394,0.000311,5.656901,0.258435,0.391648,1.181179,0.999361,0.002036,1.0,True,False,True
+FAO,linear,Fishing effort (nominal),Seaborne trade volume,2000–2017,18,14.337815,0.000409,0.329675,-49.672287,0.000106,4.388221,0.635973,0.073112,1.005374,0.999361,0.010223,1.0,True,False,True
+FAO,linear,Fishing effort (nominal),Dams completed (cumulative),1974–2017,44,19.756612,1e-06,0.580212,-61.61538,1e-06,51.353159,0.0,0.807054,2.868089,0.000119,4.3e-05,0.006676,True,True,True
+FAO,linear,Fishing effort (nominal),Aquaculture production,1974–2017,44,5.978733,0.005349,0.075698,-9.230838,0.632873,8.840031,0.038621,0.722252,2.090508,0.590217,0.090926,1.0,False,False,True
+FAO,linear,Sea-surface temperature,Ocean heat content,1974–2021,48,10.121187,0.000242,0.295493,-1.888185,0.622689,-0.753339,9e-05,0.027677,1.000767,0.103354,0.006777,1.0,True,False,True
+FAO,linear,Sea-surface temperature,Container port traffic,2000–2021,22,0.573718,0.573399,0.08602,-7.094349,0.322773,-2.007403,0.594003,-0.488656,1.313689,0.856811,1.0,1.0,False,False,True
+FAO,linear,Sea-surface temperature,Seaborne trade volume,2000–2021,22,0.465005,0.63547,0.077266,-6.481879,0.36525,-3.021415,0.671474,-0.445154,1.247135,0.473217,1.0,1.0,False,False,True
+FAO,linear,Sea-surface temperature,Dams completed (cumulative),1974–2019,46,5.813102,0.005906,0.283449,-4.366393,0.19634,19.771824,0.0028,0.097712,1.00964,0.208093,0.094501,1.0,False,False,True
+FAO,linear,Sea-surface temperature,Aquaculture production,1974–2021,48,2.241049,0.11835,0.059451,-2.042538,0.581103,4.495057,0.084944,-0.043482,1.001894,0.519549,1.0,1.0,False,False,True
+FAO,linear,Ocean heat content,Container port traffic,2000–2021,22,1.303241,0.296086,0.114638,-0.458884,0.126536,-0.766799,0.858205,-0.218893,1.050325,0.99792,1.0,1.0,False,False,True
+FAO,linear,Ocean heat content,Seaborne trade volume,2000–2021,22,1.080487,0.360453,0.11208,-0.441244,0.162524,0.535984,0.949974,-0.086566,1.00755,0.997341,1.0,1.0,False,False,True
+FAO,linear,Ocean heat content,Dams completed (cumulative),1974–2019,46,9.288438,0.000457,0.326579,-0.544853,0.066167,8.74144,0.329431,-0.751292,2.295896,0.156066,0.010965,1.0,True,False,True
+FAO,linear,Ocean heat content,Aquaculture production,1974–2021,48,11.276881,0.000111,0.301678,-0.854062,0.000587,-2.332756,0.40521,-0.583128,1.515241,0.044695,0.003448,1.0,True,False,True
+FAO,linear,Container port traffic,Seaborne trade volume,2000–2021,22,0.103557,0.902158,0.003429,-1.094067,0.865599,3.739364,0.697694,0.876054,4.300527,0.097774,1.0,1.0,False,False,True
+FAO,linear,Container port traffic,Dams completed (cumulative),2000–2019,20,4.511808,0.027936,0.252677,15.503358,0.019684,-248.651166,0.008567,0.881732,4.493394,0.999361,0.3911,1.0,False,False,True
+FAO,linear,Container port traffic,Aquaculture production,2000–2021,22,0.080769,0.922739,0.00469,1.559592,0.839399,-4.700098,0.754797,0.808134,2.882516,0.878085,1.0,1.0,False,False,True
+FAO,linear,Seaborne trade volume,Dams completed (cumulative),2000–2019,20,1.515019,0.249714,0.098476,10.683787,0.239445,-89.117557,0.137734,0.58605,1.523124,0.999361,1.0,1.0,False,False,True
+FAO,linear,Seaborne trade volume,Aquaculture production,2000–2021,22,0.145614,0.8655,0.007724,4.01608,0.701848,-4.568978,0.596268,0.711259,2.023837,0.007196,1.0,0.388573,False,False,True
+FAO,linear,Dams completed (cumulative),Aquaculture production,1974–2019,46,6.317248,0.003994,0.311704,28.413964,0.004523,-7.141576,0.165827,0.750184,2.287158,0.021498,0.071896,1.0,False,False,True
+FAO,quadratic,Catch (FAO capture),Fishing effort (nominal),1974–2017,44,16.778036,6e-06,0.41949,2.694909,0.696754,-78.051322,1.3e-05,-0.239086,1.060628,0.003374,0.000271,0.165302,True,False,False
+FAO,quadratic,Catch (FAO capture),Sea-surface temperature,1974–2021,48,5.31347,0.008666,0.071807,12.810174,0.026236,-1.86588,0.582227,-0.190968,1.037849,0.522411,0.28599,1.0,False,False,True
+FAO,quadratic,Catch (FAO capture),Ocean heat content,1974–2021,48,8.925155,0.000573,0.199594,11.000889,0.040538,-0.711656,0.005769,-0.128958,1.016911,0.165897,0.024626,1.0,True,False,True
+FAO,quadratic,Catch (FAO capture),Container port traffic,2000–2021,22,1.041825,0.374278,0.096017,-12.766421,0.337234,11.079745,0.169975,0.227554,1.054609,0.10777,1.0,1.0,False,False,True
+FAO,quadratic,Catch (FAO capture),Seaborne trade volume,2000–2021,22,1.333266,0.289821,0.068943,-18.747987,0.202683,13.449275,0.142867,0.523346,1.377204,0.999973,1.0,1.0,False,False,True
+FAO,quadratic,Catch (FAO capture),Dams completed (cumulative),1974–2019,46,6.543645,0.003417,0.409827,8.506361,0.168864,120.690954,0.001154,0.140598,1.020166,0.003193,0.123004,0.159654,False,False,False
+FAO,quadratic,Catch (FAO capture),Aquaculture production,1974–2021,48,5.079846,0.01046,0.263969,28.248846,0.003027,-17.968531,0.006118,0.544723,1.421916,0.046495,0.313812,1.0,False,False,True
+FAO,quadratic,Fishing effort (nominal),Sea-surface temperature,1974–2017,44,14.687508,1.8e-05,0.429195,-78.825696,7e-06,-3.192569,0.282092,0.0522,1.002732,0.002338,0.000844,0.119242,True,False,False
+FAO,quadratic,Fishing effort (nominal),Ocean heat content,1974–2017,44,21.617377,0.0,0.427527,-72.677333,0.000239,-0.219493,0.267186,0.4787,1.297276,0.001974,2.5e-05,0.102642,True,False,False
+FAO,quadratic,Fishing effort (nominal),Container port traffic,2000–2017,18,6.888613,0.009123,0.390405,-55.679199,0.00683,7.988999,0.268441,-0.359641,1.148556,0.999944,0.28599,1.0,False,False,False
+FAO,quadratic,Fishing effort (nominal),Seaborne trade volume,2000–2017,18,6.178722,0.013,0.359031,-65.277535,0.003815,-2.541058,0.736799,-0.377404,1.166091,0.999944,0.364002,1.0,False,False,False
+FAO,quadratic,Fishing effort (nominal),Dams completed (cumulative),1974–2017,44,22.750146,0.0,0.47012,-53.6152,0.000281,69.211877,0.08929,-0.674665,1.835444,0.006333,1.5e-05,0.297644,True,False,False
+FAO,quadratic,Fishing effort (nominal),Aquaculture production,1974–2017,44,19.80779,1e-06,0.421262,-78.202673,0.0,-2.250627,0.586484,0.165212,1.028061,0.000456,5.8e-05,0.024612,True,True,False
+FAO,quadratic,Sea-surface temperature,Ocean heat content,1974–2021,48,4.721266,0.014008,0.158831,-1.896786,0.617161,-0.75017,0.005051,0.120396,1.014708,0.208632,0.378213,1.0,False,False,True
+FAO,quadratic,Sea-surface temperature,Container port traffic,2000–2021,22,0.720636,0.500718,0.094999,-4.893642,0.538217,3.970264,0.649195,-0.685285,1.885423,0.999763,1.0,1.0,False,False,True
+FAO,quadratic,Sea-surface temperature,Seaborne trade volume,2000–2021,22,0.692274,0.514003,0.090414,-6.138949,0.396548,2.028851,0.763118,-0.388799,1.178085,0.999657,1.0,1.0,False,False,True
+FAO,quadratic,Sea-surface temperature,Dams completed (cumulative),1974–2019,46,12.910418,4.5e-05,0.457059,-8.196305,0.030479,138.598726,3.3e-05,0.232624,1.05721,2.9e-05,0.002106,0.001595,True,True,False
+FAO,quadratic,Sea-surface temperature,Aquaculture production,1974–2021,48,2.080018,0.137318,0.077772,-4.781378,0.169929,-8.885378,0.11538,-0.196306,1.040081,0.169207,1.0,1.0,False,False,True
+FAO,quadratic,Ocean heat content,Container port traffic,2000–2021,22,2.866287,0.084587,0.242535,-0.582019,0.035134,11.827328,0.129216,0.140335,1.02009,0.0,1.0,1.9e-05,False,False,True
+FAO,quadratic,Ocean heat content,Seaborne trade volume,2000–2021,22,3.103601,0.070961,0.1929,-0.578801,0.031397,10.905252,0.189557,0.185452,1.035617,0.067486,1.0,1.0,False,False,True
+FAO,quadratic,Ocean heat content,Dams completed (cumulative),1974–2019,46,11.276388,0.000125,0.433001,-0.447383,0.02617,112.44158,0.001734,-0.275022,1.081826,0.000801,0.005637,0.042471,True,True,False
+FAO,quadratic,Ocean heat content,Aquaculture production,1974–2021,48,4.385742,0.018477,0.181086,-0.708489,0.006077,-5.61032,0.238875,0.176915,1.03231,0.108614,0.471372,1.0,False,False,True
+FAO,quadratic,Container port traffic,Seaborne trade volume,2000–2021,22,0.908097,0.421984,0.077115,14.241695,0.309676,-7.397853,0.582909,0.798633,2.761023,0.185119,1.0,1.0,False,False,True
+FAO,quadratic,Container port traffic,Dams completed (cumulative),2000–2019,20,6.83468,0.007763,0.456395,6.040331,0.298667,-1058.597554,0.002219,-0.288244,1.090613,0.999944,0.263954,1.0,False,False,False
+FAO,quadratic,Container port traffic,Aquaculture production,2000–2021,22,2.256782,0.135133,0.107439,11.294027,0.117104,20.88171,0.244073,-0.220445,1.051078,0.984285,1.0,1.0,False,False,True
+FAO,quadratic,Seaborne trade volume,Dams completed (cumulative),2000–2019,20,6.214286,0.010818,0.452456,6.623301,0.321024,-1127.819852,0.003162,-0.042509,1.00181,0.999944,0.313812,1.0,False,False,False
+FAO,quadratic,Seaborne trade volume,Aquaculture production,2000–2021,22,0.917845,0.418285,0.034742,6.197141,0.50155,11.294977,0.595159,0.19626,1.040061,0.077806,1.0,1.0,False,False,True
+FAO,quadratic,Dams completed (cumulative),Aquaculture production,1974–2019,46,6.905925,0.002601,0.418281,152.162017,0.000983,7.89911,0.15031,-0.574945,1.49379,0.005216,0.098839,0.250384,False,False,False
+FAO,changes,Catch (FAO capture),Fishing effort (nominal),1975–2017,43,2.390653,0.104536,0.087435,13.126406,0.143981,-22.670735,0.059042,0.081847,1.006744,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Sea-surface temperature,1975–2021,47,0.974604,0.385338,0.050071,7.945697,0.353288,-2.216878,0.606967,-0.53044,1.391531,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Ocean heat content,1975–2021,47,3.235894,0.048853,0.047027,10.268428,0.218147,-0.088634,0.660977,-0.113382,1.013023,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Container port traffic,2001–2021,21,0.975454,0.396085,0.083848,-11.44184,0.180134,5.498607,0.421196,0.195536,1.039754,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Seaborne trade volume,2001–2021,21,1.972061,0.168108,0.121046,-13.545989,0.100436,10.619136,0.123667,0.279816,1.084948,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Dams completed (cumulative),1975–2019,45,1.176399,0.318342,0.051494,11.405269,0.16373,4.100465,0.821039,0.231706,1.056733,,1.0,,False,False,True
+FAO,changes,Catch (FAO capture),Aquaculture production,1975–2021,47,1.343369,0.271457,0.084521,5.850111,0.301597,11.828703,0.241489,0.416681,1.210102,,1.0,,False,False,True
+FAO,changes,Fishing effort (nominal),Sea-surface temperature,1975–2017,43,1.629873,0.208699,0.066816,-19.280935,0.09634,-4.569188,0.274164,0.036013,1.001299,,1.0,,False,False,True
+FAO,changes,Fishing effort (nominal),Ocean heat content,1975–2017,43,2.676913,0.081081,0.031882,-19.983364,0.076236,-0.100305,0.556329,0.02122,1.00045,,1.0,,False,False,True
+FAO,changes,Fishing effort (nominal),Container port traffic,2001–2017,17,5.652419,0.015866,0.247792,-34.645489,0.005968,6.550236,0.250753,0.023507,1.000553,,0.630398,,False,False,True
+FAO,changes,Fishing effort (nominal),Seaborne trade volume,2001–2017,17,5.664562,0.01576,0.215256,-28.798956,0.005372,7.272942,0.234626,-0.31974,1.113876,,0.630398,,False,False,True
+FAO,changes,Fishing effort (nominal),Dams completed (cumulative),1975–2017,43,3.437902,0.041901,0.048238,-26.981482,0.015945,28.22519,0.171952,0.351778,1.141224,,1.0,,False,False,True
+FAO,changes,Fishing effort (nominal),Aquaculture production,1975–2017,43,1.506701,0.233951,0.109669,-22.103513,0.097834,15.955745,0.227856,0.054233,1.00295,,1.0,,False,False,True
+FAO,changes,Sea-surface temperature,Ocean heat content,1975–2021,47,3.329936,0.045014,0.045054,-4.379231,0.250891,-0.155339,0.317444,-0.128833,1.016878,,1.0,,False,False,True
+FAO,changes,Sea-surface temperature,Container port traffic,2001–2021,21,0.356667,0.704842,0.059208,-3.581362,0.483064,2.154127,0.720073,-0.523861,1.378227,,1.0,,False,False,True
+FAO,changes,Sea-surface temperature,Seaborne trade volume,2001–2021,21,0.642739,0.537501,0.069636,-2.830516,0.585396,5.28144,0.368935,-0.557204,1.450278,,1.0,,False,False,True
+FAO,changes,Sea-surface temperature,Dams completed (cumulative),1975–2019,45,1.166129,0.321454,0.047437,-4.606203,0.255348,13.558668,0.471399,0.017249,1.000298,,1.0,,False,False,True
+FAO,changes,Sea-surface temperature,Aquaculture production,1975–2021,47,1.068187,0.352373,0.09864,-3.546028,0.300286,13.59683,0.163227,-0.088654,1.007922,,1.0,,False,False,True
+FAO,changes,Ocean heat content,Container port traffic,2001–2021,21,1.100146,0.354188,0.069866,-0.197788,0.211643,4.846952,0.44485,0.089495,1.008074,,1.0,,False,False,True
+FAO,changes,Ocean heat content,Seaborne trade volume,2001–2021,21,1.602643,0.2288,0.094364,-0.209676,0.168402,8.835848,0.239554,0.114507,1.013286,,1.0,,False,False,True
+FAO,changes,Ocean heat content,Dams completed (cumulative),1975–2019,45,0.341305,0.712795,0.010054,-0.09347,0.606,11.671709,0.537706,-0.109321,1.012096,,1.0,,False,False,True
+FAO,changes,Ocean heat content,Aquaculture production,1975–2021,47,6.236514,0.004125,0.09661,-0.216008,0.182427,16.174871,0.092851,0.224382,1.053016,,0.181513,,False,False,True
+FAO,changes,Container port traffic,Seaborne trade volume,2001–2021,21,0.879467,0.432097,0.055554,-0.904945,0.941623,9.148307,0.48534,0.84143,3.424704,,1.0,,False,False,True
+FAO,changes,Container port traffic,Dams completed (cumulative),2001–2019,19,5.382085,0.016313,0.193121,8.957414,0.097271,-198.398237,0.008692,0.332419,1.12423,,0.630398,,False,False,True
+FAO,changes,Container port traffic,Aquaculture production,2001–2021,21,0.226399,0.799636,0.034929,4.320957,0.564096,1.200886,0.954592,0.391838,1.181386,,1.0,,False,False,True
+FAO,changes,Seaborne trade volume,Dams completed (cumulative),2001–2019,19,5.668531,0.01377,0.185256,11.873997,0.051899,-153.683209,0.028564,0.103829,1.010898,,0.564585,,False,False,True
+FAO,changes,Seaborne trade volume,Aquaculture production,2001–2021,21,0.616766,0.550707,0.055179,7.971083,0.325312,0.645544,0.974596,0.332148,1.124002,,1.0,,False,False,True
+FAO,changes,Dams completed (cumulative),Aquaculture production,1975–2019,45,1.008931,0.373274,0.072696,0.651701,0.976477,14.469679,0.254953,0.264088,1.074971,,1.0,,False,False,True
+SAU,linear,Catch (FAO capture),Fishing effort (nominal),1960–2017,58,7.490347,0.001346,0.472986,-6.944295,0.023882,-15.414359,0.057179,0.726199,2.115797,0.923437,0.029608,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Sea-surface temperature,1960–2019,60,7.381071,0.001428,0.347644,-12.530691,0.000374,-2.099366,0.546751,-0.280299,1.085266,0.960674,0.029996,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Ocean heat content,1960–2019,60,9.964779,0.000198,0.457302,-2.625649,0.456599,0.56579,0.001501,-0.803584,2.822844,0.793368,0.005756,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Container port traffic,2000–2019,20,64.861397,0.0,0.765232,-2.402546,0.798499,11.249061,0.0,-0.388321,1.17757,0.999361,1e-06,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Seaborne trade volume,2000–2019,20,26.744959,8e-06,0.559716,-21.825544,0.056927,20.243189,2.8e-05,-0.002801,1.000008,0.999361,0.000276,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Dams completed (cumulative),1960–2019,60,15.338236,5e-06,0.576162,1.585763,0.559909,-14.227688,1e-06,0.807369,2.872286,0.962644,0.000176,1.0,True,False,True
+SAU,linear,Catch (FAO capture),Aquaculture production,1960–2019,60,22.388056,0.0,0.620335,-20.505916,0.0,14.854153,8.9e-05,0.611391,1.59693,0.463536,3e-06,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Sea-surface temperature,1950–2017,68,15.401696,3e-06,0.665387,-32.565191,2e-06,5.025583,0.089065,-0.45333,1.258666,0.895711,0.000128,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Ocean heat content,1955–2017,63,24.602977,0.0,0.685794,-14.894104,0.040227,0.584003,3e-05,-0.763972,2.401842,0.587137,1e-06,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Container port traffic,2000–2017,18,64.323946,0.0,0.827793,13.639839,0.01942,10.701681,0.0,0.391648,1.181179,0.999361,4e-06,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Seaborne trade volume,2000–2017,18,17.056368,0.000177,0.619518,30.903739,0.007979,17.155961,0.000202,0.073112,1.005374,0.999361,0.005299,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Dams completed (cumulative),1950–2017,68,266.231492,0.0,0.9138,40.38733,9e-06,-34.590909,0.0,0.95733,11.973419,0.122338,0.0,1.0,True,False,True
+SAU,linear,Fishing effort (nominal),Aquaculture production,1960–2017,58,16.183035,3e-06,0.499777,-27.522655,3e-06,7.261026,0.089829,0.318664,1.113024,0.430337,0.000118,1.0,True,False,True
+SAU,linear,Sea-surface temperature,Ocean heat content,1955–2019,65,17.846817,1e-06,0.569469,-0.134606,0.964589,0.826401,0.0,0.379517,1.168269,0.338707,3.2e-05,1.0,True,False,True
+SAU,linear,Sea-surface temperature,Container port traffic,2000–2019,20,54.791877,0.0,0.769581,-1.710387,0.58386,10.634764,1.7e-05,-0.636819,1.682196,0.999361,3e-06,1.0,True,False,True
+SAU,linear,Sea-surface temperature,Seaborne trade volume,2000–2019,20,21.56166,2.9e-05,0.503824,-6.182883,0.077063,13.705843,0.060386,-0.590055,1.534132,0.999361,0.000978,1.0,True,False,True
+SAU,linear,Sea-surface temperature,Dams completed (cumulative),1950–2019,70,35.191658,0.0,0.798467,0.823474,0.705186,-16.164254,0.0,-0.526104,1.382715,0.982485,0.0,1.0,True,False,True
+SAU,linear,Sea-surface temperature,Aquaculture production,1960–2019,60,0.164097,0.849066,0.01278,2.638654,0.599985,1.417387,0.723631,-0.041303,1.001709,0.72668,1.0,1.0,False,False,True
+SAU,linear,Ocean heat content,Container port traffic,2000–2019,20,60.918194,0.0,0.766222,-0.053753,0.399302,11.353374,0.0,-0.159832,1.026216,0.999361,2e-06,1.0,True,False,True
+SAU,linear,Ocean heat content,Seaborne trade volume,2000–2019,20,11.991067,0.000658,0.456005,-0.201753,0.263982,20.264281,0.000509,-0.001968,1.000004,0.999361,0.015127,1.0,True,False,True
+SAU,linear,Ocean heat content,Dams completed (cumulative),1955–2019,65,24.446554,0.0,0.721189,0.068602,0.61825,-13.797524,0.0,-0.871375,4.154443,0.98201,1e-06,1.0,True,False,True
+SAU,linear,Ocean heat content,Aquaculture production,1960–2019,60,33.347076,0.0,0.534608,0.763071,0.0,6.774085,0.033181,-0.317835,1.11237,0.162188,0.0,1.0,True,False,True
+SAU,linear,Container port traffic,Seaborne trade volume,2000–2019,20,73.65154,0.0,0.7831,14.17727,0.0,-7.800823,0.01737,0.830907,3.230042,0.999361,0.0,1.0,True,False,True
+SAU,linear,Container port traffic,Dams completed (cumulative),2000–2019,20,77.793352,0.0,0.78985,7.503222,0.006912,64.793324,0.090495,0.881732,4.493394,0.999361,0.0,1.0,True,False,True
+SAU,linear,Container port traffic,Aquaculture production,2000–2019,20,68.235106,0.0,0.773151,10.010682,0.000244,7.452361,0.441583,0.752249,2.303505,0.999361,1e-06,1.0,True,False,True
+SAU,linear,Seaborne trade volume,Dams completed (cumulative),2000–2019,20,54.370587,0.0,0.752451,7.265624,0.019374,134.561574,1e-06,0.58605,1.523124,0.999361,3e-06,1.0,True,False,True
+SAU,linear,Seaborne trade volume,Aquaculture production,2000–2019,20,34.563844,2e-06,0.603302,10.987281,0.042939,26.420947,0.010833,0.571435,1.484864,0.999361,6.1e-05,1.0,True,False,True
+SAU,linear,Dams completed (cumulative),Aquaculture production,1960–2019,60,56.633777,0.0,0.695002,-15.414438,0.0,8.276851,0.014819,0.351002,1.140514,0.691945,0.0,1.0,True,False,True
+SAU,quadratic,Catch (FAO capture),Fishing effort (nominal),1960–2017,58,6.463891,0.003076,0.245094,3.519991,0.254085,43.864849,0.000855,-0.307697,1.104579,0.530791,0.113815,1.0,False,False,True
+SAU,quadratic,Catch (FAO capture),Sea-surface temperature,1960–2019,60,0.109418,0.89655,0.005465,-1.213974,0.715493,-1.387016,0.673599,-0.21563,1.048764,0.994097,1.0,1.0,False,False,True
+SAU,quadratic,Catch (FAO capture),Ocean heat content,1960–2019,60,2.301973,0.109625,0.060613,1.752562,0.617933,0.340103,0.04926,-0.369901,1.158516,0.979652,1.0,1.0,False,False,True
+SAU,quadratic,Catch (FAO capture),Container port traffic,2000–2019,20,4.998243,0.021707,0.219564,4.216848,0.674512,6.690172,0.007076,0.380277,1.169058,0.999944,0.520959,1.0,False,False,True
+SAU,quadratic,Catch (FAO capture),Seaborne trade volume,2000–2019,20,3.193438,0.069916,0.125291,4.956129,0.688368,5.411355,0.114408,0.515784,1.36246,0.999944,1.0,1.0,False,False,True
+SAU,quadratic,Catch (FAO capture),Dams completed (cumulative),1960–2019,60,62.28563,0.0,0.731203,-5.563969,0.034081,-93.72654,0.0,-0.205159,1.04394,0.124339,0.0,1.0,True,False,True
+SAU,quadratic,Catch (FAO capture),Aquaculture production,1960–2019,60,9.302797,0.000331,0.437085,-10.740876,0.007525,13.576389,9.9e-05,0.493461,1.321884,0.509602,0.014567,1.0,True,False,True
+SAU,quadratic,Fishing effort (nominal),Sea-surface temperature,1950–2017,68,8.148398,0.000712,0.253363,35.262709,0.003292,0.06417,0.975495,0.15055,1.023191,0.9007,0.029917,1.0,True,False,True
+SAU,quadratic,Fishing effort (nominal),Ocean heat content,1955–2017,63,6.81399,0.002198,0.233422,39.392941,0.006755,0.044427,0.7063,0.457512,1.264729,0.901141,0.087917,1.0,False,False,True
+SAU,quadratic,Fishing effort (nominal),Container port traffic,2000–2017,18,7.630288,0.006426,0.196669,5.965901,0.284441,6.061945,0.001804,-0.359641,1.148556,0.999944,0.224917,1.0,False,False,True
+SAU,quadratic,Fishing effort (nominal),Seaborne trade volume,2000–2017,18,2.274836,0.142195,0.118746,4.951353,0.430675,5.63219,0.055272,-0.377404,1.166091,0.999944,1.0,1.0,False,False,True
+SAU,quadratic,Fishing effort (nominal),Dams completed (cumulative),1950–2017,68,20.096804,0.0,0.583736,36.480345,8e-06,-50.192763,1e-05,0.029166,1.000851,0.093908,9e-06,1.0,True,False,True
+SAU,quadratic,Fishing effort (nominal),Aquaculture production,1960–2017,58,11.06634,9.6e-05,0.432122,37.505866,7.1e-05,7.689771,0.006799,0.06426,1.004146,0.433625,0.004432,1.0,True,False,True
+SAU,quadratic,Sea-surface temperature,Ocean heat content,1955–2019,65,1.600731,0.210244,0.041166,-0.54662,0.838696,0.271832,0.079459,0.16459,1.027844,0.992947,1.0,1.0,False,False,True
+SAU,quadratic,Sea-surface temperature,Container port traffic,2000–2019,20,6.586921,0.008848,0.303,-4.054978,0.23113,3.115196,0.179598,-0.651926,1.739153,0.999944,0.28599,1.0,False,False,True
+SAU,quadratic,Sea-surface temperature,Seaborne trade volume,2000–2019,20,4.247126,0.034552,0.291982,-4.782857,0.134566,2.324922,0.341382,-0.461699,1.270916,0.999944,0.691038,1.0,False,False,True
+SAU,quadratic,Sea-surface temperature,Dams completed (cumulative),1950–2019,70,6.653034,0.002351,0.411844,0.444007,0.82489,-58.912928,0.003219,-0.104125,1.010961,0.260154,0.091706,1.0,False,False,True
+SAU,quadratic,Sea-surface temperature,Aquaculture production,1960–2019,60,4.036137,0.023143,0.320106,-1.755488,0.494861,10.074271,0.006337,0.049947,1.002501,0.832166,0.532284,1.0,False,False,True
+SAU,quadratic,Ocean heat content,Container port traffic,2000–2019,20,3.996193,0.040626,0.209735,-0.019325,0.738872,7.458251,0.013235,0.136095,1.018871,0.999944,0.771894,1.0,False,False,True
+SAU,quadratic,Ocean heat content,Seaborne trade volume,2000–2019,20,3.441026,0.058888,0.11332,-0.018379,0.796277,6.916717,0.019673,0.17939,1.033251,0.999944,0.942202,1.0,False,False,True
+SAU,quadratic,Ocean heat content,Dams completed (cumulative),1955–2019,65,38.126988,0.0,0.704174,0.103514,0.116642,-81.106283,0.0,-0.148992,1.022702,0.115168,0.0,1.0,True,False,True
+SAU,quadratic,Ocean heat content,Aquaculture production,1960–2019,60,7.587558,0.00123,0.347513,0.242932,0.00895,9.682759,0.005058,0.093478,1.008815,0.75636,0.050434,1.0,False,False,True
+SAU,quadratic,Container port traffic,Seaborne trade volume,2000–2019,20,4.764316,0.025011,0.220439,10.298948,0.070789,-4.270058,0.4,0.85652,3.754119,0.999944,0.532284,1.0,False,False,True
+SAU,quadratic,Container port traffic,Dams completed (cumulative),2000–2019,20,5.301944,0.01813,0.232485,8.136327,0.006758,118.981199,0.244319,-0.288244,1.090613,0.999944,0.471372,1.0,False,False,True
+SAU,quadratic,Container port traffic,Aquaculture production,2000–2019,20,4.851437,0.023718,0.208749,7.405589,0.009654,0.538303,0.966408,-0.123409,1.015465,0.999944,0.532284,1.0,False,False,True
+SAU,quadratic,Seaborne trade volume,Dams completed (cumulative),2000–2019,20,3.828103,0.045371,0.113275,6.827561,0.020795,22.50187,0.858535,-0.042509,1.00181,0.999944,0.816682,1.0,False,False,True
+SAU,quadratic,Seaborne trade volume,Aquaculture production,2000–2019,20,3.642727,0.051348,0.121459,7.083447,0.027705,-4.999153,0.730491,0.144164,1.021224,0.999944,0.872915,1.0,False,False,True
+SAU,quadratic,Dams completed (cumulative),Aquaculture production,1960–2019,60,56.402564,0.0,0.717223,-112.881024,0.0,-4.975093,0.19064,-0.796266,2.732542,0.067292,0.0,1.0,True,False,True
+SAU,changes,Catch (FAO capture),Fishing effort (nominal),1961–2017,57,3.58652,0.034475,0.098583,-5.861792,0.011066,1.077369,0.850451,0.198437,1.040991,,1.0,,False,False,True
+SAU,changes,Catch (FAO capture),Sea-surface temperature,1961–2019,59,1.855293,0.165893,0.048698,-5.031156,0.060376,-0.630937,0.618939,-0.569531,1.480091,,1.0,,False,False,True
+SAU,changes,Catch (FAO capture),Ocean heat content,1961–2019,59,1.328144,0.273185,0.046564,-4.361626,0.112918,-0.022611,0.676352,-0.178676,1.032978,,1.0,,False,False,True
+SAU,changes,Catch (FAO capture),Container port traffic,2001–2019,19,15.747733,0.000166,0.291834,3.019183,0.775927,9.212064,7.8e-05,0.122471,1.015228,,0.008956,,True,True,False
+SAU,changes,Catch (FAO capture),Seaborne trade volume,2001–2019,19,14.899517,0.000222,0.158018,2.523919,0.818531,9.604319,6.1e-05,0.204531,1.043659,,0.011759,,True,True,False
+SAU,changes,Catch (FAO capture),Dams completed (cumulative),1961–2019,59,2.232636,0.116707,0.065981,-3.210557,0.216516,-8.085889,0.133932,0.338453,1.12937,,1.0,,False,False,True
+SAU,changes,Catch (FAO capture),Aquaculture production,1961–2019,59,1.406797,0.253448,0.047853,-4.109716,0.112448,-1.20089,0.670444,0.128042,1.016668,,1.0,,False,False,True
+SAU,changes,Fishing effort (nominal),Sea-surface temperature,1951–2017,67,0.531519,0.590283,0.01645,-2.191947,0.708651,0.917479,0.338424,-0.073859,1.005485,,1.0,,False,False,True
+SAU,changes,Fishing effort (nominal),Ocean heat content,1956–2017,62,0.094876,0.909624,0.002444,-2.3416,0.70029,0.00473,0.921577,-0.068276,1.004683,,1.0,,False,False,True
+SAU,changes,Fishing effort (nominal),Container port traffic,2001–2017,17,12.395913,0.000797,0.395911,8.453254,0.299698,8.282154,0.000216,0.023507,1.000553,,0.038279,,True,True,False
+SAU,changes,Fishing effort (nominal),Seaborne trade volume,2001–2017,17,10.176395,0.001867,0.306003,17.044302,0.08434,10.828546,0.000534,-0.31974,1.113876,,0.085886,,False,False,False
+SAU,changes,Fishing effort (nominal),Dams completed (cumulative),1951–2017,67,5.785737,0.004901,0.116762,6.055077,0.280346,-16.224647,0.001197,0.471029,1.28513,,0.210754,,False,False,True
+SAU,changes,Fishing effort (nominal),Aquaculture production,1961–2017,57,0.298482,0.74316,0.013952,-2.313459,0.720401,-2.473826,0.479421,-0.062894,1.003971,,1.0,,False,False,True
+SAU,changes,Sea-surface temperature,Ocean heat content,1956–2019,64,0.088205,0.915689,0.00297,0.485296,0.684501,0.004838,0.923565,-0.154118,1.02433,,1.0,,False,False,True
+SAU,changes,Sea-surface temperature,Container port traffic,2001–2019,19,17.590305,9.1e-05,0.309172,-2.77368,0.557638,7.339379,0.010219,-0.603523,1.57292,,0.005017,,True,True,False
+SAU,changes,Sea-surface temperature,Seaborne trade volume,2001–2019,19,23.931655,1.6e-05,0.219045,-4.722056,0.362571,4.715334,0.213695,-0.628085,1.651503,,0.000869,,True,True,False
+SAU,changes,Sea-surface temperature,Dams completed (cumulative),1951–2019,69,3.726789,0.029277,0.074497,0.335222,0.74021,-11.929642,0.01084,-0.096063,1.009314,,1.0,,False,False,True
+SAU,changes,Sea-surface temperature,Aquaculture production,1961–2019,59,0.242968,0.785119,0.010043,0.586911,0.627163,-1.632801,0.609864,-0.129253,1.01699,,1.0,,False,False,True
+SAU,changes,Ocean heat content,Container port traffic,2001–2019,19,11.022441,0.000979,0.307196,-0.110363,0.097197,9.513169,0.000364,0.049688,1.002475,,0.045993,,True,True,False
+SAU,changes,Ocean heat content,Seaborne trade volume,2001–2019,19,7.537497,0.004939,0.175747,-0.111363,0.31985,10.217308,0.001346,0.070184,1.00495,,0.210754,,False,False,False
+SAU,changes,Ocean heat content,Dams completed (cumulative),1956–2019,64,2.698807,0.07532,0.057527,-0.022295,0.634076,-11.06191,0.023549,-0.146117,1.021816,,1.0,,False,False,True
+SAU,changes,Ocean heat content,Aquaculture production,1961–2019,59,0.199272,0.819905,0.006207,0.012164,0.805954,-1.916676,0.565025,0.182206,1.034339,,1.0,,False,False,True
+SAU,changes,Container port traffic,Seaborne trade volume,2001–2019,19,12.19846,0.000606,0.293055,11.616661,0.00312,-3.908007,0.378104,0.825527,3.139662,,0.030279,,True,True,False
+SAU,changes,Container port traffic,Dams completed (cumulative),2001–2019,19,13.959708,0.00031,0.34402,7.887053,0.00066,94.806743,0.135736,0.332419,1.12423,,0.015823,,True,True,False
+SAU,changes,Container port traffic,Aquaculture production,2001–2019,19,14.275986,0.000277,0.35943,7.695761,0.000747,21.151943,0.190607,0.333406,1.125061,,0.014389,,True,True,False
+SAU,changes,Seaborne trade volume,Dams completed (cumulative),2001–2019,19,11.923825,0.000676,0.288432,8.979598,0.000808,136.409502,0.03075,0.103829,1.010898,,0.033108,,True,True,False
+SAU,changes,Seaborne trade volume,Aquaculture production,2001–2019,19,9.305603,0.002086,0.268753,7.470925,0.010244,25.888918,0.084891,0.276931,1.083061,,0.093851,,False,False,False
+SAU,changes,Dams completed (cumulative),Aquaculture production,1961–2019,59,1.759761,0.181468,0.046378,-10.710574,0.065887,-1.415369,0.671409,0.086624,1.00756,,1.0,,False,False,True

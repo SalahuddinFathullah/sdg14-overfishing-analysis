@@ -1,0 +1,13 @@
+response,driver,shapley_r2_beyond_trend
+FAO,Catch (FAO capture),0.023069
+FAO,Fishing effort (nominal),0.032707
+FAO,Sea-surface temperature,0.028395
+FAO,Ocean heat content,0.013536
+FAO,Dams completed (cumulative),0.006052
+FAO,Aquaculture production,0.065882
+SAU,Catch (FAO capture),0.071157
+SAU,Fishing effort (nominal),0.006169
+SAU,Sea-surface temperature,0.009238
+SAU,Ocean heat content,0.00205
+SAU,Dams completed (cumulative),0.051805
+SAU,Aquaculture production,0.006748

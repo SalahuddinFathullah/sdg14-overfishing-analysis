@@ -1,0 +1,17 @@
+pair,reason,driver_1,driver_2,response,spec,countries,years,n_obs,beta_interaction,cluster_se,p_wild_bootstrap,beta_standardised,p_holm,significant_holm
+Effort × sea temperature,fishing hits harder where stocks are heat-stressed,log_effort,sst,% overexploited,country + year FE,5,1960–2017,290,10.34775,5.060894,0.221451,0.435662,1.0,False
+Effort × sea temperature,fishing hits harder where stocks are heat-stressed,log_effort,sst,% overexploited,country + year FE + country trends,5,1960–2017,290,2.983144,3.156865,0.40072,0.089434,1.0,False
+Effort × sea temperature,fishing hits harder where stocks are heat-stressed,log_effort,sst,mean trophic level,country + year FE,5,1960–2017,290,0.087923,0.038409,0.045782,0.377716,0.73251,False
+Effort × sea temperature,fishing hits harder where stocks are heat-stressed,log_effort,sst,mean trophic level,country + year FE + country trends,5,1960–2017,290,0.003941,0.016071,0.811728,0.013289,1.0,False
+Effort × aquaculture,fishmeal/trash-fish demand from farms,log_effort,log_aquaculture,% overexploited,country + year FE,5,1960–2017,290,0.602914,0.927419,0.618056,0.095646,1.0,False
+Effort × aquaculture,fishmeal/trash-fish demand from farms,log_effort,log_aquaculture,% overexploited,country + year FE + country trends,5,1960–2017,290,3.929935,3.14936,0.301955,0.304778,1.0,False
+Effort × aquaculture,fishmeal/trash-fish demand from farms,log_effort,log_aquaculture,mean trophic level,country + year FE,5,1960–2017,290,-0.005289,0.004575,0.272891,-0.086636,1.0,False
+Effort × aquaculture,fishmeal/trash-fish demand from farms,log_effort,log_aquaculture,mean trophic level,country + year FE + country trends,5,1960–2017,290,0.040009,0.023346,0.156121,0.367481,1.0,False
+Effort × foreign-fleet share,domestic and foreign pressure combined,log_effort,foreign_share,% overexploited,country + year FE,5,1960–2017,290,-0.355809,0.112528,0.122428,-0.249097,1.0,False
+Effort × foreign-fleet share,domestic and foreign pressure combined,log_effort,foreign_share,% overexploited,country + year FE + country trends,5,1960–2017,290,-0.392919,0.155757,0.150463,-0.326586,1.0,False
+Effort × foreign-fleet share,domestic and foreign pressure combined,log_effort,foreign_share,mean trophic level,country + year FE,5,1960–2017,290,0.000561,0.000584,0.266975,0.03599,1.0,False
+Effort × foreign-fleet share,domestic and foreign pressure combined,log_effort,foreign_share,mean trophic level,country + year FE + country trends,5,1960–2017,290,0.001502,0.001922,0.470936,0.120371,1.0,False
+Industrial share × sea temperature,industrial fleets on warming stocks,industrial_share,sst,% overexploited,country + year FE,5,1960–2017,290,0.270571,0.05418,0.063786,0.390541,0.95679,False
+Industrial share × sea temperature,industrial fleets on warming stocks,industrial_share,sst,% overexploited,country + year FE + country trends,5,1960–2017,290,0.072264,0.076883,0.39892,0.066279,1.0,False
+Industrial share × sea temperature,industrial fleets on warming stocks,industrial_share,sst,mean trophic level,country + year FE,5,1960–2017,290,0.002799,0.001399,0.277521,0.334203,1.0,False
+Industrial share × sea temperature,industrial fleets on warming stocks,industrial_share,sst,mean trophic level,country + year FE + country trends,5,1960–2017,290,0.000836,0.000942,0.394033,0.082001,1.0,False

@@ -2546,6 +2546,546 @@ def section_summary() -> None:
 
 
 # =========================================================================== #
+# Iteration 6 — drivers in combination (new hypothesis H6)
+# =========================================================================== #
+# Iterations 1–5 tested one driver at a time. Two drivers can matter only together:
+# small effects can add up, one driver can mask another (suppression), or the effect of
+# one can depend on the level of the other (interaction).
+#   H6a  pairs, world: do two drivers TOGETHER explain % overexploited beyond the trend?
+#   H6b  interactions, SEA country panel: does one pressure change the effect of another?
+#   H6c  combinations, world: does any combination of drivers beat the trend alone,
+#        in sample (BIC, LASSO) and on years the model has not seen (rolling origin)?
+# Main test: YEAR-TO-YEAR CHANGES (stationary after differencing, O.02), where the shared
+# upward trend that makes every driver correlate 0.93–1.00 in levels cannot create a link.
+# Levels-with-trend models are reported too, but the detrended levels still wander like
+# random walks, so a levels regression can look significant by chance (spurious regression);
+# a levels result counts only if the series are cointegrated (Engle-Granger test on the
+# same model), i.e. the regression residual is stationary.
+
+I6_MIN_TRAIN = 20     # years in the first training window of the rolling-origin test
+I6_TREND = {"linear": "ct", "quadratic": "ctt"}   # Engle-Granger deterministic terms per spec
+I6_MIN_SHIFT = 5      # circular-shift permutation: smallest shift (years) used as a null draw
+# Long world drivers (all start by 1960) used in H6c; shipping starts in 2000, too short to combine
+I6_LONG = ["Catch (FAO capture)", "Fishing effort (nominal)", "Sea-surface temperature", "Ocean heat content",
+           "Dams completed (cumulative)", "Aquaculture production"]
+I6_SHORT = {"Catch (FAO capture)": "Catch", "Fishing effort (nominal)": "Effort", "Sea-surface temperature": "SST",
+            "Ocean heat content": "Ocean heat", "Container port traffic": "Port traffic",
+            "Seaborne trade volume": "Seaborne trade", "Dams completed (cumulative)": "Dams",
+            "Aquaculture production": "Aquaculture"}
+
+
+def i6_world_frame(names: list[str], resp: pd.Series, spec: str) -> pd.DataFrame:
+    """
+    Aligned years of the response and the named world drivers (log for volumes).
+    spec 'levels' keeps levels (the trend goes into the model); 'changes' uses year-to-year
+    changes (Δ response, Δlog volume or Δ index), which removes the trend by differencing.
+    """
+    drv = {dn: (x, log) for _, dn, x, log in summary_drivers()}
+    cols = {"y": resp.diff() if spec == "changes" else resp}
+    for dn in names:
+        x, log = drv[dn]
+        cols[dn] = i4_change(x, log) if spec == "changes" else (np.log(x) if log else x)
+    return pd.concat(cols, axis=1).dropna()
+
+
+def i6_design(d: pd.DataFrame, names: list[str], spec: str) -> np.ndarray:
+    """Regressors: constant, trend terms for the spec, then the drivers (drivers are the LAST columns)."""
+    t = d.index.to_numpy(float) - d.index.to_numpy(float).mean()
+    base = [np.ones(len(d))]
+    if spec in ("linear", "quadratic"):
+        base.append(t)
+    if spec == "quadratic":
+        base.append(t ** 2)
+    return np.column_stack(base + [d[n].to_numpy(float) for n in names])
+
+
+def i6_joint_test(y: np.ndarray, X: np.ndarray, k: int, label: str) -> dict:
+    """
+    OLS with Newey-West (HAC) covariance; Wald F-test that the last k coefficients (the
+    drivers) are all zero, their own p-values, and the R² the drivers add over the
+    trend-only model (partial R²).
+    """
+    fit = sm.OLS(y, X).fit()      # not logged to DIAGNOSTICS: hundreds of pair models would swamp that table
+    hac = fit.get_robustcov_results(cov_type="HAC", maxlags=nw_lags(len(y)))
+    R = np.zeros((k, X.shape[1]))
+    R[:, -k:] = np.eye(k)
+    ft = hac.f_test(R)
+    base = sm.OLS(y, X[:, :-k]).fit()
+    partial_r2 = (base.ssr - fit.ssr) / base.ssr
+    return {"F": float(np.squeeze(ft.fvalue)), "p_joint": float(ft.pvalue), "partial_r2": partial_r2,
+            "betas": fit.params[-k:], "p_each": np.asarray(hac.pvalues)[-k:], "n": len(y)}
+
+
+def i6_coint_p(d: pd.DataFrame, names: list[str], spec: str) -> float:
+    """
+    Engle-Granger cointegration p-value (MacKinnon) for y on the drivers with the spec's
+    trend terms; NaN for the changes spec. H0 = no cointegration = the levels regression
+    is spurious, so a levels link counts only when this rejects.
+    """
+    if spec not in I6_TREND:
+        return np.nan
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        return float(coint(d["y"].to_numpy(), d[names].to_numpy(), trend=I6_TREND[spec])[1])
+
+
+def section_i6_h6a() -> None:
+    sec = "12_iteration6"
+    print("Iteration 6: H6a — pairs of world drivers, joint test beyond the trend")
+    from itertools import combinations
+    names = [dn for _, dn, _, _ in summary_drivers()]
+    responses = [("FAO", st.world_fao()), ("SAU", st.world_sau())]
+    specs = [("linear", "levels"), ("quadratic", "levels"), ("changes", "changes")]
+    single_rows, rows = [], []
+    for rn, resp in responses:
+        for spec, frame in specs:
+            for dn in names:                                         # one driver alone, same framework
+                d = i6_world_frame([dn], resp, frame)
+                r = i6_joint_test(d["y"].to_numpy(), i6_design(d, [dn], spec), 1, f"H6a {rn} {spec}: {dn}")
+                single_rows.append({"response": rn, "spec": spec, "driver": dn, "n_years": r["n"],
+                                    "beta": r["betas"][0], "p": r["p_joint"], "partial_r2": r["partial_r2"],
+                                    "p_coint": i6_coint_p(d, [dn], spec)})
+            for a, b in combinations(names, 2):
+                d = i6_world_frame([a, b], resp, frame)
+                r = i6_joint_test(d["y"].to_numpy(), i6_design(d, [a, b], spec), 2, f"H6a {rn} {spec}: {a} + {b}")
+                # correlation of the two drivers after the same trend removal → variance inflation factor
+                Xt = i6_design(d, [a, b], spec)
+                base = Xt[:, :-2]
+                ra = Xt[:, -2] - base @ np.linalg.lstsq(base, Xt[:, -2], rcond=None)[0]
+                rb = Xt[:, -1] - base @ np.linalg.lstsq(base, Xt[:, -1], rcond=None)[0]
+                r12 = float(np.corrcoef(ra, rb)[0, 1])
+                rows.append({"response": rn, "spec": spec, "driver_1": a, "driver_2": b,
+                             "years": f"{d.index.min()}–{d.index.max()}", "n_years": r["n"],
+                             "F_joint": r["F"], "p_joint": r["p_joint"], "partial_r2": r["partial_r2"],
+                             "beta_1": r["betas"][0], "p_1_in_pair": r["p_each"][0],
+                             "beta_2": r["betas"][1], "p_2_in_pair": r["p_each"][1],
+                             "r_drivers_after_trend": r12, "vif": 1 / (1 - r12 ** 2),
+                             "p_coint": i6_coint_p(d, [a, b], spec)})
+    single = pd.DataFrame(single_rows)
+    res = pd.DataFrame(rows)
+    for df in (single, res):                 # Holm within spec: 8 drivers / 28 pairs × 2 sources
+        pc = "p" if df is single else "p_joint"
+        df["p_holm"] = df.groupby("spec")[pc].transform(holm)
+        df["p_coint_holm"] = df.groupby("spec")["p_coint"].transform(holm)
+        df["significant_holm"] = df["p_holm"] < ALPHA
+        # changes: the F-test is valid as it stands; levels: only if the regression is not spurious
+        df["supported"] = df["significant_holm"] & ((df["spec"] == "changes") | (df["p_coint_holm"] < ALPHA))
+    res = res.rename(columns={"p_holm": "p_joint_holm"})
+    sp = single.set_index(["response", "spec", "driver"])["supported"]
+    res["neither_alone"] = [not sp[(r["response"], r["spec"], r["driver_1"])] and
+                            not sp[(r["response"], r["spec"], r["driver_2"])] for _, r in res.iterrows()]
+    save_table(single, "12_I6_H6a_single_drivers")
+    save_table(res, "12_I6_H6a_pairs")
+
+    # A pair counts if supported in BOTH data sources: in year-to-year changes, or in levels
+    # under both trend specifications (and cointegrated there, so not spurious)
+    key = ["driver_1", "driver_2"]
+    ch = res[res["spec"] == "changes"].groupby(key)["supported"].agg(["all", "size"])
+    lv = res[res["spec"] != "changes"].groupby(key)["supported"].agg(["all", "size"])
+    consistent = sorted({f"{a} + {b}" for (a, b), r in ch.iterrows() if r["all"] and r["size"] == 2}
+                        | {f"{a} + {b}" for (a, b), r in lv.iterrows() if r["all"] and r["size"] == 4})
+    sig = res[res["supported"]]
+    masked = sig[sig["neither_alone"]]
+    n_pairs = res.groupby(key).ngroups
+    lev = res[res["spec"] != "changes"]
+    chg = res[res["spec"] == "changes"]
+    decide("H6a (iteration 6: pairs of drivers, world)",
+           "Do two drivers TOGETHER explain world % overexploited beyond the shared trend, even if neither does alone?",
+           f"{n_pairs} pairs × 2 sources, joint HAC F-test, Holm within specification. Year-to-year changes: "
+           f"{int(chg['supported'].sum())} of {len(chg)} significant ("
+           + ", ".join(f"{rr} {int(g['supported'].sum())}" for rr, g in chg.groupby("response")) + ")"
+           + (": " + "; ".join(f"{r['driver_1']} + {r['driver_2']} ({r['response']}, n = {r['n_years']}) Holm p "
+                               f"{fmt_p(r['p_joint_holm'])}" for _, r in chg[chg["supported"]].iterrows())
+              if chg["supported"].any() else "")
+           + f". Levels with linear/quadratic trend: {int(lev['significant_holm'].sum())} of {len(lev)} F-tests "
+             f"significant, but only {int(lev['supported'].sum())} pass the cointegration check (the rest are spurious "
+             f"regressions; signs flip between specifications). Significant only as a pair (neither driver alone): "
+             f"{len(masked)}. Supported in both sources: {', '.join(consistent) or 'none'}",
+           bool(consistent),
+           "Shipping series start in 2000, so their pairs use about 20 years. Volumes enter as Δlog (growth), "
+           "indices as first differences. Levels results need Engle-Granger cointegration (MacKinnon p, Holm) to count.",
+           verdict=None if consistent or len(sig) == 0 else
+           f"Weak: {len(sig)} pair test(s) significant, but none supported in both data sources")
+
+    # Figure: lower-triangle matrices (FAO, SAU) — cell = pair, diagonal = driver alone (linear trend)
+    short = [I6_SHORT[n] for n in names]
+    fig, axes = plt.subplots(1, 2, figsize=(15.5, 7.6))
+    cmap = v.SEQ_BLUE
+    for ax, (rn, _) in zip(axes, responses):
+        m = np.full((len(names), len(names)), np.nan)
+        txt = {}
+        for i, a in enumerate(names):
+            ps = single.set_index(["response", "spec", "driver"]).loc[(rn, "changes", a), "p_holm"]
+            m[i, i] = -np.log10(max(ps, 1e-4))
+            txt[(i, i)] = f"{ps:.2f}" if ps >= 0.01 else "<.01"
+        for _, r in res[(res["response"] == rn) & (res["spec"] == "changes")].iterrows():
+            i, j = names.index(r["driver_2"]), names.index(r["driver_1"])
+            m[i, j] = -np.log10(max(r["p_joint_holm"], 1e-4))
+            txt[(i, j)] = f"{r['p_joint_holm']:.2f}" if r["p_joint_holm"] >= 0.01 else "<.01"
+        im = ax.imshow(np.ma.masked_invalid(m), cmap=cmap, vmin=0, vmax=3, aspect="equal")
+        for (i, j), s in txt.items():
+            strong = m[i, j] >= -np.log10(ALPHA)
+            ax.text(j, i, s, ha="center", va="center", fontsize=8.5,
+                    color="white" if m[i, j] > 1.8 else v.INK, fontweight="bold" if strong else "normal")
+            if strong:
+                ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec=v.INK, lw=1.6))
+        ax.set_xticks(range(len(names)), short, rotation=40, ha="right", fontsize=8.8)
+        ax.set_yticks(range(len(names)), short, fontsize=8.8)
+        ax.grid(False)
+        for s in ax.spines.values():
+            s.set_visible(False)
+        n_sig = int(res[(res["response"] == rn) & (res["spec"] == "changes")]["supported"].sum())
+        ship = res[(res["response"] == rn) & (res["spec"] == "changes") & res["supported"]]
+        ship_all = len(ship) and ship.apply(lambda r: "traffic" in r["driver_1"] + r["driver_2"]
+                                            or "Seaborne" in r["driver_1"] + r["driver_2"], axis=1).all()
+        ax.set_title(f"{rn} % overexploited — {n_sig} of {n_pairs} pairs significant"
+                     + ("\n(all involve shipping, 2000–2019 only; shipping is significant alone too)" if ship_all else ""),
+                     fontsize=10)
+    fig.subplots_adjust(top=0.86, bottom=0.16, left=0.07, right=0.88, wspace=0.22)
+    cb = fig.colorbar(im, cax=fig.add_axes([0.905, 0.25, 0.012, 0.55]))
+    cb.set_label("−log10(Holm p); outlined = p < 0.05", fontsize=8.8)
+    cb.set_ticks([0, -np.log10(0.05), 2, 3], labels=["1", "0.05", "0.01", "≤0.001"])
+    v.suptitle(fig, "Iteration 6 · H6a — " + (
+        f"Pairs of drivers linked in both sources: {', '.join(consistent)}" if consistent else
+        "No pair of drivers explains overexploitation in both data sources, even together"),
+               "Cells: Holm-adjusted p of the joint test that both drivers' year-to-year changes add nothing "
+               f"(Newey-West F-test); diagonal: each driver alone. Levels models: {int(lev['significant_holm'].sum())} "
+               f"of {len(lev)} look significant, {int(lev['supported'].sum())} survive the cointegration check")
+    save_fig(fig, sec, "I6.01_h6a_driver_pairs",
+             "FAO via OWID; Sea Around Us; IMAS effort; HadSST & NOAA via OWID; World Bank WDI; UNCTADstat; GDAT")
+
+
+def country_panel_i6() -> pd.DataFrame:
+    """
+    Country-year panel for H6b, 1960–2017 (aquaculture starts 1960, effort ends 2017):
+    % overexploited, MTL, break-adjusted log effort (effort_panel), mean EEZ sea-surface
+    temperature, log aquaculture production, and catch-weighted foreign-fleet and
+    industrial shares of catch across each country's EEZs.
+    """
+    eff = effort_panel()
+    ss, aq = sea_sst(), aquaculture()
+    p = eez_full_panel()
+    w = p.assign(wf=p["foreign_share_pct"] * p["catch"], wi=p["industrial_share_pct"] * p["catch"])
+    g = w.groupby(["country", "year"])[["wf", "wi", "catch"]].sum()
+    shares = pd.DataFrame({"foreign_share": g["wf"] / g["catch"], "industrial_share": g["wi"] / g["catch"]}).reset_index()
+    extra = pd.concat([pd.DataFrame({"country": c, "year": ss[c].index, "sst": ss[c]["sst_mean_c"].to_numpy()})
+                       for c in SEA5])
+    aqd = pd.concat([pd.DataFrame({"country": c, "year": aq.index, "log_aquaculture": np.log(aq[c]).to_numpy()})
+                     for c in SEA5])
+    out = (eff.merge(extra, on=["country", "year"]).merge(aqd, on=["country", "year"])
+           .merge(shares, on=["country", "year"]))
+    return out[out["year"].between(1960, 2017)].dropna().sort_values(["unit", "year"]).reset_index(drop=True)
+
+
+def section_i6_h6b() -> None:
+    sec = "12_iteration6"
+    print("Iteration 6: H6b — interactions between pressures, SEA country panel")
+    p = country_panel_i6()
+    # (driver 1, driver 2, label, reason) — pairs chosen in advance on ecological grounds
+    pairs = [("log_effort", "sst", "Effort × sea temperature", "fishing hits harder where stocks are heat-stressed"),
+             ("log_effort", "log_aquaculture", "Effort × aquaculture", "fishmeal/trash-fish demand from farms"),
+             ("log_effort", "foreign_share", "Effort × foreign-fleet share", "domestic and foreign pressure combined"),
+             ("industrial_share", "sst", "Industrial share × sea temperature", "industrial fleets on warming stocks")]
+    rows = []
+    for x1, x2, lbl, why in pairs:
+        d = p.copy()
+        # centre each driver at its panel mean, so the main effects are effects at the average level of the other
+        d["c1"], d["c2"] = d[x1] - d[x1].mean(), d[x2] - d[x2].mean()
+        d["ix"] = d["c1"] * d["c2"]
+        for resp in ["over", "mtl"]:
+            for trends in (False, True):
+                # FWL: purge FE (+ unit trends) AND both main effects from y and from the interaction
+                r = fwl_residuals(d, [resp, "ix", "c1", "c2"], trends)
+                Z = np.column_stack([np.ones(len(r)), r["c1"], r["c2"]])
+                ry = r[resp] - Z @ np.linalg.lstsq(Z, r[resp], rcond=None)[0]
+                rx = r["ix"] - Z @ np.linalg.lstsq(Z, r["ix"], rcond=None)[0]
+                b, se, p_boot = wild_cluster_p(rx.to_numpy(), ry.to_numpy(), d["unit"].to_numpy())
+                rows.append({"pair": lbl, "reason": why, "driver_1": x1, "driver_2": x2,
+                             "response": "% overexploited" if resp == "over" else "mean trophic level",
+                             "spec": "country + year FE" + (" + country trends" if trends else ""),
+                             "countries": d["unit"].nunique(), "years": f"{d['year'].min()}–{d['year'].max()}",
+                             "n_obs": len(d), "beta_interaction": b, "cluster_se": se, "p_wild_bootstrap": p_boot,
+                             "beta_standardised": b * rx.std() / ry.std()})
+    res = pd.DataFrame(rows)
+    res["p_holm"] = holm(res["p_wild_bootstrap"])
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "12_I6_H6b_interactions")
+
+    sig = res[res["significant_holm"]]
+    robust = [f"{pr} → {rp}" for (pr, rp), g in sig.groupby(["pair", "response"])
+              if g["spec"].nunique() == 2 and np.sign(g["beta_interaction"]).nunique() == 1]
+    reject = bool(robust)
+    decide("H6b (iteration 6: interactions, SEA)",
+           "Does one pressure change the effect of another on % overexploited or mean trophic level "
+           "(interaction in a country panel with fixed effects)?",
+           f"{len(pairs)} pre-chosen pairs × 2 responses × 2 specifications; {len(sig)} of {len(res)} interaction "
+           "terms significant after Holm (wild cluster bootstrap)"
+           + (": " + "; ".join(f"{r['pair']} → {r['response']} ({r['spec']}) standardised β "
+                                f"{r['beta_standardised']:+.2f}, Holm p {fmt_p(r['p_holm'])}" for _, r in sig.iterrows())
+              if len(sig) else "")
+           + f"; robust to country trends: {', '.join(robust) or 'none'}; smallest raw p: "
+           + (lambda r: f"{r['pair']} → {r['response']} ({r['spec']}) p {fmt_p(r['p_wild_bootstrap'])}")(
+               res.loc[res["p_wild_bootstrap"].idxmin()]),
+           reject,
+           "5 countries, 1960–2017. Drivers are centred before multiplying; both main effects and the fixed effects "
+           "are partialled out (Frisch-Waugh-Lovell), and the interaction is tested with the wild cluster bootstrap "
+           "(all 6^5 Webb draws).",
+           verdict=None if reject or len(sig) == 0 else
+           f"Weak: {len(sig)} interaction(s) significant, but not robust to country trends")
+
+    # Figure: standardised interaction effect per pair × response, two specifications
+    combos = list(dict.fromkeys(zip(res["pair"], res["response"])))
+    fig, ax = plt.subplots(figsize=(12.5, 6.4))
+    marks = {False: "o", True: "D"}
+    for i, (pr, rp) in enumerate(combos):
+        y0 = len(combos) - 1 - i
+        for _, r in res[(res["pair"] == pr) & (res["response"] == rp)].iterrows():
+            tr = "trends" in r["spec"]
+            yp = y0 + (-0.15 if tr else 0.15)
+            col = v.SERIES[0] if rp == "% overexploited" else v.SERIES[1]
+            half = 1.96 * r["cluster_se"] * abs(r["beta_standardised"] / r["beta_interaction"]) if r["beta_interaction"] else 0
+            ax.plot([r["beta_standardised"] - half, r["beta_standardised"] + half], [yp, yp], color=v.GRID, lw=2, zorder=1)
+            ax.scatter(r["beta_standardised"], yp, marker=marks[tr], s=52, zorder=3, lw=1.4, edgecolor=col,
+                       color=col if r["significant_holm"] else v.SURFACE)
+            ax.text(1.01, yp, f"p {fmt_p(r['p_wild_bootstrap'])}", transform=ax.get_yaxis_transform(),
+                    va="center", fontsize=8, color=v.INK_2)
+    ax.text(1.01, len(combos) - 0.45, "bootstrap p\n(raw)", transform=ax.get_yaxis_transform(),
+            va="bottom", fontsize=8, color=v.MUTED)
+    for b in range(1, len(combos)):
+        ax.axhline(b - 0.5, color=v.GRID, lw=0.8)
+    ax.axvline(0, color=v.AXIS, lw=0.8)
+    ax.set_yticks(range(len(combos))[::-1], [f"{pr} → {rp}" for pr, rp in combos], fontsize=8.8)
+    ax.set_xlabel("Standardised interaction effect (SD of response per SD of the product term)\n"
+                  "grey bar = conventional 95% clustered CI, too narrow with only 5 countries; "
+                  "significance uses the wild cluster bootstrap")
+    ax.grid(axis="y", visible=False)
+    handles = [plt.Line2D([], [], marker="o", ls="", color=v.INK_2, label="country + year fixed effects"),
+               plt.Line2D([], [], marker="D", ls="", color=v.INK_2, label="+ a trend per country"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[0], label="% overexploited"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[1], label="mean trophic level")]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.4, -0.17), ncol=4, fontsize=8.5,
+              title="Filled = significant after Holm (wild cluster bootstrap); hollow = not", title_fontsize=8.5)
+    v.suptitle(fig, "Iteration 6 · H6b — " + (
+        f"Pressures interact: {', '.join(robust)}" if reject else
+        "No pressure changes the effect of another in the SEA country panel"),
+               f"Interaction term in a two-way fixed-effects panel (5 countries, {res['years'].iloc[0]}), main effects "
+               f"held constant. {len(sig)} of {len(res)} interaction terms significant after Holm")
+    fig.subplots_adjust(top=0.85, bottom=0.24, left=0.3, right=0.91)
+    save_fig(fig, sec, "I6.02_h6b_interactions",
+             "Sea Around Us (11 SEA EEZs); IMAS Global Fishing Effort; NOAA ERSST v5; FAO via OWID")
+
+
+def i6_fit_subsets(d: pd.DataFrame, names: list[str], spec: str = "changes") -> dict[tuple, tuple[float, float]]:
+    """(R², BIC) of y ~ base terms of the spec + every subset of the drivers (2^k models)."""
+    from itertools import combinations
+    out = {}
+    for k in range(len(names) + 1):
+        for s in combinations(names, k):
+            f = sm.OLS(d["y"].to_numpy(), i6_design(d, list(s), spec)).fit()
+            out[s] = (f.rsquared, f.bic)
+    return out
+
+
+def i6_shapley(fits: dict[tuple, tuple[float, float]], names: list[str]) -> dict[str, float]:
+    """
+    Shapley value of each driver for the R² added beyond the base model: the driver's extra R²,
+    averaged over every order in which the drivers could enter. The values add up to the
+    R² that all drivers together add (a fair split even when drivers overlap).
+    """
+    from math import factorial
+    n = len(names)
+    out = {}
+    for dn in names:
+        others = [o for o in names if o != dn]
+        val = 0.0
+        for s, (r2, _) in fits.items():
+            if dn in s:
+                continue
+            w = factorial(len(s)) * factorial(n - len(s) - 1) / factorial(n)
+            with_d = tuple(o for o in names if o in s or o == dn)
+            val += w * (fits[with_d][0] - r2)
+        out[dn] = val
+    return out
+
+
+def i6_lasso_resid_fit(Xtr: np.ndarray, ytr: np.ndarray):
+    """LASSO on standardised drivers; λ chosen by time-ordered cross-validation (no future data in training folds)."""
+    from sklearn.linear_model import LassoCV
+    from sklearn.model_selection import TimeSeriesSplit
+    mu, sd = Xtr.mean(0), Xtr.std(0)
+    sd[sd == 0] = 1
+    m = LassoCV(cv=TimeSeriesSplit(n_splits=4), max_iter=50000, random_state=4033).fit((Xtr - mu) / sd, ytr)
+    return m, mu, sd
+
+
+def i6_rolling(d: pd.DataFrame, names: list[str]) -> pd.DataFrame:
+    """
+    Rolling-origin (expanding window) test on year-to-year changes: fit on years ≤ T,
+    predict the change in year T+1 (= next year's level given this year's), for every T
+    from the I6_MIN_TRAIN-th year on. Model choice (BIC subset, LASSO λ) is redone inside
+    each window, so the held-out year never influences which drivers are used.
+    Models: trend only (the average yearly change = drift); BIC-best subset; all drivers;
+    LASSO (mean partialled out first).
+    """
+    rows = []
+    yrs = d.index.to_numpy()
+    for i in range(I6_MIN_TRAIN, len(d)):
+        tr, te = d.iloc[:i], d.iloc[[i]]
+        T_tr, T_te = np.ones((len(tr), 1)), np.ones((1, 1))       # drift only (changes spec)
+        pred = {}
+        f0 = sm.OLS(tr["y"].to_numpy(), T_tr).fit()
+        pred["Trend only"] = float(f0.predict(T_te)[0])
+        fits = i6_fit_subsets(tr, names)
+        best = min(fits, key=lambda s: fits[s][1])
+        Xb_tr = np.column_stack([T_tr] + [tr[n].to_numpy() for n in best])
+        Xb_te = np.column_stack([T_te] + [te[n].to_numpy() for n in best])
+        pred["Best subset (BIC)"] = float(sm.OLS(tr["y"].to_numpy(), Xb_tr).fit().predict(Xb_te)[0])
+        Xa_tr = np.column_stack([T_tr] + [tr[n].to_numpy() for n in names])
+        Xa_te = np.column_stack([T_te] + [te[n].to_numpy() for n in names])
+        pred["All drivers"] = float(sm.OLS(tr["y"].to_numpy(), Xa_tr).fit().predict(Xa_te)[0])
+        # LASSO on trend-residualised drivers (Frisch-Waugh: the trend is never penalised)
+        Bx = np.linalg.lstsq(T_tr, tr[names].to_numpy(), rcond=None)[0]
+        by = np.linalg.lstsq(T_tr, tr["y"].to_numpy(), rcond=None)[0]
+        m, mu, sd = i6_lasso_resid_fit(tr[names].to_numpy() - T_tr @ Bx, tr["y"].to_numpy() - T_tr @ by)
+        xr = te[names].to_numpy() - T_te @ Bx
+        pred["LASSO"] = float((T_te @ by)[0] + m.predict((xr - mu) / sd)[0])
+        for k, val in pred.items():
+            rows.append({"year": int(yrs[i]), "model": k, "predicted": val, "observed": float(te["y"].iloc[0]),
+                         "drivers_used": ", ".join(I6_SHORT[n] for n in best) if k == "Best subset (BIC)" else ""})
+    return pd.DataFrame(rows)
+
+
+def i6_shift_p(d: pd.DataFrame, names: list[str]) -> float:
+    """
+    Circular-shift permutation p for the R² all drivers add beyond the drift: the drivers
+    (kept together, so their mutual correlation stays) are rotated against the response by
+    every shift of ≥ I6_MIN_SHIFT years. Autocorrelation is preserved, unlike a plain shuffle.
+    """
+    T = np.ones((len(d), 1))
+    ry = d["y"].to_numpy() - T @ np.linalg.lstsq(T, d["y"].to_numpy(), rcond=None)[0]
+    RX = d[names].to_numpy() - T @ np.linalg.lstsq(T, d[names].to_numpy(), rcond=None)[0]
+
+    def r2(X):
+        b = np.linalg.lstsq(X, ry, rcond=None)[0]
+        return 1 - ((ry - X @ b) ** 2).sum() / (ry ** 2).sum()
+
+    obs = r2(RX)
+    null = [r2(np.roll(RX, k, axis=0)) for k in range(I6_MIN_SHIFT, len(d) - I6_MIN_SHIFT + 1)]
+    return float((1 + sum(n >= obs for n in null)) / (1 + len(null)))
+
+
+def section_i6_h6c() -> None:
+    sec = "12_iteration6"
+    print("Iteration 6: H6c — best combination of drivers (BIC, LASSO, rolling-origin test, Shapley R²)")
+    names = I6_LONG
+    responses = [("FAO", st.world_fao()), ("SAU", st.world_sau())]
+    summary, shap_rows, oos_all = [], [], []
+    for rn, resp in responses:
+        d = i6_world_frame(names, resp, "changes")
+        fits = i6_fit_subsets(d, names)
+        best = min(fits, key=lambda s: fits[s][1])
+        r2_trend, r2_all = fits[()][0], fits[tuple(names)][0]
+        shap = i6_shapley({s: (r2 - r2_trend, b) for s, (r2, b) in fits.items()}, names)
+        for dn in names:
+            shap_rows.append({"response": rn, "driver": dn, "shapley_r2_beyond_trend": shap[dn]})
+        jb = i6_joint_test(d["y"].to_numpy(), i6_design(d, list(best), "changes"), len(best),
+                           f"H6c {rn}: BIC subset") if best else None
+        ja = i6_joint_test(d["y"].to_numpy(), i6_design(d, names, "changes"), len(names), f"H6c {rn}: all drivers")
+        T = np.ones((len(d), 1))
+        Bx = np.linalg.lstsq(T, d[names].to_numpy(), rcond=None)[0]
+        by = np.linalg.lstsq(T, d["y"].to_numpy(), rcond=None)[0]
+        lasso, _, _ = i6_lasso_resid_fit(d[names].to_numpy() - T @ Bx, d["y"].to_numpy() - T @ by)
+        oos = i6_rolling(d, names).assign(response=rn)
+        oos_all.append(oos)
+        rmse = oos.assign(e2=(oos["predicted"] - oos["observed"]) ** 2).groupby("model")["e2"].mean() ** 0.5
+        summary.append({"response": rn, "years": f"{d.index.min()}–{d.index.max()}", "n_years": len(d),
+                        "r2_trend_only": r2_trend, "r2_all_drivers": r2_all, "r2_added_by_all": r2_all - r2_trend,
+                        "bic_best_subset": ", ".join(best) or "(trend only)",
+                        "r2_added_by_best": fits[best][0] - r2_trend,
+                        "p_best_subset_hac": jb["p_joint"] if jb else np.nan,
+                        "p_all_drivers_hac": ja["p_joint"], "p_all_drivers_circular_shift": i6_shift_p(d, names),
+                        "lasso_selected": ", ".join(n for n, c in zip(names, lasso.coef_) if abs(c) > 1e-8) or "(none)",
+                        "oos_years": f"{oos['year'].min()}–{oos['year'].max()}",
+                        **{f"rmse_{k.lower().replace(' ', '_').replace('(', '').replace(')', '')}": val
+                           for k, val in rmse.items()},
+                        "best_subset_beats_trend_oos": rmse["Best subset (BIC)"] < rmse["Trend only"],
+                        "bic_subsets_chosen_oos": "; ".join(f"{k or '(trend only)'} ×{n}" for k, n in
+                                                            oos[oos["model"] == "Best subset (BIC)"]["drivers_used"]
+                                                            .value_counts().items())})
+    summ = pd.DataFrame(summary)
+    shp = pd.DataFrame(shap_rows)
+    oos = pd.concat(oos_all, ignore_index=True)
+    save_table(summ, "12_I6_H6c_best_combination")
+    save_table(shp, "12_I6_H6c_shapley_r2")
+    save_table(oos, "12_I6_H6c_rolling_origin_predictions")
+
+    ok = summ.apply(lambda r: r["bic_best_subset"] != "(trend only)" and r["p_best_subset_hac"] < ALPHA
+                    and r["best_subset_beats_trend_oos"], axis=1)
+    reject = bool(ok.all())
+    decide("H6c (iteration 6: best combination, world)",
+           "Does any combination of the long-run drivers explain year-to-year changes in world % overexploited "
+           "better than the trend (average change) alone, including on years the model has not seen?",
+           "; ".join(f"{r['response']} ({r['years']}): BIC picks {r['bic_best_subset']} (adds R² "
+                     f"{r['r2_added_by_best']:.2f}, HAC p {fmt_p(r['p_best_subset_hac']) if pd.notna(r['p_best_subset_hac']) else 'n/a'}); "
+                     f"all 6 drivers add R² {r['r2_added_by_all']:.2f} (HAC p {fmt_p(r['p_all_drivers_hac'])}, "
+                     f"circular-shift p {fmt_p(r['p_all_drivers_circular_shift'])}); LASSO keeps {r['lasso_selected']}; "
+                     f"held-out RMSE {r['rmse_best_subset_bic']:.2f} pp (BIC subset) vs {r['rmse_trend_only']:.2f} pp "
+                     f"(trend only)" for _, r in summ.iterrows()),
+           reject,
+           "Year-to-year changes (levels regressions are spurious here, see H6a). Six drivers with series back "
+           "to 1960 (shipping starts in 2000 and is left out). The BIC subset is "
+           "re-chosen inside every training window, so the held-out comparison is free of selection bias. SAU stock "
+           "status is derived from catch, so catch → SAU is partly circular.",
+           verdict=None if reject or not ok.any() else
+           "Mixed: a combination beats the trend in " + ", ".join(summ.loc[ok, "response"]) + " only")
+
+    # Figure: (1) Shapley split of the R² the drivers add beyond the trend; (2) held-out error by model
+    fig = plt.figure(figsize=(15.5, 6.8))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.2, 1], wspace=0.3)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    yy = np.arange(len(names))[::-1]
+    for k, (rn, _) in enumerate(responses):
+        vals = shp[shp["response"] == rn].set_index("driver").loc[names, "shapley_r2_beyond_trend"]
+        a1.barh(yy + (0.18 if k == 0 else -0.18), vals.to_numpy(), height=0.34, color=v.SERIES[k], label=rn)
+        for y_, val in zip(yy + (0.18 if k == 0 else -0.18), vals.to_numpy()):
+            a1.text(val + shp["shapley_r2_beyond_trend"].max() * 0.012, y_, f"{val:.2f}", va="center",
+                    fontsize=8, color=v.INK_2)
+    a1.set_yticks(yy, [I6_SHORT[n] for n in names], fontsize=9)
+    a1.axvline(0, color=v.AXIS, lw=0.8)
+    a1.set_xlabel("Shapley share of the R² of year-to-year changes in % overexploited (sums to the total)")
+    a1.grid(axis="y", visible=False)
+    a1.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=2, fontsize=8.5)
+    tot = ", ".join(f"{r['response']} {r['r2_added_by_all']:.2f} (shift p {fmt_p(r['p_all_drivers_circular_shift'])})"
+                    for _, r in summ.iterrows())
+    a1.set_title(f"1 · Split of the variation all 6 drivers explain — total R²: {tot}", fontsize=9.5)
+    models = ["Trend only", "Best subset (BIC)", "LASSO", "All drivers"]
+    cols_ = {"Trend only": "rmse_trend_only", "Best subset (BIC)": "rmse_best_subset_bic", "LASSO": "rmse_lasso",
+             "All drivers": "rmse_all_drivers"}
+    xm = np.arange(len(models))
+    for k, (_, r) in enumerate(summ.iterrows()):
+        vals = [r[cols_[m]] for m in models]
+        a2.bar(xm + (-0.2 if k == 0 else 0.2), vals, width=0.38, color=v.SERIES[k], label=r["response"])
+        for x_, val in zip(xm + (-0.2 if k == 0 else 0.2), vals):
+            a2.text(x_, val + 0.03, f"{val:.2f}", ha="center", fontsize=8, color=v.INK_2)
+    a2.set_xticks(xm, models, fontsize=8.8)
+    a2.set_ylabel("Error on held-out years (RMSE of the yearly change, pp)")
+    a2.grid(axis="x", visible=False)
+    a2.legend(fontsize=8.5, loc="upper left")
+    a2.set_title("2 · One-year-ahead error on unseen years (lower = better)", fontsize=9.5)
+    beats = [r["response"] for _, r in summ.iterrows() if r["best_subset_beats_trend_oos"]]
+    v.suptitle(fig, "Iteration 6 · H6c — " + (
+        "A combination of drivers explains overexploitation beyond the trend" if reject else
+        "No combination of drivers predicts overexploitation better than the trend alone" if not beats else
+        f"Drivers help on unseen years only for {', '.join(beats)}, not in both sources"),
+               "Year-to-year change in % overexploited ~ drift + changes in catch, effort, SST, ocean heat, dams, "
+               "aquaculture. Best subset by BIC among all 64; each held-out year predicted with the choice redone "
+               "in every training window")
+    fig.subplots_adjust(top=0.84, bottom=0.2, left=0.08, right=0.98)
+    save_fig(fig, sec, "I6.03_h6c_best_combination",
+             "FAO via OWID; Sea Around Us; IMAS effort; HadSST & NOAA via OWID; GDAT")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -2592,6 +3132,8 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             "i4_h4c": section_i4_h4c, "i4_descriptive": section_i4_descriptive,
             # iteration 5: pooled panel, stock rebuilding, Fishing-in-Balance (new hypothesis H5)
             "i5_h5a": section_i5_h5a, "i5_h5b": section_i5_h5b, "i5_h5c": section_i5_h5c, "i5_h5d": section_i5_h5d,
+            # iteration 6: drivers in combination — pairs, interactions, best subset (new hypothesis H6)
+            "i6_h6a": section_i6_h6a, "i6_h6b": section_i6_h6b, "i6_h6c": section_i6_h6c,
             # summary across iterations (report figure S.01)
             "summary": section_summary,
             "diagnostics": section_diagnostics}
