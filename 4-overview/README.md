@@ -35,4 +35,4 @@ Captions come from the gallery tables in `0-visualisation/README.md` plus a capt
 
 ## Interactive dashboard
 
-The same catalogue, the verdict table and the H5d forecast are also in an interactive dashboard (filter figures by report section, step or hypothesis; click a hypothesis to see its evidence and figures; hover the 2030 forecast): <https://claude.ai/artifact/5Ggtp6LYx4CseyBpFX4Trp>. It is private to its owner until shared.
+The same catalogue, the verdict table and the H5d forecast are in the offline interactive page [`dashboard/index.html`](../dashboard/README.md) (rebuild with `python dashboard/build_dashboard.py` after this script).

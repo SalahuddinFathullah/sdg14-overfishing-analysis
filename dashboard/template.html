@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDG 14 overfishing — results dashboard</title>
+<!--
+  Template for dashboard/index.html. Do not open this file directly: run
+  python dashboard/build_dashboard.py, which puts the data in at the DATA placeholder.
+  Everything is plain HTML/CSS/JavaScript (no libraries, works offline).
+-->
+<style>
+  :root {
+    --bg: #fcfcfb; --panel: #ffffff; --fg: #1f2328; --muted: #5f6670; --line: #e3e5e8;
+    --grid: #eceef0; --axis: #c9cdd2; --hover: #f3f4f6;
+    /* Categorical colours (validated for colour-blind separation and contrast) */
+    --c0: #2563eb; --c1: #d97706; --c2: #0d9488; --cmuted: #9aa1ab;
+    --radius: 8px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1c1c1e; --panel: #242427; --fg: #ececef; --muted: #a2a7ae; --line: #38393d;
+            --grid: #2f3034; --axis: #4a4c51; --hover: #2c2d31;
+            --c0: #3b82f6; --c1: #d17f0a; --c2: #14a394; --cmuted: #6b7079; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); }
+  main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; display: flex; flex-direction: column; gap: 36px; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; font-size: 2rem; margin: 0; }
+  h2 { font-size: 1.15rem; font-weight: 600; margin: 0 0 4px; }
+  p { margin: 0; }
+  .lead { margin-top: 10px; max-width: 72ch; line-height: 1.55; font-size: 1.02rem; }
+  .muted { color: var(--muted); font-size: .85rem; }
+  .sub { color: var(--muted); margin: 0 0 14px; max-width: 78ch; line-height: 1.45; }
+  .num { font-variant-numeric: tabular-nums; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .tile-label { display: flex; gap: 7px; align-items: center; color: var(--muted); font-size: .85rem; }
+  .tile-value { font-family: Georgia, serif; font-size: 2.3rem; line-height: 1.1; margin: 6px 0 4px; font-variant-numeric: tabular-nums; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  select { font: inherit; font-size: .9rem; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+  label.check { display: inline-flex; gap: 6px; align-items: center; font-size: .9rem; }
+  .wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+  th { text-align: left; font-weight: 600; color: var(--muted); padding: 7px 9px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 8px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--hover); }
+  tbody tr.sel { outline: 2px solid var(--c0); outline-offset: -2px; }
+  .badge { display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+  .detail { margin-top: 14px; line-height: 1.5; }
+  .detail dt { color: var(--muted); font-size: .8rem; margin-top: 8px; }
+  .detail dd { margin: 0; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: .85rem; color: var(--muted); margin-bottom: 6px; }
+  .legend span { display: inline-flex; gap: 6px; align-items: center; }
+  .sw { display: inline-block; width: 18px; height: 3px; border-radius: 2px; }
+  .sw.dash { background: repeating-linear-gradient(90deg, var(--c1) 0 6px, transparent 6px 10px); }
+  .sw.band { height: 10px; opacity: .22; background: var(--c1); }
+  .chart { position: relative; min-height: 320px; }
+  .chart svg { display: block; width: 100%; height: 320px; overflow: visible; }
+  .chart text { fill: var(--muted); font-size: 12px; }
+  .tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line);
+         box-shadow: 0 4px 14px rgba(0,0,0,.12); border-radius: 6px; padding: 6px 10px; font-size: .82rem; white-space: nowrap; }
+  .map img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+  .fig { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .fig.big { grid-column: 1 / -1; }
+  .fig img { width: 100%; height: auto; background: #fff; border-radius: 4px; cursor: zoom-in; display: block; }
+  .fig.big img { cursor: zoom-out; }
+  .fig-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .fig-id { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .chip { font-size: .78rem; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+  .fig-title { font-weight: 600; }
+  .fig-msg { color: var(--muted); font-size: .85rem; line-height: 1.4; }
+  .path { font-family: ui-monospace, Consolas, monospace; font-size: .72rem; color: var(--muted); overflow-wrap: anywhere; }
+  .empty { color: var(--muted); padding: 10px 0; }
+  footer { color: var(--muted); font-size: .8rem; border-top: 1px solid var(--line); padding-top: 14px; }
+  @media print { .controls { display: none; } .fig { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>SDG 14 overfishing — results dashboard</h1>
+    <p class="lead">Of <b id="n-all">—</b> hypothesis tests across five iterations, <b id="n-reject">—</b> reject H0,
+      <b id="n-mixed">—</b> are mixed or weak and <b id="n-fail">—</b> fail to reject. The world share of overexploited
+      stocks is projected at <b id="w2030">—</b>% by 2030.</p>
+    <p class="muted" style="margin-top:6px">KIE4033 Assignment 1 · FAO SOFIA and Sea Around Us data · SEA = Malaysia, Indonesia, Thailand, Vietnam, Philippines.</p>
+  </header>
+
+  <section class="tiles" aria-label="Verdict summary">
+    <div class="card"><div class="tile-label"><span class="dot" style="background:var(--c0)"></span>Reject H0</div>
+      <div class="tile-value" id="t-reject">—</div><div class="muted">Significant result in the stated direction</div></div>
+    <div class="card"><div class="tile-label"><span class="dot" style="background:var(--c1)"></span>Mixed or weak</div>
+      <div class="tile-value" id="t-mixed">—</div><div class="muted">Isolated lags, or opposite directions world vs SEA</div></div>
+    <div class="card"><div class="tile-label"><span class="dot" style="background:var(--c2)"></span>Fail to reject H0</div>
+      <div class="tile-value" id="t-fail">—</div><div class="muted">No evidence beyond the shared trend</div></div>
+    <div class="card"><div class="tile-label">World % overexploited, 2030 forecast</div>
+      <div class="tile-value"><span id="t-w2030">—</span>%</div>
+      <div class="muted">95% interval <span class="num" id="t-lo">—</span>–<span class="num" id="t-hi">—</span>%, from <span class="num" id="t-last">—</span>% in <span class="num" id="t-year">—</span></div></div>
+  </section>
+
+  <section class="map" id="map">
+    <h2>How the analysis fits together</h2>
+    <p class="sub">Data sources, the five test iterations and the verdict each hypothesis reached (figure O.01).</p>
+    <div id="map-img"></div>
+  </section>
+
+  <section id="verdicts">
+    <h2>Every hypothesis and its verdict</h2>
+    <p class="sub">Click a row to read its question, evidence and note, and to show its figures in the gallery below.</p>
+    <div class="controls"><select id="iter-sel" aria-label="Iteration"></select></div>
+    <div class="wrap"><table>
+      <thead><tr><th>Test</th><th class="r">Iteration</th><th>Verdict</th><th>Decision</th></tr></thead>
+      <tbody id="v-body"></tbody>
+    </table></div>
+    <div class="card detail" id="v-detail"><p class="muted">Select a row above to see the question, evidence and note.</p></div>
+  </section>
+
+  <section id="forecast">
+    <h2>Forecast of % stocks overexploited to 2030 (H5d)</h2>
+    <p class="sub">Each series uses the model that did best in a 5-year back-test. A rise counts as credible only when that model also beat a naive last-value forecast.</p>
+    <div class="controls"><select id="unit-sel" aria-label="Series"></select></div>
+    <div class="legend"><span><i class="sw" style="background:var(--c0)"></i>Observed</span><span><i class="sw dash"></i>Forecast</span><span><i class="sw band"></i>95% prediction interval</span></div>
+    <div class="chart" id="f-chart"></div>
+    <div class="wrap" style="margin-top:14px"><table>
+      <thead><tr><th>Series</th><th>Model</th><th class="r">Last %</th><th class="r">2030 %</th><th class="r">95% low</th><th class="r">95% high</th><th class="r">Back-test error (pp)</th><th class="r">Naive error (pp)</th><th>Rise credible</th></tr></thead>
+      <tbody id="f-body"></tbody>
+    </table></div>
+  </section>
+
+  <section id="figures">
+    <h2>All figures, including the tests</h2>
+    <p class="sub">Every figure the project produces, tagged by report section, pipeline step and hypothesis. Click a figure to enlarge it.</p>
+    <div class="controls">
+      <select id="sec-sel" aria-label="Report section"></select>
+      <select id="step-sel" aria-label="Pipeline step"></select>
+      <select id="hyp-sel" aria-label="Hypothesis"></select>
+      <label class="check"><input type="checkbox" id="main-only"> Report main-body figures only</label>
+      <span class="muted" id="fig-count"></span>
+    </div>
+    <div class="grid" id="gallery"></div>
+  </section>
+
+  <footer>Built by <code>dashboard/build_dashboard.py</code> from <code>2-hypothesis-tests/results/</code> and <code>4-overview/figure_index.csv</code>. Re-run it after the analysis changes.</footer>
+</main>
+
+<script>
+const DATA = /*__DATA__*/null;
+
+// ---------- helpers ----------
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const fmt = (v, d = 1) => (v == null || v === '' || isNaN(+v)) ? '' : (+v).toFixed(d);
+const COL = { 'Reject H0': 'var(--c0)', 'Mixed': 'var(--c1)', 'Weak': 'var(--c1)', 'Fail to reject H0': 'var(--c2)' };
+const S = { iter: '', code: '', unit: 'World (FAO)', sec: '', step: '', hyp: '', main: false };
+const SVGNS = 'http://www.w3.org/2000/svg';
+const svgEl = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+
+// ---------- summary ----------
+function drawSummary() {
+  const tests = DATA.verdicts.filter((r) => /^H\d/.test(r.code));     // hypothesis tests only
+  const n = (f) => tests.filter(f).length;
+  const reject = n((r) => r.verdict === 'Reject H0');
+  const mixed = n((r) => r.verdict === 'Mixed' || r.verdict === 'Weak');
+  const fail = n((r) => r.verdict === 'Fail to reject H0');
+  $('n-all').textContent = tests.length;
+  $('n-reject').textContent = $('t-reject').textContent = reject;
+  $('n-mixed').textContent = $('t-mixed').textContent = mixed;
+  $('n-fail').textContent = $('t-fail').textContent = fail;
+  const w = DATA.forecastSummary.find((r) => r.unit === 'World (FAO)');
+  if (w) {
+    $('w2030').textContent = $('t-w2030').textContent = fmt(w.forecast_2030);
+    $('t-lo').textContent = fmt(w.pi95_low_2030); $('t-hi').textContent = fmt(w.pi95_high_2030);
+    $('t-last').textContent = fmt(w.last_value); $('t-year').textContent = w.last_year;
+  }
+  const m = DATA.figures.find((r) => r.figure_id === 'O.01');
+  if (m) { const img = el('img'); img.src = m.src; img.alt = m.title; $('map-img').append(img); }
+}
+
+// ---------- verdicts ----------
+function badge(v) {
+  const s = el('span', 'badge'); const d = el('i', 'dot');
+  d.style.background = COL[v] || 'var(--cmuted)'; s.append(d, document.createTextNode(v)); return s;
+}
+function drawVerdicts() {
+  const body = $('v-body'); body.replaceChildren();
+  DATA.verdicts.filter((r) => !S.iter || String(r.iteration) === S.iter).forEach((r) => {
+    const tr = body.insertRow(); if (r.code === S.code) tr.className = 'sel';
+    tr.insertCell().textContent = r.code;
+    const it = tr.insertCell(); it.className = 'r'; it.textContent = r.iteration;
+    tr.insertCell().append(badge(r.verdict));
+    tr.insertCell().textContent = r.decision;
+    tr.onclick = () => {
+      S.code = r.code;
+      S.hyp = /^H\d/.test(r.code) ? r.code.replace(/\s*\(.*\)$/, '') : '';
+      S.sec = S.step = ''; S.main = false; $('main-only').checked = false;
+      drawVerdicts(); drawDetail(); fillFigureFilters(); drawGallery();
+    };
+  });
+}
+function drawDetail() {
+  const r = DATA.verdicts.find((x) => x.code === S.code); if (!r) return;
+  const dl = el('dl'); dl.style.margin = '0';
+  [['Test', 'test'], ['Question', 'question'], ['Evidence', 'evidence'], ['Decision', 'decision'], ['Note', 'note']].forEach(([lab, f]) => {
+    if (r[f]) dl.append(el('dt', null, lab), el('dd', null, r[f]));
+  });
+  $('v-detail').replaceChildren(dl);
+}
+
+// ---------- forecast ----------
+function drawForecastTable() {
+  const body = $('f-body'); body.replaceChildren();
+  DATA.forecastSummary.forEach((r) => {
+    const tr = body.insertRow(); if (r.unit === S.unit) tr.className = 'sel';
+    tr.insertCell().textContent = r.unit; tr.insertCell().textContent = r.chosen_model;
+    [[r.last_value, 1], [r.forecast_2030, 1], [r.pi95_low_2030, 1], [r.pi95_high_2030, 1], [r.backtest_mae_pp, 2], [r.naive_mae_pp, 2]]
+      .forEach(([v, d]) => { const td = tr.insertCell(); td.className = 'r'; td.textContent = fmt(v, d); });
+    tr.insertCell().textContent = String(r.rise_credible) === 'true' || r.rise_credible === true ? 'Yes' : 'No';
+    tr.onclick = () => { S.unit = r.unit; $('unit-sel').value = r.unit; drawForecastTable(); drawChart(); };
+  });
+}
+function niceTicks(lo, hi, n) {
+  const step0 = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= step0);
+  const ticks = []; for (let t = Math.ceil(lo / step) * step; t <= hi + 1e-9; t += step) ticks.push(+t.toFixed(6));
+  return { ticks, lo: Math.floor(lo / step) * step, hi: Math.ceil(hi / step) * step };
+}
+function drawChart() {
+  const box = $('f-chart'); box.replaceChildren();
+  const rows = DATA.forecast.filter((r) => r.unit === S.unit);
+  const obs = rows.filter((r) => r.kind === 'Observed').sort((a, b) => a.year - b.year);
+  const fc = rows.filter((r) => r.kind === 'Forecast').sort((a, b) => a.year - b.year);
+  if (!obs.length) { box.textContent = 'No data for this series.'; return; }
+  const last = obs[obs.length - 1];
+  const fcLine = [{ year: last.year, value: last.value, lower: last.value, upper: last.value }, ...fc];
+  const W = Math.max(300, box.clientWidth || 800), H = 320, mt = 12, mb = 28, mr = 52;
+  const vals = rows.flatMap((r) => [r.value, r.lower, r.upper]).filter((v) => v != null);
+  const yt = niceTicks(Math.max(0, Math.min(...vals) - 3), Math.max(...vals) + 3, 5);
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img',
+    'aria-label': `% of stocks overexploited, ${S.unit}: observed ${obs[0].year}–${last.year} and forecast to 2030` });
+  box.append(svg);
+  // left margin from the widest tick label as drawn
+  let ml = 0; const probe = svgEl('text', {}); svg.append(probe);
+  yt.ticks.forEach((t) => { probe.textContent = t + '%'; ml = Math.max(ml, probe.getComputedTextLength()); });
+  probe.remove(); ml = Math.ceil(ml) + 14;
+  const x0 = Math.min(...rows.map((r) => r.year)), x1 = Math.max(...rows.map((r) => r.year));
+  const x = (v) => ml + (v - x0) / (x1 - x0) * (W - mr - ml);
+  const y = (v) => H - mb - (v - yt.lo) / (yt.hi - yt.lo) * (H - mb - mt);
+  yt.ticks.forEach((t) => {
+    svg.append(svgEl('line', { x1: ml, x2: W - mr, y1: y(t), y2: y(t), style: 'stroke:var(--grid)' }));
+    const tx = svgEl('text', { x: ml - 8, y: y(t) + 4, 'text-anchor': 'end' }); tx.textContent = t + '%'; svg.append(tx);
+  });
+  svg.append(svgEl('line', { x1: ml, x2: W - mr, y1: H - mb, y2: H - mb, style: 'stroke:var(--axis)' }));
+  const xstep = W < 500 ? 10 : 5;
+  for (let yr = Math.ceil(x0 / xstep) * xstep; yr <= x1; yr += xstep) {
+    const tx = svgEl('text', { x: x(yr), y: H - mb + 18, 'text-anchor': 'middle' }); tx.textContent = yr; svg.append(tx);
+  }
+  const line = (pts) => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.year).toFixed(1)},${y(p.value).toFixed(1)}`).join('');
+  const band = fcLine.filter((p) => p.lower != null);
+  if (band.length) {
+    const d = band.map((p, i) => `${i ? 'L' : 'M'}${x(p.year)},${y(p.upper)}`).join('') +
+              band.slice().reverse().map((p) => `L${x(p.year)},${y(p.lower)}`).join('') + 'Z';
+    svg.append(svgEl('path', { d, style: 'fill:var(--c1);opacity:.18' }));
+  }
+  svg.append(svgEl('path', { d: line(obs), style: 'fill:none;stroke:var(--c0);stroke-width:2' }));
+  svg.append(svgEl('path', { d: line(fcLine), style: 'fill:none;stroke:var(--c1);stroke-width:2;stroke-dasharray:5 4' }));
+  if (fc.length) {
+    const e = fc[fc.length - 1];
+    svg.append(svgEl('circle', { cx: x(e.year), cy: y(e.value), r: 4, style: 'fill:var(--c1);stroke:var(--bg);stroke-width:2' }));
+    const tx = svgEl('text', { x: x(e.year) + 7, y: y(e.value) + 4, style: 'fill:var(--fg)' }); tx.textContent = fmt(e.value) + '%'; svg.append(tx);
+  }
+  // hover: crosshair + tooltip at the nearest year
+  const tip = el('div', 'tip'); tip.hidden = true; box.append(tip);
+  const vline = svgEl('line', { y1: mt, y2: H - mb, style: 'stroke:var(--axis);display:none' }); svg.append(vline);
+  const dot = svgEl('circle', { r: 4, style: 'display:none;stroke:var(--bg);stroke-width:2' }); svg.append(dot);
+  const pts = [...obs, ...fc];
+  const hit = svgEl('rect', { x: ml, y: 0, width: W - mr - ml, height: H - mb, style: 'fill:transparent' }); svg.append(hit);
+  hit.addEventListener('pointermove', (ev) => {
+    const r = svg.getBoundingClientRect(), sx = W / r.width;
+    const mx = (ev.clientX - r.left) * sx;
+    const p = pts.reduce((a, b) => Math.abs(x(b.year) - mx) < Math.abs(x(a.year) - mx) ? b : a);
+    vline.setAttribute('x1', x(p.year)); vline.setAttribute('x2', x(p.year)); vline.style.display = '';
+    dot.setAttribute('cx', x(p.year)); dot.setAttribute('cy', y(p.value));
+    dot.style.fill = p.kind === 'Observed' ? 'var(--c0)' : 'var(--c1)'; dot.style.display = '';
+    tip.replaceChildren(el('b', null, `${p.year} · ${p.kind}`), el('div', null, `${fmt(p.value)}% overexploited`));
+    if (p.kind === 'Forecast' && p.lower != null) tip.append(el('div', null, `95% interval ${fmt(p.lower)}–${fmt(p.upper)}%`));
+    tip.hidden = false;
+    let left = x(p.year) / sx + 12; if (left + tip.offsetWidth > box.clientWidth) left = x(p.year) / sx - tip.offsetWidth - 12;
+    tip.style.left = Math.max(0, left) + 'px'; tip.style.top = Math.max(0, y(p.value) / sx - 30) + 'px';
+  });
+  hit.addEventListener('pointerleave', () => { tip.hidden = true; vline.style.display = 'none'; dot.style.display = 'none'; });
+}
+
+// ---------- gallery ----------
+const tokens = (r) => String(r.hypotheses || '').split(/\s+/).filter(Boolean);
+const figNum = (r) => { const m = /^Fig (\d+)/.exec(r.report_role || ''); return m ? +m[1] : null; };
+function filteredFigures() {
+  let rs = DATA.figures.filter((r) => (!S.sec || r.rubric_section === S.sec) && (!S.step || r.step === S.step)
+    && (!S.hyp || tokens(r).includes(S.hyp)) && (!S.main || figNum(r) !== null));
+  if (S.main) rs = rs.slice().sort((a, b) => figNum(a) - figNum(b));
+  return rs;
+}
+function fillSelect(sel, label, values, key, after) {
+  sel.replaceChildren(new Option(label, ''), ...values.map((v) => new Option(v, v)));
+  sel.value = S[key];
+  sel.onchange = () => { S[key] = sel.value; after(); };
+}
+function fillFigureFilters() {
+  const order = ['Introduction', 'Data Understanding & Preparation', 'Exploratory Data Analysis', 'Statistical Analysis', 'Discussion', 'Conclusion'];
+  const have = new Set(DATA.figures.map((r) => r.rubric_section));
+  fillSelect($('sec-sel'), 'All report sections', [...order.filter((s) => have.has(s)), ...[...have].filter((s) => s && !order.includes(s))], 'sec', drawGallery);
+  fillSelect($('step-sel'), 'All pipeline steps', [...new Set(DATA.figures.map((r) => r.step))].filter(Boolean).sort(), 'step', drawGallery);
+  fillSelect($('hyp-sel'), 'All hypotheses', [...new Set(DATA.figures.flatMap(tokens))].sort((a, b) => a.localeCompare(b, undefined, { numeric: true })), 'hyp', drawGallery);
+}
+function drawGallery() {
+  const rs = filteredFigures(), g = $('gallery');
+  $('fig-count').textContent = `${rs.length} of ${DATA.figures.length} figures`;
+  if (!rs.length) { g.replaceChildren(el('p', 'empty', 'No figure matches these filters.')); return; }
+  g.replaceChildren(...rs.map((r) => {
+    const card = el('article', 'fig'); card.id = 'fig-' + r.figure_id;
+    const head = el('div', 'fig-head'); head.append(el('span', 'fig-id', r.figure_id), el('span', 'chip', r.report_role));
+    const img = el('img'); img.src = r.src; img.alt = r.title; img.loading = 'lazy';
+    img.onclick = () => card.classList.toggle('big');
+    card.append(head, img, el('div', 'fig-title', r.title));
+    if (r.message) card.append(el('div', 'fig-msg', r.message));
+    card.append(el('div', 'muted', [r.rubric_section, r.hypotheses ? 'Hypotheses: ' + r.hypotheses : '', r.chart].filter(Boolean).join(' · ')),
+                el('div', 'path', r.file));
+    return card;
+  }));
+}
+
+// ---------- start ----------
+if (!DATA) {
+  document.querySelector('main').replaceChildren(el('p', null, 'This is the template. Run python dashboard/build_dashboard.py and open dashboard/index.html.'));
+} else {
+  drawSummary();
+  const its = [...new Set(DATA.verdicts.map((r) => String(r.iteration)))].sort();
+  fillSelect($('iter-sel'), 'All iterations', its, 'iter', drawVerdicts);
+  [...$('iter-sel').options].slice(1).forEach((o) => { o.textContent = 'Iteration ' + o.value; });
+  drawVerdicts();
+  const us = DATA.forecastSummary.map((r) => r.unit);
+  $('unit-sel').replaceChildren(...us.map((u) => new Option(u, u)));
+  $('unit-sel').value = S.unit;
+  $('unit-sel').onchange = () => { S.unit = $('unit-sel').value; drawForecastTable(); drawChart(); };
+  drawForecastTable(); drawChart();
+  fillFigureFilters(); drawGallery();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawChart, 150); });
+}
+</script>
+</body>
+</html>
