@@ -1,6 +1,6 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5), in 5 iterations
-=========================================================================
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5, H6), in 6 iterations
+==============================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
 
@@ -65,6 +65,14 @@ Runs the analysis pipeline in README §4 on the raw data:
                      catch and trophic-level parts
     i5_h5d           forecast of % overexploited to 2030 (linear trend, damped ETS, ARIMA on the
                      logit scale; model chosen by a 5-year back-test against a no-change forecast)
+
+  Iteration 6 (drivers in combination, new hypothesis H6):
+    i6_h6a           28 pairs of the 8 world drivers: joint HAC F-test on year-to-year changes
+                     (Holm); levels-with-trend models counted only if Engle-Granger cointegrated
+    i6_h6b           4 pre-chosen interactions in the SEA country panel (1960–2017), country +
+                     year fixed effects, main effects partialled out, wild cluster bootstrap
+    i6_h6c           all 64 combinations of 6 long-run drivers ranked by BIC, LASSO, rolling-origin
+                     held-out-year test vs trend only, Shapley R², circular-shift permutation
 
   Summary (report figure):
     summary          all 8 world drivers from iterations 1–4 on one common method:
