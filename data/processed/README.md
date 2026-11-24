@@ -1,6 +1,15 @@
-# data/processed — cleaned, analysis-ready tables
+# data/processed — checked and cleaned data (the only input of steps 1–4)
 
-Created by [`3-data-quality/clean_data.py`](../../3-data-quality/clean_data.py) from `data/raw/`. Do not edit by hand. Each cleaning rule (R1–R6) and every check, with counts, is listed in `cleaning_log.csv`.
+Created by [`0-data-quality/clean_data.py`](../../0-data-quality/clean_data.py), step 0 of the pipeline, from `data/raw/`. Do not edit by hand. Each check (C1–C4), cleaning rule (R1–R6) and count is listed in `cleaning_log.csv`.
+
+## `clean/` — checked copy of every raw file
+
+Same folder layout, file names and columns as `data/raw/`, so the shared loaders in [`src/loaders.py`](../../src/loaders.py) read it unchanged. Lines are copied byte for byte except where a rule applies:
+- R1: "Viet Nam" → "Vietnam" in 5 files.
+- R5: the partial year 2026 is dropped from the world SST series.
+- R4: 6 GDAT dams with completion years after 2025 (planned) are removed.
+
+`_quality_checks_passed.json` is written only when every check passes. It holds the SHA-256 of every raw file; steps 1–4 compare it with `data/raw/` before running.
 
 ## `global_annual.csv` — World, 1950–2025 (76 rows)
 

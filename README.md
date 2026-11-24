@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟢 Analysis complete — data collected and cleaned ([`data/processed/`](data/processed/)), validation and integrity formally tested ([`3-data-quality/`](3-data-quality/)), 34 exploratory figures ([`0-visualisation/`](0-visualisation/)), course-method tests ([`1-statistical-tests/`](1-statistical-tests/)) and formal hypothesis tests H1a–H2c in six iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast, drivers in combination ([`2-hypothesis-tests/`](2-hypothesis-tests/)) done; overview figures for every test and a 71-figure catalogue ([`4-overview/`](4-overview/)) plus an offline interactive results dashboard ([`dashboard/`](dashboard/)); only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
+> **Status:** 🟢 Analysis complete — the pipeline runs **data quality first** ([`run_all.py`](run_all.py)): every input checked and cleaned before any analysis, with validation and integrity formally tested ([`0-data-quality/`](0-data-quality/) → [`data/processed/`](data/processed/)); 34 exploratory figures ([`1-visualisation/`](1-visualisation/)), course-method tests ([`2-statistical-tests/`](2-statistical-tests/)) and formal hypothesis tests H1a–H2c in six iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast, drivers in combination ([`3-hypothesis-tests/`](3-hypothesis-tests/)) done; overview figures for every test and a 71-figure catalogue ([`4-overview/`](4-overview/)) plus an offline interactive results dashboard ([`dashboard/`](dashboard/)); only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
 
 ---
 
@@ -20,9 +20,9 @@ We apply exploratory data analysis (EDA) and statistical hypothesis testing in P
 | Report section (weight) | What we produce | Where in this repo |
 |---|---|---|
 | Introduction (10%) | Problem statement, objectives, research questions (H1a–H2c below) | [§1](#1-goal), [§2](#2-hypotheses) |
-| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`1-statistical-tests/`](1-statistical-tests/) §A (summary stats, outliers, missing-value map), [`3-data-quality/`](3-data-quality/) (cleaning → `data/processed/`, formal validation and integrity tests) |
-| EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`0-visualisation/`](0-visualisation/) |
-| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`1-statistical-tests/`](1-statistical-tests/) §B–E, [`2-hypothesis-tests/`](2-hypothesis-tests/) |
+| Data Understanding & Preparation (15%) | Dataset descriptions, cleaning, missing-value handling, summary statistics, correlation matrix, **validation against alternative sources** | [§3](#3-datasets), [`2-statistical-tests/`](2-statistical-tests/) §A (summary stats, outliers, missing-value map), [`0-data-quality/`](0-data-quality/) (cleaning → `data/processed/`, formal validation and integrity tests) |
+| EDA (25%) | Labelled time-series plots, ACF plots, regional comparisons, anomaly notes | [`1-visualisation/`](1-visualisation/) |
+| Statistical Analysis (25%) | ADF, Mann-Kendall, segmented regression, CCF, interaction regression; **assumptions checked**; **post-hoc tests**; course methods (t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum, chi-square, k-means + hierarchical clustering) | [§4](#4-analysis-pipeline), [`2-statistical-tests/`](2-statistical-tests/) §B–E, [`3-hypothesis-tests/`](3-hypothesis-tests/) |
 | Discussion (15%) | Link EDA + test results; limitations | [§5](#5-known-caveats-for-the-limitations-section) |
 | Conclusion (5%) | Direct answer to each hypothesis + SDG 14.4 relevance | [Findings](#findings-so-far) |
 | Code quality & references (5%) | Commented, reproducible code; all sources cited | `src/`, `requirements.txt`, [§3](#3-datasets) |
@@ -136,10 +136,22 @@ Details: [data dictionary §4](data/raw/README.md#4-data-integrity-sources--is-r
 
 ## 4. Analysis pipeline
 
+**Run order (data-analytics lifecycle): check the data before analysing it.** `python run_all.py` runs the steps in folder order and stops at the first failure:
+
+| Step | Folder | Reads | Writes |
+|---|---|---|---|
+| **0 · Data quality** | [`0-data-quality/`](0-data-quality/) | `data/raw/` (the only step that does) | checked copies of every input (`data/processed/clean/`), tidy tables + cleaning log (`data/processed/`), validation and integrity tests |
+| 1 · Exploration | [`1-visualisation/`](1-visualisation/) | `data/processed/` | 34 EDA figures |
+| 2 · Course methods | [`2-statistical-tests/`](2-statistical-tests/) | `data/processed/` | test tables + 8 figures |
+| 3 · Hypothesis tests | [`3-hypothesis-tests/`](3-hypothesis-tests/) | `data/processed/` | verdicts, 6 iterations, 23 figures |
+| 4 · Overview | [`4-overview/`](4-overview/), [`dashboard/`](dashboard/) | result tables | analysis map, figure catalogue, results page |
+
+**The gate:** step 0 checks all 79 input files (parse, exact duplicates, infinite values, missing values) and the tidy tables (duplicate keys, value ranges). If any check fails it exits with an error and the run stops. Steps 1–4 also refuse to start on their own until step 0 has passed on the *current* raw files (`require_checked_data()` in [`src/loaders.py`](src/loaders.py) compares a SHA-256 fingerprint of `data/raw/`). All data loaders and the chart style live in [`src/`](src/), so step 0 never depends on a later step.
+
 Fishing data is strongly **trended**. Two trending series will look correlated even when unrelated (*spurious correlation*), so correlation tests are run only on **stationary** series.
 
 ```
-Load & clean ──► Explore (plots, missing years)
+Check & clean (step 0, gate) ──► Explore (plots, missing years)
                      │
                      ▼
              ACF of each series ──► shows trend / persistence
@@ -231,52 +243,59 @@ Because years are autocorrelated, the paired-test *p*-values are optimistic; we 
 ```
 sdg14-overfishing-analysis/
 ├── README.md            ← this file (project plan + progress log)
-├── 0-visualisation/
-│   ├── visualise.py     ← creates every exploratory figure from data/raw/
+├── run_all.py           ← runs every step in order, data quality first; stops at the first failure
+├── 0-data-quality/      ← STEP 0 — the only step that reads data/raw/
+│   ├── clean_data.py    ← checks every input file (C1–C4), cleans it (R1, R4, R5) into
+│   │                      data/processed/clean/, builds the tidy tables (R2, R3, R6) and the
+│   │                      cleaning log; writes the pass marker or stops the pipeline
+│   ├── quality_tests.py ← formal validation (21 source pairs) and integrity tests (Benford,
+│   │                      mirror trade, peer outliers, unreported share)
+│   ├── README.md        ← checks, cleaning rules, validation and integrity results
+│   ├── results/         ← one CSV per test
+│   └── figures/         ← V.01 validation summary, I.01 integrity summary
+├── 1-visualisation/
+│   ├── visualise.py     ← creates every exploratory figure from the checked data
 │   ├── README.md        ← figure gallery with descriptions
 │   └── figures/         ← 34 PNGs in 5 sections (global, sea_owid, sea_sau, validation, integrity)
-├── 1-statistical-tests/
+├── 2-statistical-tests/
 │   ├── stat_tests.py    ← course methods: EDA profiling, t-test/ANOVA vs non-parametric, rank-sum,
 │   │                      chi-square, k-means + hierarchical clustering
 │   ├── README.md        ← method ↔ course-topic map, results tables and interpretation
 │   ├── results/         ← one CSV per test + test_summary.csv
 │   └── figures/         ← 8 PNGs in 5 sections (A profile … E clustering)
-├── 2-hypothesis-tests/
+├── 3-hypothesis-tests/
 │   ├── hypothesis_tests.py ← stationarity, H1a, H1b, H2a, H2b, H2c, residual diagnostics;
 │   │                         iterations 2 (effort), 3 (warming, H3), 4 (shipping & structures, H4),
 │   │                         5 (panel, rebuilding, FiB, forecast, H5), 6 (drivers in combination, H6)
 │   ├── README.md        ← verdicts, method per hypothesis, notes for the report
 │   ├── results/         ← one CSV per test family + decisions.csv
 │   └── figures/         ← 23 PNGs (iteration 1: 6; iterations 2–6: 3 + 2 + 4 + 4 + 3; summary S.01)
-├── 3-data-quality/
-│   ├── clean_data.py    ← builds data/processed/ (rules R1–R6, cleaning_log.csv)
-│   ├── quality_tests.py ← formal validation (21 source pairs) and integrity tests (Benford,
-│   │                      mirror trade, peer outliers, unreported share)
-│   ├── README.md        ← cleaning rules, validation and integrity results
-│   ├── results/         ← one CSV per test
-│   └── figures/         ← V.01 validation summary, I.01 integrity summary
 ├── 4-overview/
 │   ├── overview.py      ← run last: reads result tables only; analysis map, stationarity, assumption
 │   │                       checks, long-run tests; builds the figure catalogue
 │   ├── README.md        ← what each overview figure shows + link to the interactive dashboard
-│   ├── figure_index.csv ← all 68 figures: section, step, hypotheses, message, report role
+│   ├── figure_index.csv ← all 71 figures: section, step, hypotheses, message, report role
 │   └── figures/         ← O.01–O.04
 ├── dashboard/
 │   ├── build_dashboard.py ← run last: embeds verdicts, H5d forecast and figure catalogue into the page
 │   ├── template.html    ← layout and drawing code (plain JavaScript, works offline)
 │   ├── index.html       ← generated interactive results page — open it in a browser
 │   └── README.md        ← what the page shows, how to open and rebuild it
+├── src/
+│   ├── loaders.py       ← every data loader + the data-quality gate (require_checked_data)
+│   ├── style.py         ← shared chart style (palette, figure header helpers)
+│   ├── stats_utils.py   ← Holm, Mann-Kendall + Sen, Benford MAD, p-value formatting
+│   └── download_data.py ← re-downloads everything in data/raw/
 ├── LICENSE              ← MIT
 ├── requirements.txt     ← Python dependencies
 ├── data/
-│   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md
-│   │   └── validation/  ← alternative sources for cross-checking (UN SDG, World Bank, SAU regions)
-│   │                      data-integrity sources (economic/, comtrade/, benford/) and
-│   │                      iteration drivers (effort/, climate/, human_use/)
-│   └── processed/       ← cleaned, analysis-ready CSVs + cleaning_log.csv (see its README)
+│   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md;
+│   │   └── validation/     read ONLY by step 0. validation/ = alternative sources (UN SDG,
+│   │                        World Bank, SAU regions), integrity sources and iteration drivers
+│   └── processed/       ← written by step 0, read by steps 1–4 (see its README):
+│       ├── clean/       ← checked copy of every raw file (same layout and columns) + pass marker
+│       └── *.csv        ← tidy analysis tables + cleaning_log.csv
 ├── notebooks/           ← (unused placeholder — the analysis lives in the numbered script folders)
-├── src/
-│   └── download_data.py ← re-downloads everything in data/raw/
 └── figures/README.md    ← final figure set for the report (links to the generated figures)
 ```
 
@@ -292,19 +311,16 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 # data is already in data/raw/; to re-download from source:
 python src/download_data.py
-# regenerate all exploratory figures:
-python 0-visualisation/visualise.py
-# run the course-method statistical tests (tables + figures):
-python 1-statistical-tests/stat_tests.py
-# run the formal hypothesis tests (H1a–H2c, iterations 2–4):
-python 2-hypothesis-tests/hypothesis_tests.py
-# build the cleaned tables and run the validation / integrity tests:
-python 3-data-quality/clean_data.py
-python 3-data-quality/quality_tests.py
-# overview figures + figure catalogue (run last; reads the result tables above):
-python 4-overview/overview.py
-# interactive results page (run last), then open dashboard/index.html:
-python dashboard/build_dashboard.py
+# run everything in order — data quality first, stops at the first failure (~2 min):
+python run_all.py
+# or step by step (steps 1–4 refuse to run until step 0 has passed):
+python 0-data-quality/clean_data.py        # step 0: check + clean every input (the gate)
+python 0-data-quality/quality_tests.py     # step 0: validation and integrity tests
+python 1-visualisation/visualise.py        # step 1: exploratory figures
+python 2-statistical-tests/stat_tests.py   # step 2: course-method tests
+python 3-hypothesis-tests/hypothesis_tests.py   # step 3: hypothesis tests, 6 iterations
+python 4-overview/overview.py              # step 4: overview figures + figure catalogue
+python dashboard/build_dashboard.py        # step 4: interactive results page (open dashboard/index.html)
 jupyter lab
 ```
 
@@ -317,25 +333,26 @@ jupyter lab
 | Repo & plan set up | — | ✅ Done | `README.md` |
 | Download global datasets | 1 | ✅ Done | `data/raw/owid/`, `src/download_data.py` |
 | Download alternative sources for validation | 1–2 | ✅ Done | `data/raw/validation/` |
-| Clean global datasets | 1 | ✅ Done — `data/processed/global_annual.csv`, rules R1–R6 logged, 0 range/duplicate violations | `3-data-quality/clean_data.py` |
-| Course-method tests: assumption checks, t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square, k-means + hierarchical clustering | 1–2 | ✅ Done | `1-statistical-tests/stat_tests.py` |
-| Validate main data vs alternative sources | 1–2 | ✅ Done — 21 pairs: 7 identical, 10 of 14 others agree on trend, 4 on direction | `3-data-quality/quality_tests.py` §V |
-| Exploratory plots — SEA | 2 | ✅ Done | `0-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
-| Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | ✅ Done — digits genuine, no peer outliers; Vietnam re-export gap, Malaysia gap widening; unreported share falling in 3 countries | `3-data-quality/quality_tests.py` §I |
-| Exploratory plots + ACF | 1 | ✅ Done | `0-visualisation/figures/1_global/` |
-| ADF + KPSS + differencing | 1–2 | ✅ Done | `2-hypothesis-tests/` (stationarity) |
-| H1a trend tests (Mann-Kendall, Sen, segmented regression, Chow) | 1 | ✅ Done — reject H₀ | `2-hypothesis-tests/` |
-| H1b cross-correlation (CCF, prewhitening, Granger, cointegration) | 1 | ✅ Done — fail to reject H₀ | `2-hypothesis-tests/` |
-| **Stage 1 decision** | 1 | ⚠️ Rule not met (H1a yes, H1b no) → Stage 2 reported as exploratory | `2-hypothesis-tests/results/decisions.csv` |
+| Clean global datasets | 1 | ✅ Done — `data/processed/global_annual.csv`, rules R1–R6 logged, 0 range/duplicate violations | `0-data-quality/clean_data.py` |
+| Pipeline reordered: data quality first (step 0 checks all 79 inputs and gates every later step; analysis reads only `data/processed/`) | — | ✅ Done — every result and figure identical after the change | `run_all.py`, `0-data-quality/`, `src/` |
+| Course-method tests: assumption checks, t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square, k-means + hierarchical clustering | 1–2 | ✅ Done | `2-statistical-tests/stat_tests.py` |
+| Validate main data vs alternative sources | 1–2 | ✅ Done — 21 pairs: 7 identical, 10 of 14 others agree on trend, 4 on direction | `0-data-quality/quality_tests.py` §V |
+| Exploratory plots — SEA | 2 | ✅ Done | `1-visualisation/figures/2_sea_owid/`, `3_sea_sau/` |
+| Data-integrity checks (GDP, mirror trade, Benford, reconstruction gap) | 1–2 | ✅ Done — digits genuine, no peer outliers; Vietnam re-export gap, Malaysia gap widening; unreported share falling in 3 countries | `0-data-quality/quality_tests.py` §I |
+| Exploratory plots + ACF | 1 | ✅ Done | `1-visualisation/figures/1_global/` |
+| ADF + KPSS + differencing | 1–2 | ✅ Done | `3-hypothesis-tests/` (stationarity) |
+| H1a trend tests (Mann-Kendall, Sen, segmented regression, Chow) | 1 | ✅ Done — reject H₀ | `3-hypothesis-tests/` |
+| H1b cross-correlation (CCF, prewhitening, Granger, cointegration) | 1 | ✅ Done — fail to reject H₀ | `3-hypothesis-tests/` |
+| **Stage 1 decision** | 1 | ⚠️ Rule not met (H1a yes, H1b no) → Stage 2 reported as exploratory | `3-hypothesis-tests/results/decisions.csv` |
 | Download SEA datasets | 2 | ✅ Done | `data/raw/sau/`, `data/raw/owid/` |
-| Clean SEA datasets | 2 | ✅ Done — `sea_country_annual.csv`, `sea_eez_annual.csv` | `3-data-quality/clean_data.py` |
-| H2a / H2b tests on SEA | 2 | ✅ Done — H2a reject H₀, H2b fail to reject | `2-hypothesis-tests/` |
-| H2c SEA vs global comparison | 2 | ✅ Done — SEA = world; Indonesia, Thailand, Malaysia worse | `2-hypothesis-tests/` |
-| **Iteration 2:** fishing effort replaces catch as the pressure variable (H1b, H2b re-tested; CPUE) | 1–2 | ✅ Done — CPUE falling; short-run links still not significant | `2-hypothesis-tests/` §7, `data/raw/validation/effort/` |
-| **Iteration 3:** ocean warming as an alternative driver (new H3a global, H3b SEA) | 1–2 | ✅ Done — shared trend only; no link beyond it | `2-hypothesis-tests/` §8, `data/raw/validation/climate/` |
-| **Iteration 4:** shipping and built structures — ports, seaborne trade, liner connectivity, dams, aquaculture, offshore platforms & wind, artificial islands (new H4a global, H4b SEA, H4c island-building DiD) | 1–2 | ✅ Done — shared trend only; island building shows no effect; platforms/wind too recent to test | `2-hypothesis-tests/` §9, `data/raw/validation/human_use/` |
-| **Iteration 5:** pooled panel with fixed effects (H5a), stock rebuilding after 2015 (H5b), Fishing-in-Balance index (H5c), forecast to 2030 (H5d) | 1–2 | ✅ Done — no pressure effect even pooled; SEA rebuilding stalled; FiB rising (expansion), falling only in Thailand; world ~41% overexploited by 2030 | `2-hypothesis-tests/` §11 |
-| **Iteration 6:** drivers in combination — pairs of world drivers (H6a), interactions in the SEA panel (H6b), best combination with held-out-year test and Shapley R² (H6c) | 1–2 | ✅ Done — no pair, interaction or combination holds in both sources or beats the trend on unseen years; levels "links" are spurious | `2-hypothesis-tests/` §12 |
+| Clean SEA datasets | 2 | ✅ Done — `sea_country_annual.csv`, `sea_eez_annual.csv` | `0-data-quality/clean_data.py` |
+| H2a / H2b tests on SEA | 2 | ✅ Done — H2a reject H₀, H2b fail to reject | `3-hypothesis-tests/` |
+| H2c SEA vs global comparison | 2 | ✅ Done — SEA = world; Indonesia, Thailand, Malaysia worse | `3-hypothesis-tests/` |
+| **Iteration 2:** fishing effort replaces catch as the pressure variable (H1b, H2b re-tested; CPUE) | 1–2 | ✅ Done — CPUE falling; short-run links still not significant | `3-hypothesis-tests/` §7, `data/raw/validation/effort/` |
+| **Iteration 3:** ocean warming as an alternative driver (new H3a global, H3b SEA) | 1–2 | ✅ Done — shared trend only; no link beyond it | `3-hypothesis-tests/` §8, `data/raw/validation/climate/` |
+| **Iteration 4:** shipping and built structures — ports, seaborne trade, liner connectivity, dams, aquaculture, offshore platforms & wind, artificial islands (new H4a global, H4b SEA, H4c island-building DiD) | 1–2 | ✅ Done — shared trend only; island building shows no effect; platforms/wind too recent to test | `3-hypothesis-tests/` §9, `data/raw/validation/human_use/` |
+| **Iteration 5:** pooled panel with fixed effects (H5a), stock rebuilding after 2015 (H5b), Fishing-in-Balance index (H5c), forecast to 2030 (H5d) | 1–2 | ✅ Done — no pressure effect even pooled; SEA rebuilding stalled; FiB rising (expansion), falling only in Thailand; world ~41% overexploited by 2030 | `3-hypothesis-tests/` §11 |
+| **Iteration 6:** drivers in combination — pairs of world drivers (H6a), interactions in the SEA panel (H6b), best combination with held-out-year test and Shapley R² (H6c) | 1–2 | ✅ Done — no pair, interaction or combination holds in both sources or beats the trend on unseen years; levels "links" are spurious | `3-hypothesis-tests/` §12 |
 | Final figure selection (15 figures mapped to report sections; report outline drafted) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
 | Overview: analysis map, figures for the table-only tests (stationarity, assumption checks, cointegration/Granger), 71-figure catalogue | — | ✅ Done — every test now has a figure | [`4-overview/`](4-overview/) |
 | Interactive results dashboard: verdict table with drill-down, 2030 forecast chart, filterable gallery of all 71 figures | — | ✅ Done — offline single page | [`dashboard/`](dashboard/) |
@@ -343,7 +360,7 @@ jupyter lab
 
 ### Findings so far
 
-_Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method tests: [`1-statistical-tests/`](1-statistical-tests/). Hypothesis tests: [`2-hypothesis-tests/`](2-hypothesis-tests/)._
+_Exploratory figures: [`1-visualisation/`](1-visualisation/). Course-method tests: [`2-statistical-tests/`](2-statistical-tests/). Hypothesis tests: [`3-hypothesis-tests/`](3-hypothesis-tests/)._
 
 **Hypothesis verdicts**
 
@@ -388,7 +405,7 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 - **Catch vs overexploitation:** world wild catch plateaued at ~90–95 Mt from the mid-1990s while overexploitation kept rising (figs 1.03–1.04).
 - **ACF:** both series are strongly autocorrelated in levels and close to white noise after differencing → correlation tests must use differenced series (fig 1.05).
 - **SEA:** FAO Area 71 (South China Sea etc.) went from ~6% to 47% overexploited between 2004 and 2021, the largest rise of any FAO area (fig 1.07). In Sea Around Us data, ~50% of stocks in most SEA EEZs are collapsed or over-exploited by 2019, tracking or exceeding the world level; Vietnam is the exception (~20%) (figs 3.01–3.03).
-- **Validation (formal, `3-data-quality`):** 7 source pairs are identical (same data, two publishers); of 14 pairs from different sources, 10 agree on trend (overlapping Sen's-slope CIs) and 4 on direction only — none disagrees. Level gaps have known causes (FAO capture includes inland catch; Sea Around Us stock status is catch-based and sits higher, bias −4.1 pp, CCC 0.74) (figs 4.01–4.06, V.01).
+- **Validation (formal, `0-data-quality`):** 7 source pairs are identical (same data, two publishers); of 14 pairs from different sources, 10 agree on trend (overlapping Sen's-slope CIs) and 4 on direction only — none disagrees. Level gaps have known causes (FAO capture includes inland catch; Sea Around Us stock status is catch-based and sits higher, bias −4.1 pp, CCC 0.74) (figs 4.01–4.06, V.01).
 - **Missing values:** no data loss — the only gaps are reporting cycles (FAO areas 71/57 assessed ~every 2 years, SDG 14.7.1 published every 2 years); 5 FAO world years look linearly interpolated (fig A.01).
 - **Test choice:** normality fails for most series (Shapiro-Wilk), so non-parametric tests are used. FAO is systematically 4.1 pp below Sea Around Us (Wilcoxon p < 0.001, r = −0.58). Countries' yearly MTL changes do not differ (Kruskal-Wallis p = 0.32); a plain ANOVA would have wrongly said they do (p = 0.033, unequal variances) (fig B.01).
 - **SDG effect:** no indicator changed significantly after 2015 (rank-sum / Welch, all p ≥ 0.22); the world rise looks slower (median +1.1 → +0.5 pp/yr) but 6 post-2015 years are too few (fig C.01).
@@ -402,23 +419,24 @@ _Exploratory figures: [`0-visualisation/`](0-visualisation/). Course-method test
 
 | Date | Author | Change |
 |------|--------|--------|
+| 2026-11-25 | Salah | Pipeline reordered so data quality runs first: folders renamed `3-data-quality` → `0-data-quality`, `0-visualisation` → `1-visualisation`, `1-statistical-tests` → `2-statistical-tests`, `2-hypothesis-tests` → `3-hypothesis-tests`; `clean_data.py` now checks every raw file (C1–C4) and writes checked copies to `data/processed/clean/` (R1 'Viet Nam' → 'Vietnam' in 5 files, R5 partial 2026 SST row dropped, R4 6 planned GDAT dams with future completion years removed) before building the tidy tables, and exits with an error if any check fails; steps 1–4 read only `data/processed/` and refuse to run until step 0 has passed on the current raw files (SHA-256 fingerprint); data loaders, chart style and shared statistics moved unchanged into `src/` (`loaders.py`, `style.py`, `stats_utils.py`) so step 0 no longer imports later steps; new `run_all.py`; all result tables and 67 of 71 figures byte-identical (O.01 shows the gate; O.02–O.04 differ only in their source line) |
 | 2026-11-23 | Salah | Iteration 6 (drivers in combination, new H6): `hypothesis_tests.py` sections i6_h6a (28 driver pairs, joint HAC F-test on year-to-year changes, levels counted only if Engle-Granger cointegrated), i6_h6b (4 interactions in the SEA country panel, two-way FE + wild cluster bootstrap), i6_h6c (all 64 driver combinations by BIC, LASSO, held-out-year test, Shapley R², circular-shift permutation); figures I6.01–I6.03, 6 tables, H6 decision rows; O.01 analysis map gains an iteration 6 lane; figure catalogue and dashboard rebuilt (71 figures); caveat 12; iterations 1–5 kept |
 | 2026-11-23 | Salah | Added `dashboard/` (build_dashboard.py, template.html, generated index.html, README): offline interactive results page — verdict summary and table with drill-down, H5d forecast chart for all 8 series with back-test table, analysis map, gallery of all 68 figures filterable by section/step/hypothesis |
 | 2026-11-23 | Salah | Added `4-overview/` (overview.py, README, figure_index.csv): O.01 analysis map with verdicts read from `decisions.csv`, O.02 stationarity of all 42 series, O.03 assumption checks and test choice, O.04 long-run tests; catalogue of all 68 figures with report roles; interactive results dashboard (verdicts, 2030 forecast, filterable figure gallery) |
 | 2026-11-18 | Salah | Initial repo: project plan, hypotheses, datasets, analysis pipeline, rubric mapping, assumption & post-hoc tests, MIT licence |
 | 2026-11-18 | Salah | Added all raw datasets (6 OWID + 33 Sea Around Us files), `src/download_data.py`, data dictionary; switched SEA source to Sea Around Us EEZ data; added circularity caveat for SAU stock status |
-| 2026-11-22 | Salah | Completed remaining steps: `3-data-quality/` (clean_data.py → `data/processed/` with cleaning log; quality_tests.py → formal validation of 21 source pairs and integrity tests, 2 figures, 6 tables); final figure set in `figures/README.md`; README progress/status/findings updated |
+| 2026-11-22 | Salah | Completed remaining steps: `0-data-quality/` (clean_data.py → `data/processed/` with cleaning log; quality_tests.py → formal validation of 21 source pairs and integrity tests, 2 figures, 6 tables); final figure set in `figures/README.md`; README progress/status/findings updated |
 | 2026-11-23 | Salah | Iteration 5 · H5d: forecast of % overexploited to 2030 (`i5_h5d`: linear trend / damped ETS / ARIMA on logit %, 5-year back-test vs no-change forecast), figure I5.04, 4 tables, decision row |
 | 2026-11-23 | Salah | Iteration 5: `hypothesis_tests.py` sections i5_h5a (pooled two-way fixed-effects panel, wild cluster bootstrap), i5_h5b (rebuilding share before/after 2015), i5_h5c (Fishing-in-Balance index + decomposition); 3 figures, 4 tables, H5 decision rows; caveats §5 extended with iterations 3–5 limitations; iterations 1–4 kept |
 | 2026-11-23 | Salah | Added `summary` section to `hypothesis_tests.py`: all 8 world drivers from iterations 1–4 on one common method (levels vs linear/quadratic-detrended ρ, CCF), figure S.01 and 2 tables; S.01 replaces I3.01 + I4.01 in the report figure set |
 | 2026-11-22 | Salah | Iteration 4: added shipping and structure data (`data/raw/validation/human_use/`: WDI container traffic + liner connectivity incl. Dec-2020 archive, UNCTADstat seaborne trade, GDAT dams, DeepOWT offshore wind, OOGP platforms; `download_data.py --only human_use`); `hypothesis_tests.py` sections i4_data, i4_h4a, i4_h4b, i4_h4c (island-building DiD with randomization inference), i4_descriptive (4 figures, 11 tables, H4 decision rows); `ccf_table` takes an optional `max_lag`; iterations 1–3 kept |
 | 2026-11-22 | Salah | Iteration 3: added ocean-warming data (OWID HadSST + ocean heat content; NOAA ERSST v5 averaged over SEA EEZs; `download_data.py --only climate`); `hypothesis_tests.py` sections i3_stationarity, i3_h3a, i3_h3b (2 figures, 8 tables, H3 decision rows); iterations 1–2 kept |
 | 2026-11-22 | Salah | Iteration 2: added IMAS fishing-effort data (`data/raw/validation/effort/`, `download_data.py --only effort`); `hypothesis_tests.py` sections i2_stationarity, i2_cpue, i2_h1b, i2_h2b (3 figures, 6 tables, decisions rows); iteration-1 results kept. Fixed undefined `RAW` in `download_integrity()` |
-| 2026-11-22 | Salah | Added `2-hypothesis-tests/` (hypothesis_tests.py + 6 figures + 12 result tables + README): ADF/KPSS stationarity, H1a Mann-Kendall/Sen/segmented/Chow, H1b CCF/prewhitening/Granger/cointegration, H2a SEA trends, H2b SEA CCF, H2c interaction regression, residual diagnostics, decisions table; README status, progress, verdicts |
-| 2026-11-22 | Salah | Added `1-statistical-tests/` (stat_tests.py + 8 figures + 13 result tables + README): EDA profiling and missing-value map, Shapiro/Levene-gated t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square independence with Cramér's V, k-means + hierarchical clustering; added scikit-learn to requirements |
+| 2026-11-22 | Salah | Added `3-hypothesis-tests/` (hypothesis_tests.py + 6 figures + 12 result tables + README): ADF/KPSS stationarity, H1a Mann-Kendall/Sen/segmented/Chow, H1b CCF/prewhitening/Granger/cointegration, H2a SEA trends, H2b SEA CCF, H2c interaction regression, residual diagnostics, decisions table; README status, progress, verdicts |
+| 2026-11-22 | Salah | Added `2-statistical-tests/` (stat_tests.py + 8 figures + 13 result tables + README): EDA profiling and missing-value map, Shapiro/Levene-gated t-test/ANOVA vs Wilcoxon/Kruskal-Wallis, rank-sum before/after 2015, chi-square independence with Cramér's V, k-means + hierarchical clustering; added scikit-learn to requirements |
 | 2026-11-22 | Salah | Filled Philippines 2014–2023 Comtrade mirror-trade data (previously blocked by the API rate limit); re-rendered figs 5.04 and 5.06 |
 | 2026-11-22 | Salah | Added data-integrity sources recommended for validation (SDG 14.7.1 + World Bank GDP/capture, UN Comtrade mirror trade, Benford digit counts from SAU records), `download_data.py --only integrity`, and visualisation section 5 (6 figures) |
-| 2026-11-21 | Salah | Added `0-visualisation/` (visualise.py + 28 figures + gallery README); fixed domestic/foreign fleet labels in `sau/catch_summary/` for the 9 split EEZs (and in `download_data.py`); first exploratory findings |
+| 2026-11-21 | Salah | Added `1-visualisation/` (visualise.py + 28 figures + gallery README); fixed domestic/foreign fleet labels in `sau/catch_summary/` for the 9 split EEZs (and in `download_data.py`); first exploratory findings |
 | 2026-11-18 | Salah | Added alternative sources for cross-validation (UN SDG 14.4.1, World Bank API, Sea Around Us World / FAO areas 57 & 71 / 5 SEA LMEs; 26 files), validation test plan, download script `--only validation` |
 
 ---

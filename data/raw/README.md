@@ -261,14 +261,14 @@ Re-create with `python src/download_data.py --only human_use`. Transfer check (S
 6. **Name mismatch:** OWID uses `Vietnam`, SAU uses `Viet Nam`.
 7. **Fixed 2026-11-21:** the first version of `catch_summary/` labelled all catch in the 9 split EEZs (Malaysia, Indonesia, Thailand) as `foreign` because the fishing country was compared with the full EEZ name. Files were rebuilt; totals are unchanged, only the domestic/foreign split.
 8. **SAU discard series start late** for some countries in OWID (Malaysia/Thailand 1961, Vietnam 1987) — missing ≠ zero.
-9. **Effort source breaks:** single-year jumps of more than 65% in EEZ effort mark changes in the national statistics, not in fishing. They occur in Thailand 2002 (+75%) and 2011 (−52%), and in Malaysia 1965 (+67%). `2-hypothesis-tests` drops these years from the effort growth series. Thailand's catch-per-unit-effort dip in 2002–2010 is an artefact of the same breaks.
+9. **Effort source breaks:** single-year jumps of more than 65% in EEZ effort mark changes in the national statistics, not in fishing. They occur in Thailand 2002 (+75%) and 2011 (−52%), and in Malaysia 1965 (+67%). `3-hypothesis-tests` drops these years from the effort growth series. Thailand's catch-per-unit-effort dip in 2002–2010 is an artefact of the same breaks.
 10. **Effort ends in 2017**, two years before Sea Around Us (2019) and four before FAO stock status (2021). Iteration-2 tests use the common window.
 11. **Warming data:**
     - **Two products:** the global SST (HadSST) and the SEA SST (ERSST v5) come from different products. They are never compared directly; each is only correlated with the fisheries series at its own scale.
     - **Coarse grid:** ERSST's 2° grid is coarse, so coastal EEZ cells are partly land, and narrow seas (e.g. the Malacca Strait) are smoothed.
     - **Short ocean-heat series:** NOAA ocean heat content starts in 1955.
 12. **Human-use data (iteration 4):**
-    - **Container series break in 2010:** the current WDI series starts in 2010 and differs slightly from the Dec-2020 archive (current/archive ratio 0.92–1.02 over 2010–2019). `2-hypothesis-tests` rescales archive years 2000–2009 by the median ratio before joining.
+    - **Container series break in 2010:** the current WDI series starts in 2010 and differs slightly from the Dec-2020 archive (current/archive ratio 0.92–1.02 over 2010–2019). `3-hypothesis-tests` rescales archive years 2000–2009 by the median ratio before joining.
     - **GDAT dates:** 11,866 of 35,140 dams (34%) have no completion year, including 139 of 248 in Indonesia, 139 of 181 in Thailand and 112 of 198 in Vietnam. 25 world dams have only a decade ("195" = 1950s). Completions thin out after ~2005 because the database lags construction, and 2020–2040 entries are planned or under construction.
     - **GDAT volume outlier:** 1921 has a reported volume of 11,969,027 million m³, about 1,000× any other year, so it is a data-entry error. The analysis uses dam counts, not volumes.
     - **Seaborne trade:** the world row is goods loaded (= discharged at world level). Country rows are summed over both flows to give total tonnes handled.

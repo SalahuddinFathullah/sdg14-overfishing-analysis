@@ -10,7 +10,7 @@
 
 ## Open it
 
-Download or clone the repo and double-click `dashboard/index.html`. It needs no server, internet connection or installed libraries. The images are linked from their folders in the repo (`../0-visualisation/figures/...` etc.), so keep the page inside the repo folder.
+Download or clone the repo and double-click `dashboard/index.html`. It needs no server, internet connection or installed libraries. The images are linked from their folders in the repo (`../1-visualisation/figures/...` etc.), so keep the page inside the repo folder.
 
 GitHub shows `.html` files as source code, not as a page. To view it online, enable GitHub Pages for the repo (Settings → Pages → deploy from `main`, folder `/root`); it is then at `https://salahuddinfathullah.github.io/sdg14-overfishing-analysis/dashboard/`.
 
@@ -19,14 +19,14 @@ GitHub shows `.html` files as source code, not as a page. To view it online, ena
 The data are embedded in the page, so rebuild it whenever results change:
 
 ```bash
-python 2-hypothesis-tests/hypothesis_tests.py
+python 3-hypothesis-tests/hypothesis_tests.py
 python 4-overview/overview.py          # writes 4-overview/figure_index.csv
 python dashboard/build_dashboard.py    # writes dashboard/index.html
 ```
 
 | File | Role |
 |---|---|
-| `build_dashboard.py` | Reads `2-hypothesis-tests/results/decisions.csv`, the H5d forecast tables and `4-overview/figure_index.csv`, rebuilds the observed series with the same loaders H5d uses, and writes the data into the template |
+| `build_dashboard.py` | Reads `3-hypothesis-tests/results/decisions.csv`, the H5d forecast tables and `4-overview/figure_index.csv`, rebuilds the observed series with the same loaders H5d uses, and writes the data into the template |
 | `template.html` | Layout, styles and drawing code (plain JavaScript, no libraries); light and dark mode follow the system setting |
 | `index.html` | Generated output; do not edit by hand |
 

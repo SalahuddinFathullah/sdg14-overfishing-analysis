@@ -18,7 +18,7 @@ no JavaScript libraries) that shows
 
 The script only READS result tables written by the other folders, so run it last:
 
-    python 2-hypothesis-tests/hypothesis_tests.py
+    python 3-hypothesis-tests/hypothesis_tests.py
     python 4-overview/overview.py          # writes 4-overview/figure_index.csv
     python dashboard/build_dashboard.py    # this script
 
@@ -27,9 +27,9 @@ relative paths to the PNGs already in the repo, so the page must stay inside the
 folder; the data tables are embedded in the page itself.
 
 Inputs:
-    2-hypothesis-tests/results/decisions.csv                  verdict rows
-    2-hypothesis-tests/results/11_I5_H5d_forecast_2030.csv    chosen model + 2030 forecast per series
-    2-hypothesis-tests/results/11_I5_H5d_forecast_paths.csv   yearly forecast path + 95% interval
+    3-hypothesis-tests/results/decisions.csv                  verdict rows
+    3-hypothesis-tests/results/11_I5_H5d_forecast_2030.csv    chosen model + 2030 forecast per series
+    3-hypothesis-tests/results/11_I5_H5d_forecast_paths.csv   yearly forecast path + 95% interval
     4-overview/figure_index.csv                               figure catalogue
     observed % overexploited series — rebuilt with the same loader functions that H5d uses
     (hypothesis_tests.py), so the chart shows exactly the data the forecast was fitted on
@@ -48,7 +48,7 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-RESULTS = ROOT / "2-hypothesis-tests" / "results"
+RESULTS = ROOT / "3-hypothesis-tests" / "results"
 TEMPLATE = HERE / "template.html"
 OUTPUT = HERE / "index.html"
 PLACEHOLDER = "/*__DATA__*/null"
@@ -124,7 +124,7 @@ def load_figures() -> list[dict]:
 # ---------------------------------------------------------------------------
 def load_forecast() -> tuple[list[dict], list[dict]]:
     """Observed + forecast rows per series, and the per-series summary table."""
-    sys.path.insert(0, str(ROOT / "2-hypothesis-tests"))
+    sys.path.insert(0, str(ROOT / "3-hypothesis-tests"))
     import hypothesis_tests as ht  # noqa: E402  (its own module sets up the data paths)
 
     sea, cs = ht.sea_series(), ht.country_series()
@@ -154,6 +154,9 @@ def load_forecast() -> tuple[list[dict], list[dict]]:
 
 # ---------------------------------------------------------------------------
 def main() -> None:
+    sys.path.insert(0, str(ROOT / "src"))
+    from loaders import require_checked_data
+    require_checked_data()   # the observed series come from the checked data (step 0)
     forecast, forecast_summary = load_forecast()
     data = {
         "verdicts": load_verdicts(),

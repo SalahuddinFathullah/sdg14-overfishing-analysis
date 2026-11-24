@@ -1,4 +1,170 @@
 table,rule,detail,count
+owid/aquaculture-farmed-fish-production.csv,C1–C3 file checks,390 rows × 4 columns; duplicates 0; infinite 0,0
+owid/aquaculture-farmed-fish-production.csv,C4 missing values,empty cells across all columns,0
+owid/capture-fishery-production.csv,C1–C3 file checks,390 rows × 4 columns; duplicates 0; infinite 0,0
+owid/capture-fishery-production.csv,C4 missing values,empty cells across all columns,0
+owid/fish-catch-gear-type.csv,C1–C3 file checks,414 rows × 11 columns; duplicates 0; infinite 0,0
+owid/fish-catch-gear-type.csv,C4 missing values,empty cells across all columns,414
+owid/fish-discards.csv,C1–C3 file checks,355 rows × 4 columns; duplicates 0; infinite 0,0
+owid/fish-discards.csv,C4 missing values,empty cells across all columns,0
+owid/fish-stocks-within-sustainable-levels.csv,C1–C3 file checks,318 rows × 5 columns; duplicates 0; infinite 0,0
+owid/fish-stocks-within-sustainable-levels.csv,C4 missing values,empty cells across all columns,150
+owid/ocean-heat-content-upper.csv,C1–C3 file checks,71 rows × 7 columns; duplicates 0; infinite 0,0
+owid/ocean-heat-content-upper.csv,C4 missing values,empty cells across all columns,25
+owid/sea-surface-temperature-anomaly.csv,C1–C3 file checks,177 rows × 6 columns; duplicates 0; infinite 0,0
+owid/sea-surface-temperature-anomaly.csv,C4 missing values,empty cells across all columns,0
+owid/sea-surface-temperature-anomaly.csv,R5 drop,rows with Year > 2025: partial year (only some months observed),1
+owid/share-of-fish-stocks-overexploited.csv,C1–C3 file checks,318 rows × 4 columns; duplicates 0; infinite 0,0
+owid/share-of-fish-stocks-overexploited.csv,C4 missing values,empty cells across all columns,150
+sau/catch_summary/361_indonesia_eastern.csv,C1–C3 file checks,733 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/361_indonesia_eastern.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/459_malaysia_peninsula_west.csv,C1–C3 file checks,756 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/459_malaysia_peninsula_west.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/460_malaysia_peninsula_east.csv,C1–C3 file checks,755 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/460_malaysia_peninsula_east.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/461_malaysia_sabah.csv,C1–C3 file checks,666 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/461_malaysia_sabah.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/463_malaysia_sarawak.csv,C1–C3 file checks,717 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/463_malaysia_sarawak.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/608_philippines.csv,C1–C3 file checks,669 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/608_philippines.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/704_viet_nam.csv,C1–C3 file checks,563 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/704_viet_nam.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/937_indonesia_central.csv,C1–C3 file checks,695 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/937_indonesia_central.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/938_indonesia_indian_ocean.csv,C1–C3 file checks,595 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/938_indonesia_indian_ocean.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/956_thailand_andaman_sea.csv,C1–C3 file checks,517 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/956_thailand_andaman_sea.csv,C4 missing values,empty cells across all columns,0
+sau/catch_summary/957_thailand_gulf_of_thailand.csv,C1–C3 file checks,481 rows × 7 columns; duplicates 0; infinite 0,0
+sau/catch_summary/957_thailand_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,0
+sau/marine_trophic_index/361_indonesia_eastern.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/361_indonesia_eastern.csv,C4 missing values,empty cells across all columns,66
+sau/marine_trophic_index/459_malaysia_peninsula_west.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/459_malaysia_peninsula_west.csv,C4 missing values,empty cells across all columns,56
+sau/marine_trophic_index/460_malaysia_peninsula_east.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/460_malaysia_peninsula_east.csv,C4 missing values,empty cells across all columns,78
+sau/marine_trophic_index/461_malaysia_sabah.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/461_malaysia_sabah.csv,C4 missing values,empty cells across all columns,53
+sau/marine_trophic_index/463_malaysia_sarawak.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/463_malaysia_sarawak.csv,C4 missing values,empty cells across all columns,60
+sau/marine_trophic_index/608_philippines.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/608_philippines.csv,C4 missing values,empty cells across all columns,37
+sau/marine_trophic_index/704_viet_nam.csv,C1–C3 file checks,70 rows × 14 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/704_viet_nam.csv,C4 missing values,empty cells across all columns,10
+sau/marine_trophic_index/937_indonesia_central.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/937_indonesia_central.csv,C4 missing values,empty cells across all columns,45
+sau/marine_trophic_index/938_indonesia_indian_ocean.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/938_indonesia_indian_ocean.csv,C4 missing values,empty cells across all columns,44
+sau/marine_trophic_index/956_thailand_andaman_sea.csv,C1–C3 file checks,70 rows × 15 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/956_thailand_andaman_sea.csv,C4 missing values,empty cells across all columns,51
+sau/marine_trophic_index/957_thailand_gulf_of_thailand.csv,C1–C3 file checks,70 rows × 15 columns; duplicates 0; infinite 0,0
+sau/marine_trophic_index/957_thailand_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,53
+sau/stock_status/361_indonesia_eastern.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/361_indonesia_eastern.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/459_malaysia_peninsula_west.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/459_malaysia_peninsula_west.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/460_malaysia_peninsula_east.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/460_malaysia_peninsula_east.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/461_malaysia_sabah.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/461_malaysia_sabah.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/463_malaysia_sarawak.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/463_malaysia_sarawak.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/608_philippines.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/608_philippines.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/704_viet_nam.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/704_viet_nam.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/937_indonesia_central.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/937_indonesia_central.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/938_indonesia_indian_ocean.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/938_indonesia_indian_ocean.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/956_thailand_andaman_sea.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/956_thailand_andaman_sea.csv,C4 missing values,empty cells across all columns,0
+sau/stock_status/957_thailand_gulf_of_thailand.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+sau/stock_status/957_thailand_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,0
+validation/benford/sau_catch_leading_digits.csv,C1–C3 file checks,22 rows × 12 columns; duplicates 0; infinite 0,0
+validation/benford/sau_catch_leading_digits.csv,C4 missing values,empty cells across all columns,0
+validation/climate/eez_ersst_cell_weights.csv,C1–C3 file checks,295 rows × 4 columns; duplicates 0; infinite 0,0
+validation/climate/eez_ersst_cell_weights.csv,C4 missing values,empty cells across all columns,0
+validation/climate/eez_ersst_cell_weights.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',22
+validation/climate/sea_eez_sst_ersst.csv,C1–C3 file checks,456 rows × 5 columns; duplicates 0; infinite 0,0
+validation/climate/sea_eez_sst_ersst.csv,C4 missing values,empty cells across all columns,0
+validation/climate/sea_eez_sst_ersst.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',76
+validation/comtrade/fish_hs03_mirror_trade.csv,C1–C3 file checks,65 rows × 6 columns; duplicates 0; infinite 0,0
+validation/comtrade/fish_hs03_mirror_trade.csv,C4 missing values,empty cells across all columns,0
+validation/economic/fisheries_gdp_capture.csv,C1–C3 file checks,223 rows × 6 columns; duplicates 0; infinite 0,0
+validation/economic/fisheries_gdp_capture.csv,C4 missing values,empty cells across all columns,0
+validation/effort/sea_eez_effort.csv,C1–C3 file checks,340 rows × 7 columns; duplicates 0; infinite 0,0
+validation/effort/sea_eez_effort.csv,C4 missing values,empty cells across all columns,0
+validation/effort/sea_eez_effort.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',68
+validation/effort/world_effort.csv,C1–C3 file checks,68 rows × 6 columns; duplicates 0; infinite 0,0
+validation/effort/world_effort.csv,C4 missing values,empty cells across all columns,0
+validation/human_use/deepowt_offshore_wind.csv,C1–C3 file checks,40 rows × 6 columns; duplicates 0; infinite 0,0
+validation/human_use/deepowt_offshore_wind.csv,C4 missing values,empty cells across all columns,0
+validation/human_use/gdat_dams_by_year.csv,C1–C3 file checks,399 rows × 6 columns; duplicates 0; infinite 0,0
+validation/human_use/gdat_dams_by_year.csv,C4 missing values,empty cells across all columns,6
+validation/human_use/gdat_dams_by_year.csv,R4 remove,rows with year > 2025: planned dams: completion year in the future,6
+validation/human_use/oogp_platforms.csv,C1–C3 file checks,42 rows × 5 columns; duplicates 0; infinite 0,0
+validation/human_use/oogp_platforms.csv,C4 missing values,empty cells across all columns,0
+validation/human_use/unctad_seaborne_trade.csv,C1–C3 file checks,300 rows × 4 columns; duplicates 0; infinite 0,0
+validation/human_use/unctad_seaborne_trade.csv,C4 missing values,empty cells across all columns,0
+validation/human_use/wb_shipping.csv,C1–C3 file checks,370 rows × 5 columns; duplicates 0; infinite 0,0
+validation/human_use/wb_shipping.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/fao_57_indian_ocean_eastern.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/fao_57_indian_ocean_eastern.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/fao_71_pacific_western_central.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/fao_71_pacific_western_central.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/global.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/global.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/lme_34_bay_of_bengal.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/lme_34_bay_of_bengal.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/lme_35_gulf_of_thailand.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/lme_35_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/lme_36_south_china_sea.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/lme_36_south_china_sea.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/lme_37_sulu_celebes_sea.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/lme_37_sulu_celebes_sea.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/catch/lme_38_indonesian_sea.csv,C1–C3 file checks,70 rows × 5 columns; duplicates 0; infinite 0,0
+validation/sau_regions/catch/lme_38_indonesian_sea.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/marine_trophic_index/fao_57_indian_ocean_eastern.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/fao_57_indian_ocean_eastern.csv,C4 missing values,empty cells across all columns,75
+validation/sau_regions/marine_trophic_index/fao_71_pacific_western_central.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/fao_71_pacific_western_central.csv,C4 missing values,empty cells across all columns,59
+validation/sau_regions/marine_trophic_index/global.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/global.csv,C4 missing values,empty cells across all columns,86
+validation/sau_regions/marine_trophic_index/lme_34_bay_of_bengal.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/lme_34_bay_of_bengal.csv,C4 missing values,empty cells across all columns,74
+validation/sau_regions/marine_trophic_index/lme_35_gulf_of_thailand.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/lme_35_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,70
+validation/sau_regions/marine_trophic_index/lme_36_south_china_sea.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/lme_36_south_china_sea.csv,C4 missing values,empty cells across all columns,25
+validation/sau_regions/marine_trophic_index/lme_37_sulu_celebes_sea.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/lme_37_sulu_celebes_sea.csv,C4 missing values,empty cells across all columns,39
+validation/sau_regions/marine_trophic_index/lme_38_indonesian_sea.csv,C1–C3 file checks,70 rows × 16 columns; duplicates 0; infinite 0,0
+validation/sau_regions/marine_trophic_index/lme_38_indonesian_sea.csv,C4 missing values,empty cells across all columns,60
+validation/sau_regions/stock_status/fao_57_indian_ocean_eastern.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/fao_57_indian_ocean_eastern.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/fao_71_pacific_western_central.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/fao_71_pacific_western_central.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/global.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/global.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/lme_34_bay_of_bengal.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/lme_34_bay_of_bengal.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/lme_35_gulf_of_thailand.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/lme_35_gulf_of_thailand.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/lme_36_south_china_sea.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/lme_36_south_china_sea.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/lme_37_sulu_celebes_sea.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/lme_37_sulu_celebes_sea.csv,C4 missing values,empty cells across all columns,0
+validation/sau_regions/stock_status/lme_38_indonesian_sea.csv,C1–C3 file checks,140 rows × 7 columns; duplicates 0; infinite 0,0
+validation/sau_regions/stock_status/lme_38_indonesian_sea.csv,C4 missing values,empty cells across all columns,0
+validation/un_sdg/14_4_1_ER_H2O_FWTL.csv,C1–C3 file checks,315 rows × 7 columns; duplicates 0; infinite 0,0
+validation/un_sdg/14_4_1_ER_H2O_FWTL.csv,C4 missing values,empty cells across all columns,270
+validation/un_sdg/14_4_1_ER_H2O_FWTL.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',8
+validation/world_bank/ER.FSH.CAPT.MT.csv,C1–C3 file checks,396 rows × 4 columns; duplicates 0; infinite 0,0
+validation/world_bank/ER.FSH.CAPT.MT.csv,C4 missing values,empty cells across all columns,6
+validation/world_bank/ER.FSH.CAPT.MT.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',66
+clean copies,Stage A,79 CSV files checked and written to data/processed/clean/,79
 global_annual,R4 exclude,UN SDG 14.4.1 world values after 2021 (FAO 2025 method change),2
 global_annual,R4 flag,FAO world years on a straight line between neighbours (likely interpolated),5
 global_annual,R5 drop,partial year 2026 of the SST series,1

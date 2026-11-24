@@ -5,18 +5,18 @@ overview.py — Report-level visual summaries of the whole analysis
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
 
 Reads only the result tables written by the other folders (it recomputes nothing),
-so run it last:
+so run it last (``python run_all.py`` runs every step in order, data quality first):
 
-    python 0-visualisation/visualise.py
-    python 3-data-quality/clean_data.py && python 3-data-quality/quality_tests.py
-    python 1-statistical-tests/stat_tests.py
-    python 2-hypothesis-tests/hypothesis_tests.py
+    python 0-data-quality/clean_data.py && python 0-data-quality/quality_tests.py
+    python 1-visualisation/visualise.py
+    python 2-statistical-tests/stat_tests.py
+    python 3-hypothesis-tests/hypothesis_tests.py
     python 4-overview/overview.py              # this script
     python 4-overview/overview.py --only map
 
 Figures (figures/*.png):
-    O.01  analysis map — data → preparation → EDA → 5 iterations of tests → answers,
-          with every hypothesis verdict taken from 2-hypothesis-tests/results/decisions.csv
+    O.01  analysis map — data → quality checks & preparation → EDA → 6 iterations of tests → answers,
+          with every hypothesis verdict taken from 3-hypothesis-tests/results/decisions.csv
     O.02  stationarity of every series tested (ADF + KPSS, before and after transforming)
     O.03  assumption checks and the test choices they drove (regression residual
           diagnostics; parametric vs non-parametric p-values)
@@ -48,12 +48,12 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-sys.path.insert(0, str(ROOT / "0-visualisation"))
-import visualise as v  # noqa: E402  (chart style + header helpers)
+sys.path.insert(0, str(ROOT / "src"))
+import style as v  # noqa: E402  (chart style + header helpers, shared by every step)
 
 FIG = HERE / "figures"
-HT = ROOT / "2-hypothesis-tests" / "results"
-STT = ROOT / "1-statistical-tests" / "results"
+HT = ROOT / "3-hypothesis-tests" / "results"
+STT = ROOT / "2-statistical-tests" / "results"
 ALPHA = 0.05
 
 # Verdict classes used on the map (one colour each; text always in ink)
@@ -125,7 +125,7 @@ def section_map() -> None:
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    cols = [(2, "1 · Data"), (36, "2 · Prepare & check"), (68, "3 · Explore"), (100, "4 · Test (6 iterations)"),
+    cols = [(2, "1 · Data"), (36, "2 · Check & clean first"), (68, "3 · Explore"), (100, "4 · Test (6 iterations)"),
             (158, "5 · Answer")]
     for x, t in cols:
         ax.text(x, 99, t, ha="left", va="top", fontsize=11.5, fontweight="bold", color=v.INK)
@@ -141,8 +141,9 @@ def section_map() -> None:
     for (t, b), y, h in zip(data, ys, hs):
         box(ax, 2, y, 30, h, t, b, wrap=44)
 
-    # 2 · Prepare & check
-    prep = [("Clean", "Rules R1–R6 (ranges, duplicates, names, EEZ → country); 0 violations → data/processed"),
+    # 2 · Check & clean first (step 0: a failed check stops every later step)
+    prep = [("Check & clean (gate)", "All 79 input files checked (parse, duplicates, ranges); rules R1–R6 → "
+                                     "data/processed. Any failure stops the pipeline"),
             ("Validate", "21 source pairs: 7 identical, 10 agree on trend, 4 on direction only, none disagree"),
             ("Integrity", "Benford digits genuine; under-reporting 10–45% of catch; Vietnam mirror-trade gap")]
     for (t, b), y in zip(prep, [76, 56, 36]):
@@ -213,7 +214,7 @@ def section_map() -> None:
         chip(ax, lx, 4.2, "", c, w=3.2, h=2.6)
         ax.text(lx + 4.2, 5.5, c, ha="left", va="center", fontsize=8.6, color=v.INK_2)
         lx += 30
-    ax.text(lx + 2, 5.5, "Verdicts read from 2-hypothesis-tests/results/decisions.csv; "
+    ax.text(lx + 2, 5.5, "Verdicts read from 3-hypothesis-tests/results/decisions.csv; "
                          "H2c, H5b, H5c are mixed (true for some countries or the world, not SEA as a whole); "
                          "H6a is weak (one data source only)",
             ha="left", va="center", fontsize=8.2, color=v.MUTED)
@@ -278,7 +279,7 @@ def section_stationarity() -> None:
                f"{n} series across iterations 1–4: {ok} pass both tests after transforming, {adf_only} pass ADF only, "
                f"{n - ok - adf_only} stay non-stationary. Correlation tests use the transformed series")
     fig.subplots_adjust(top=1 - 1.05 / fig.get_figheight(), bottom=0.9 / fig.get_figheight(), left=0.25, right=0.92)
-    save(fig, "O.02_stationarity_all_series", "2-hypothesis-tests results (ADF + KPSS)")
+    save(fig, "O.02_stationarity_all_series", "3-hypothesis-tests results (ADF + KPSS)")
 
 
 # =========================================================================== #
@@ -352,7 +353,7 @@ def section_assumptions() -> None:
                "Left: residual diagnostics of every regression (✗ = check failed). Right: parametric vs non-parametric "
                "p-values for the course comparisons; blue = the test the assumption checks selected")
     fig.subplots_adjust(top=0.82, bottom=0.12, left=0.2, right=0.97)
-    save(fig, "O.03_assumption_checks_and_test_choice", "1-statistical-tests and 2-hypothesis-tests results")
+    save(fig, "O.03_assumption_checks_and_test_choice", "2-statistical-tests and 3-hypothesis-tests results")
 
 
 # =========================================================================== #
@@ -422,7 +423,7 @@ def section_longrun() -> None:
                + (", ".join(sig_t['pair']) or "none") + "), 0 jointly with effort, 0 Granger after Holm. "
                "Each passing pair fails in the other source (FAO vs Sea Around Us)")
     fig.subplots_adjust(top=1 - 1.0 / fig.get_figheight(), bottom=0.9 / fig.get_figheight(), left=0.22, right=0.9)
-    save(fig, "O.04_long_run_tests", "2-hypothesis-tests results (Engle-Granger, Granger)")
+    save(fig, "O.04_long_run_tests", "3-hypothesis-tests results (Engle-Granger, Granger)")
 
 
 # =========================================================================== #
@@ -436,7 +437,7 @@ REPORT_FIG = {"1.07": 1, "A.01": 2, "3.10": 3, "V.01": 4, "I.01": 5, "1.03": 6, 
 APPENDIX = {"1.01", "D.01 (residuals)", "H2b.01", "I2.02", "I2.03", "I3.02", "I4.02", "I3.01", "I4.01", "C.01",
             "D.01 (chi-square)", "I4.04", "I5.01", "I6.01", "I6.02", "I6.03"}
 
-# id: (title, rubric section, hypotheses, iteration, message) for figures outside 0-visualisation
+# id: (title, rubric section, hypotheses, iteration, message) for figures outside 1-visualisation
 CAPTIONS = {
     "A.01": ("Missing-value map", "Data Understanding & Preparation", "", "", "Coverage of every source; gaps are reporting cycles, not data loss; 5 FAO years look interpolated"),
     "B.01": ("Q-Q plots, normality", "Statistical Analysis", "", "", "Most series fail normality, so non-parametric tests lead"),
@@ -476,19 +477,20 @@ CAPTIONS = {
     "O.03": ("Assumption checks and test choice", "Statistical Analysis", "", "", "Assumption checks decided which tests were valid; here they change the answer"),
     "O.04": ("Long-run tests", "Statistical Analysis", "H1b H3a H4a", "1–4", "Only 2 of 23 cointegration tests pass, neither in both sources"),
 }
-STEP = {"0-visualisation": "0 · EDA figures", "1-statistical-tests": "1 · Course methods",
-        "2-hypothesis-tests": "2 · Hypothesis tests", "3-data-quality": "3 · Data quality", "4-overview": "4 · Overview"}
+STEP = {"0-data-quality": "0 · Data quality", "1-visualisation": "1 · EDA figures",
+        "2-statistical-tests": "2 · Course methods", "3-hypothesis-tests": "3 · Hypothesis tests",
+        "4-overview": "4 · Overview"}
 
 
 def section_index() -> None:
     print("Figure index")
     rows = []
-    # 0-visualisation: captions from its README gallery table
-    for line in (ROOT / "0-visualisation" / "README.md").read_text(encoding="utf-8").splitlines():
+    # 1-visualisation: captions from its README gallery table
+    for line in (ROOT / "1-visualisation" / "README.md").read_text(encoding="utf-8").splitlines():
         if line.startswith("| ") and ".png)" in line:
             cells = [c.strip() for c in line.strip("|").split("|")]
             fid, img, kind, msg = cells[0], cells[1], cells[2], cells[3]
-            rel = "0-visualisation/" + img[img.index("(") + 1: img.index(")")]
+            rel = "1-visualisation/" + img[img.index("(") + 1: img.index(")")]
             sec = rel.split("/")[2]
             rubric = "Data Understanding & Preparation" if sec.startswith(("4_", "5_")) else "Exploratory Data Analysis"
             hyp = " ".join(sorted(set(h for h in ("H1a", "H1b", "H2a", "H2b", "H2c") if h in msg)))
@@ -498,9 +500,11 @@ def section_index() -> None:
                 title = " ".join(up if w.lower() == low else w for w in title.replace(up.lower(), low).split(" ")) \
                     if " " not in low else title.replace(low, up)
             rows.append({"figure_id": fid, "title": title[0].upper() + title[1:], "chart": kind,
-                         "step": STEP["0-visualisation"], "rubric_section": rubric, "hypotheses": hyp, "iteration": "",
+                         "step": STEP["1-visualisation"], "rubric_section": rubric, "hypotheses": hyp, "iteration": "",
                          "message": msg.replace("**", ""), "file": rel})
-    for f in sorted(ROOT.glob("[1-4]-*/figures/**/*.png")):
+    for f in sorted(ROOT.glob("[0-4]-*/figures/**/*.png")):
+        if f.relative_to(ROOT).parts[0] == "1-visualisation":
+            continue                                   # EDA figures: captions come from its README (above)
         rel = f.relative_to(ROOT).as_posix()
         fid = f.stem.split("_", 1)[0]
         if fid == "D.01":
