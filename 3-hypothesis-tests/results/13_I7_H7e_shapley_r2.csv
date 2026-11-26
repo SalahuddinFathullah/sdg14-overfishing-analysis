@@ -1,0 +1,19 @@
+response,driver,pollution,shapley_r2_beyond_trend
+FAO,Catch (FAO capture),False,0.020284
+FAO,Fishing effort (nominal),False,0.030644
+FAO,Sea-surface temperature,False,0.023546
+FAO,Ocean heat content,False,0.015105
+FAO,Dams completed (cumulative),False,0.008996
+FAO,Aquaculture production,False,0.056922
+FAO,Nitrogen fertiliser per ha,True,0.001798
+FAO,Plastic production,True,0.001765
+FAO,Oil spills (number ≥ 7 t),True,0.024169
+SAU,Catch (FAO capture),False,0.062223
+SAU,Fishing effort (nominal),False,0.010743
+SAU,Sea-surface temperature,False,0.008858
+SAU,Ocean heat content,False,0.004866
+SAU,Dams completed (cumulative),False,0.005929
+SAU,Aquaculture production,False,0.015977
+SAU,Nitrogen fertiliser per ha,True,0.116476
+SAU,Plastic production,True,0.023526
+SAU,Oil spills (number ≥ 7 t),True,0.015219

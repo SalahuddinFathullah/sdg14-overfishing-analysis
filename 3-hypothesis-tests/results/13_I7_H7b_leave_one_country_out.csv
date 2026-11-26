@@ -1,0 +1,34 @@
+driver,check,n_years,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,holds
+Nitrogen fertiliser per ha,SEA (all 5),59,-0.605961,0.0,0.002455,0.985279,False
+Nitrogen fertiliser per ha,SEA without Malaysia,59,-0.522911,2.1e-05,-0.086382,0.515346,False
+Nitrogen fertiliser per ha,SEA without Indonesia,59,0.040795,0.759015,0.069959,0.598531,False
+Nitrogen fertiliser per ha,SEA without Thailand,59,-0.509468,3.8e-05,-0.058854,0.657924,False
+Nitrogen fertiliser per ha,SEA without Vietnam,59,-0.831093,0.0,0.038048,0.7748,False
+Nitrogen fertiliser per ha,SEA without Philippines,59,-0.6128,0.0,0.085155,0.521355,False
+Nitrogen fertiliser per ha,Malaysia alone,59,-0.548451,7e-06,0.021566,0.871205,False
+Nitrogen fertiliser per ha,Indonesia alone,59,-0.678434,0.0,0.150731,0.25448,False
+Nitrogen fertiliser per ha,Thailand alone,59,-0.436821,0.000542,0.118001,0.373409,False
+Nitrogen fertiliser per ha,Vietnam alone,59,0.481999,0.000111,0.074342,0.575757,False
+Nitrogen fertiliser per ha,Philippines alone,59,0.018586,0.888884,0.034541,0.795082,False
+Pesticides per ha,SEA (all 5),30,0.436707,0.015828,0.445606,0.013593,True
+Pesticides per ha,SEA without Malaysia,30,0.394883,0.030804,0.370857,0.043639,True
+Pesticides per ha,SEA without Indonesia,30,0.028699,0.880339,-0.010901,0.954408,False
+Pesticides per ha,SEA without Thailand,30,0.174638,0.356002,0.221802,0.238804,False
+Pesticides per ha,SEA without Vietnam,30,0.294772,0.113811,0.439377,0.015128,False
+Pesticides per ha,SEA without Philippines,30,0.626696,0.000211,0.63604,0.000158,True
+Pesticides per ha,Malaysia alone,30,0.388209,0.034014,0.465184,0.00959,True
+Pesticides per ha,Indonesia alone,30,0.501224,0.00478,0.513237,0.003726,True
+Pesticides per ha,Thailand alone,30,0.2,0.289304,0.414461,0.022778,False
+Pesticides per ha,Vietnam alone,30,0.34327,0.063288,0.12792,0.500534,False
+Pesticides per ha,Philippines alone,30,0.251613,0.17983,-0.067408,0.723395,False
+Chlorophyll-a deviation,SEA (all 5),15,-0.235714,0.397703,0.057143,0.8397,False
+Chlorophyll-a deviation,SEA without Malaysia,15,-0.439286,0.101361,-0.167857,0.549856,False
+Chlorophyll-a deviation,SEA without Indonesia,15,0.135714,0.62962,0.15,0.59363,False
+Chlorophyll-a deviation,SEA without Thailand,15,-0.021429,0.939578,-0.014286,0.9597,False
+Chlorophyll-a deviation,SEA without Vietnam,15,-0.239286,0.390379,-0.071429,0.800296,False
+Chlorophyll-a deviation,SEA without Philippines,15,-0.314286,0.25394,0.132143,0.638744,False
+Chlorophyll-a deviation,Malaysia alone,15,0.192857,0.491049,0.142857,0.611522,False
+Chlorophyll-a deviation,Indonesia alone,15,-0.275,0.321211,0.003571,0.989921,False
+Chlorophyll-a deviation,Thailand alone,15,-0.139286,0.620546,0.457143,0.086678,False
+Chlorophyll-a deviation,Vietnam alone,15,-0.064286,0.819948,-0.207143,0.458843,False
+Chlorophyll-a deviation,Philippines alone,15,-0.057143,0.8397,0.053571,0.84961,False

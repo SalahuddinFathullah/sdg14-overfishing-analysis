@@ -1,19 +1,41 @@
 table,rule,detail,count
 owid/aquaculture-farmed-fish-production.csv,C1–C3 file checks,390 rows × 4 columns; duplicates 0; infinite 0,0
 owid/aquaculture-farmed-fish-production.csv,C4 missing values,empty cells across all columns,0
+owid/beach-litter.csv,C1–C3 file checks,33 rows × 4 columns; duplicates 0; infinite 0,0
+owid/beach-litter.csv,C4 missing values,empty cells across all columns,0
 owid/capture-fishery-production.csv,C1–C3 file checks,390 rows × 4 columns; duplicates 0; infinite 0,0
 owid/capture-fishery-production.csv,C4 missing values,empty cells across all columns,0
+owid/chlorophyll-a-deviation-from-the-global-average.csv,C1–C3 file checks,108 rows × 4 columns; duplicates 0; infinite 0,0
+owid/chlorophyll-a-deviation-from-the-global-average.csv,C4 missing values,empty cells across all columns,0
+owid/coastal-eutrophication.csv,C1–C3 file checks,80 rows × 4 columns; duplicates 0; infinite 0,0
+owid/coastal-eutrophication.csv,C4 missing values,empty cells across all columns,0
 owid/fish-catch-gear-type.csv,C1–C3 file checks,414 rows × 11 columns; duplicates 0; infinite 0,0
 owid/fish-catch-gear-type.csv,C4 missing values,empty cells across all columns,414
 owid/fish-discards.csv,C1–C3 file checks,355 rows × 4 columns; duplicates 0; infinite 0,0
 owid/fish-discards.csv,C4 missing values,empty cells across all columns,0
 owid/fish-stocks-within-sustainable-levels.csv,C1–C3 file checks,318 rows × 5 columns; duplicates 0; infinite 0,0
 owid/fish-stocks-within-sustainable-levels.csv,C4 missing values,empty cells across all columns,150
+owid/global-plastics-production.csv,C1–C3 file checks,69 rows × 4 columns; duplicates 0; infinite 0,0
+owid/global-plastics-production.csv,C4 missing values,empty cells across all columns,0
+owid/mismanaged-plastic-waste-per-capita.csv,C1–C3 file checks,6 rows × 4 columns; duplicates 0; infinite 0,0
+owid/mismanaged-plastic-waste-per-capita.csv,C4 missing values,empty cells across all columns,0
+owid/nitrogen-fertilizer-application-per-hectare-of-cropland.csv,C1–C3 file checks,384 rows × 4 columns; duplicates 0; infinite 0,0
+owid/nitrogen-fertilizer-application-per-hectare-of-cropland.csv,C4 missing values,empty cells across all columns,0
+owid/number-oil-spills.csv,C1–C3 file checks,56 rows × 5 columns; duplicates 0; infinite 0,0
+owid/number-oil-spills.csv,C4 missing values,empty cells across all columns,0
 owid/ocean-heat-content-upper.csv,C1–C3 file checks,71 rows × 7 columns; duplicates 0; infinite 0,0
 owid/ocean-heat-content-upper.csv,C4 missing values,empty cells across all columns,25
+owid/pesticide-use-per-hectare-of-cropland.csv,C1–C3 file checks,210 rows × 4 columns; duplicates 0; infinite 0,0
+owid/pesticide-use-per-hectare-of-cropland.csv,C4 missing values,empty cells across all columns,0
+owid/plastic-waste-emitted-to-the-ocean.csv,C1–C3 file checks,6 rows × 4 columns; duplicates 0; infinite 0,0
+owid/plastic-waste-emitted-to-the-ocean.csv,C4 missing values,empty cells across all columns,0
+owid/quantity-oil-spills.csv,C1–C3 file checks,56 rows × 4 columns; duplicates 0; infinite 0,0
+owid/quantity-oil-spills.csv,C4 missing values,empty cells across all columns,0
 owid/sea-surface-temperature-anomaly.csv,C1–C3 file checks,177 rows × 6 columns; duplicates 0; infinite 0,0
 owid/sea-surface-temperature-anomaly.csv,C4 missing values,empty cells across all columns,0
 owid/sea-surface-temperature-anomaly.csv,R5 drop,rows with Year > 2025: partial year (only some months observed),1
+owid/seawater-ph.csv,C1–C3 file checks,346 rows × 4 columns; duplicates 0; infinite 0,0
+owid/seawater-ph.csv,C4 missing values,empty cells across all columns,11
 owid/share-of-fish-stocks-overexploited.csv,C1–C3 file checks,318 rows × 4 columns; duplicates 0; infinite 0,0
 owid/share-of-fish-stocks-overexploited.csv,C4 missing values,empty cells across all columns,150
 sau/catch_summary/361_indonesia_eastern.csv,C1–C3 file checks,733 rows × 7 columns; duplicates 0; infinite 0,0
@@ -164,7 +186,7 @@ validation/un_sdg/14_4_1_ER_H2O_FWTL.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',8
 validation/world_bank/ER.FSH.CAPT.MT.csv,C1–C3 file checks,396 rows × 4 columns; duplicates 0; infinite 0,0
 validation/world_bank/ER.FSH.CAPT.MT.csv,C4 missing values,empty cells across all columns,6
 validation/world_bank/ER.FSH.CAPT.MT.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',66
-clean copies,Stage A,79 CSV files checked and written to data/processed/clean/,79
+clean copies,Stage A,90 CSV files checked and written to data/processed/clean/,90
 global_annual,R4 exclude,UN SDG 14.4.1 world values after 2021 (FAO 2025 method change),2
 global_annual,R4 flag,FAO world years on a straight line between neighbours (likely interpolated),5
 global_annual,R5 drop,partial year 2026 of the SST series,1

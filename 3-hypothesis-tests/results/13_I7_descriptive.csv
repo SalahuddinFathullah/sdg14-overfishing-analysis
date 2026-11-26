@@ -1,0 +1,17 @@
+item,years,value_first,value_last,change_pct,phosphorus_change_pct,nitrogen_years_unchanged_after_2010,note
+Nutrient loading · Bay of Bengal,2000–2015,337684.88,339759.03,0.614226,38.829063,5.0,"modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"
+Nutrient loading · Gulf of Thailand,2000–2015,40498.97,45601.94,12.600246,-15.385741,5.0,"modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"
+Nutrient loading · Indonesian Sea,2000–2015,127070.87,121231.98,-4.594987,16.922764,5.0,"modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"
+Nutrient loading · South China Sea,2000–2015,301496.22,335915.6,11.41619,28.775022,5.0,"modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"
+Nutrient loading · Sulu-Celebes Sea,2000–2015,59932.59,57921.48,-3.35562,-13.521054,5.0,"modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"
+Plastic to the ocean · Malaysia,2019,73098.0,25.491518,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person; % overexploited 2019 = 50.7"
+Plastic to the ocean · Indonesia,2019,56333.0,3.045657,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person; % overexploited 2019 = 50.9"
+Plastic to the ocean · Thailand,2019,22806.0,19.557205,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person; % overexploited 2019 = 46.8"
+Plastic to the ocean · Vietnam,2019,28221.0,11.536045,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person; % overexploited 2019 = 20.3"
+Plastic to the ocean · Philippines,2019,356371.0,37.23096,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person; % overexploited 2019 = 50.8"
+Plastic to the ocean · World,2019,979458.0,8.008551,,,,"value_first = t emitted to the ocean, value_last = kg mismanaged per person"
+Beach litter · Malaysia,"2016, 2017, 2018, 2021, 2022",488504.03,273440.16,-44.024994,,,items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap
+Beach litter · Indonesia,"2016, 2017, 2018, 2021, 2022",2090664.2,32501.2,-98.445413,,,items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap
+Beach litter · Thailand,"2016, 2017, 2018, 2021, 2022",447945.66,287028.22,-35.923429,,,items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap
+Beach litter · Vietnam,"2016, 2017, 2018, 2021, 2022",3446296.0,165575.69,-95.195546,,,items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap
+Beach litter · Philippines,"2016, 2017, 2018, 2021, 2022",1023701.7,334874.53,-67.28788,,,items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap

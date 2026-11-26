@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5, H6), in 6 iterations
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5, H6, H7), in 7 iterations
 ==============================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -74,6 +74,22 @@ Runs the analysis pipeline in README §4 on the raw data:
     i6_h6c           all 64 combinations of 6 long-run drivers ranked by BIC, LASSO, rolling-origin
                      held-out-year test vs trend only, Shapley R², circular-shift permutation
 
+  Iteration 7 (sea and water pollution, alone and with the other drivers, new hypothesis H7):
+    i7_data          coverage of the pollution series, ADF + KPSS (World and SEA)
+    i7_h7a           global: nitrogen fertiliser, pesticides, plastic production, oil spills (number and
+                     tonnes), ocean acidity vs world % overexploited — same three steps as H4a
+    i7_h7b           SEA: fertiliser, pesticides and chlorophyll-a (SDG 14.1.1a) — CCF per country and
+                     a 5-country fixed-effects panel with wild cluster bootstrap
+    i7_descriptive   series too short or too sparse to test: nutrient loading per large marine
+                     ecosystem (2000–2015), plastic reaching the ocean (2019), beach litter
+    i7_h7c           pollution + each other driver (and pollution pairs): joint HAC F on year-to-year
+                     changes, world, FAO and Sea Around Us
+    i7_h7d           4 pre-chosen pollution × pressure interactions in the SEA country panel
+    i7_h7e           best combination: the 6 long drivers of H6c + fertiliser, plastic and oil spills
+                     (512 subsets, BIC, LASSO, rolling origin vs the no-pollution model, Shapley R²)
+    i7_h7f           coastal N and P loading vs Sea Around Us % overexploited and MTL in the 5 SEA large
+                     marine ecosystems (2000–2015 panel, LME + year FE, wild cluster bootstrap)
+
   Summary (report figure):
     summary          all 8 world drivers from iterations 1–4 on one common method:
                      levels vs linear/quadratic-detrended ρ and CCF, one figure (S.01)
@@ -124,7 +140,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from loaders import (  # noqa: E402
     BREAK_DLOG, CLEAN_DIR, PROC, require_checked_data, sea_series, country_series, sau_world_catch,
     sau_world_mtl, fao_area, world_effort, sea_effort, world_sst, world_ohc, sea_sst, ISO3, SPLICE,
-    container_teu, lsci, seaborne, dams, aquaculture, eez_full_panel)
+    container_teu, lsci, seaborne, dams, aquaculture, eez_full_panel,
+    n_fertiliser, pesticides, chlorophyll, plastic_production, oil_spills, seawater_ph, coastal_nutrients,
+    plastic_cross_section, beach_litter, sau_lme_panel)
 from stats_utils import (  # noqa: E402
     holm, mann_kendall)
 
@@ -2920,6 +2938,879 @@ def section_i6_h6c() -> None:
 
 
 # =========================================================================== #
+# Iteration 7 — sea and water pollution, alone and with the other drivers (H7)
+# =========================================================================== #
+# Iterations 1–6 tested pressure from fishing (catch, effort), climate (warming) and
+# other human uses (shipping, dams, aquaculture), alone and in combination. Pollution is
+# the remaining SDG 14 pressure (target 14.1: reduce marine pollution, incl. nutrients
+# and plastic; target 14.3: ocean acidification). It can hurt stocks without any catch:
+# nutrient run-off feeds algal blooms and low-oxygen "dead zones", pesticides are toxic
+# to larvae, plastic and oil damage habitats and animals, acidification weakens shells
+# and reefs. Iteration 7 repeats the tests of iterations 4–6 with pollution drivers:
+#   H7a  global, pollution alone: levels vs linear/quadratic-detrended ρ, cointegration
+#        (≥ 30 years), CCF of year-to-year changes (as H4a)
+#   H7b  SEA, pollution alone: CCF per country (as H4b) and a 5-country two-way
+#        fixed-effects panel with a wild cluster bootstrap (as H5a)
+#   H7c  pollution + each other driver: joint test on year-to-year changes (as H6a)
+#   H7d  pollution × pressure interactions in the SEA country panel (as H6b)
+#   H7e  best combination of the long drivers with pollution added (as H6c), and does
+#        it beat the best model WITHOUT pollution on years it has not seen?
+#   H7f  coastal N/P loading per SEA large marine ecosystem vs Sea Around Us for the same
+#        5 seas: a 5-LME panel turns the short loading series into a test
+# Series that are too short or sparse to test on their own (coastal nutrient loading
+# 2000–2015 with nitrogen held constant after 2010, a single 2019 plastic snapshot, beach
+# litter with gaps) are shown descriptively; the nutrient series is then tested as a
+# 5-sea panel in H7f. Iterations 1–6 above are unchanged.
+
+I7_SHORT = {"Nitrogen fertiliser per ha": "N fertiliser", "Pesticides per ha": "Pesticides",
+            "Plastic production": "Plastic", "Oil spills (number ≥ 7 t)": "Oil spills",
+            "Oil spilled (tonnes)": "Oil spilled", "Ocean acidity [H⁺] (Hawaii)": "Acidity",
+            "Chlorophyll-a deviation": "Chlorophyll-a"}
+I6_SHORT.update(I7_SHORT)      # labels only: the iteration-6 outputs do not use the new keys
+# Long pollution series added to the six long-run drivers of H6c (pesticides and acidity start in 1990;
+# oil tonnes are dominated by a few huge spills, so the number of spills is used instead)
+I7_LONG = I6_LONG + ["Nitrogen fertiliser per ha", "Plastic production", "Oil spills (number ≥ 7 t)"]
+
+
+def i7_world_drivers() -> list[tuple[str, pd.Series, bool]]:
+    """
+    (name, world level series, log?) for the pollution drivers. Plastic production is
+    put on a full year index so the missing 1974 value cannot turn 1973→1975 into one
+    'yearly' change. Acidity = hydrogen-ion concentration 10^(−pH), so higher = more
+    acidic and Δlog acidity = −ln(10)·ΔpH.
+    """
+    f, p, o = n_fertiliser(), pesticides(), oil_spills()
+    pl = plastic_production()
+    return [("Nitrogen fertiliser per ha", f["World"].dropna(), True),
+            ("Pesticides per ha", p["World"].dropna(), True),
+            ("Plastic production", pl.reindex(range(int(pl.index.min()), int(pl.index.max()) + 1)), True),
+            ("Oil spills (number ≥ 7 t)", o["n_spills"].dropna(), True),
+            ("Oil spilled (tonnes)", o["tonnes"].dropna(), True),
+            ("Ocean acidity [H⁺] (Hawaii)", 10 ** (-seawater_ph()), True)]
+
+
+def i7_sea_drivers(unit: str) -> list[tuple[str, pd.Series, bool]]:
+    """(name, level series, log?) for one SEA unit ('SEA' = mean of the 5 countries)."""
+    return [("Nitrogen fertiliser per ha", n_fertiliser()[unit].dropna(), True),
+            ("Pesticides per ha", pesticides()[unit].dropna(), True),
+            ("Chlorophyll-a deviation", chlorophyll()[unit].dropna(), False)]
+
+
+def i7_all_world() -> dict[str, tuple[pd.Series, bool]]:
+    """Every world driver of iterations 1–4 (summary set) plus the pollution drivers: name -> (series, log)."""
+    out = {dn: (x, log) for _, dn, x, log in summary_drivers()}
+    out.update({dn: (x, log) for dn, x, log in i7_world_drivers()})
+    return out
+
+
+def i7_world_frame(names: list[str], resp: pd.Series) -> pd.DataFrame:
+    """Year-to-year changes of the response and the named drivers (Δlog for volumes), common years."""
+    drv = i7_all_world()
+    cols = {"y": resp.diff()}
+    for dn in names:
+        x, log = drv[dn]
+        cols[dn] = (np.log(x) if log else x).diff()
+    return pd.concat(cols, axis=1).dropna()
+
+
+def i7_level_tables(drivers: list[tuple[str, pd.Series, bool]],
+                    responses: list[tuple[str, pd.Series]]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """
+    The three-step test of H4a for any driver list: (1) Spearman ρ in levels, after a linear and a
+    quadratic detrend (Holm across rows); (2) Engle-Granger cointegration where ≥ 30 common years;
+    (3) CCF of changes vs Δ response, lags 0 to n/3, Holm within pair and across all lag tests.
+    """
+    rows, co_rows, tabs = [], [], []
+    for dn, x, log in drivers:
+        xl = (np.log(x) if log else x).dropna()
+        dx = i4_change(x, log)
+        for rn, y in responses:
+            r_lv, p_lv, r_dt, p_dt, n = detrended_corr(xl, y)
+            r_q, p_q = quad_detrended_corr(xl, y)
+            common = pd.concat([xl, y], axis=1).dropna()
+            rows.append({"driver": dn, "response": rn, "years": f"{common.index.min()}–{common.index.max()}",
+                         "n_years": n, "spearman_levels": r_lv, "p_levels": p_lv, "spearman_detrended": r_dt,
+                         "p_detrended": p_dt, "spearman_quad_detrended": r_q, "p_quad_detrended": p_q})
+            if len(common) < 30:
+                co_rows.append({"response": rn, "driver": dn, "trend_term": "–", "n": len(common),
+                                "years": f"{common.index.min()}–{common.index.max()}", "t_stat": np.nan, "p": np.nan,
+                                "note": "too short (< 30 years)"})
+            else:
+                for tr in ("c", "ct"):
+                    t_c, p_c, _ = coint(common.iloc[:, 1], common.iloc[:, 0], trend=tr)
+                    co_rows.append({"response": rn, "driver": dn, "trend_term": tr, "n": len(common),
+                                    "years": f"{common.index.min()}–{common.index.max()}", "t_stat": t_c, "p": p_c,
+                                    "note": ""})
+            n_ch = len(pd.concat([dx, y.diff()], axis=1).dropna())
+            t = ccf_table(dx, y.diff().dropna(), f"{'Δlog' if log else 'Δ'} {dn} -> Δ {rn}", i4_max_lag(n_ch))
+            t.insert(0, "driver", dn)
+            t.insert(1, "response", rn)
+            tabs.append(t)
+    trend = pd.DataFrame(rows)
+    trend["p_detrended_holm"] = holm(trend["p_detrended"])
+    trend["p_quad_holm"] = holm(trend["p_quad_detrended"])
+    trend["consistent_link"] = i4_consistent(trend)
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    return trend, pd.DataFrame(co_rows), ccf
+
+
+def section_i7_data() -> None:
+    print("Iteration 7: pollution series — coverage and stationarity")
+    rows, st_rows = [], []
+    units = [("World", i7_world_drivers())] + [(u, i7_sea_drivers(u)) for u in ["SEA"] + SEA5]
+    for unit, drivers in units:
+        for name, s, log in drivers:
+            s = s.dropna()
+            rows.append({"unit": unit, "driver": name, "first": int(s.index.min()), "last": int(s.index.max()),
+                         "n_years": len(s),
+                         "change_per_year_pct": (np.exp(np.polyfit(s.index, np.log(s), 1)[0]) - 1) * 100,
+                         "first_5yr_mean": s.iloc[:5].mean(), "last_5yr_mean": s.iloc[-5:].mean()})
+            if unit in ("World", "SEA"):
+                x = np.log(s) if log else s
+                label, d, a, k = make_stationary(s, log)
+                st_rows.append({"series": f"{unit}: {name}", "n": len(s), "level_adf_p": adf_p(x, "ct"),
+                                "level_kpss_p": kpss_p(x, "ct"), "transformation_used": label,
+                                "transformed_adf_p": a, "transformed_kpss_p": k,
+                                "stationary_after": "yes" if a < ALPHA and k >= ALPHA
+                                else ("ADF yes, KPSS no" if a < ALPHA else "no")})
+    save_table(pd.DataFrame(rows), "13_I7_driver_coverage")
+    save_table(pd.DataFrame(st_rows), "13_I7_stationarity")
+
+
+def section_i7_h7a() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7a — global pollution vs % overexploited")
+    responses = [("FAO % overexploited", st.world_fao()), ("SAU % overexploited", st.world_sau())]
+    drivers = i7_world_drivers()
+    trend, co, ccf = i7_level_tables(drivers, responses)
+    save_table(trend, "13_I7_H7a_levels_vs_detrended")
+    save_table(co, "13_I7_H7a_cointegration")
+    save_table(ccf, "13_I7_H7a_ccf")
+
+    # Same rule as H4a: a beyond-trend link must hold under both detrends, in both sources, with one sign;
+    # or a year-to-year (CCF) link must survive the correction across all lag tests.
+    cons = trend[trend["consistent_link"]]
+    both = [d for d, g in cons.groupby("driver") if len(g) == 2 and g["spearman_detrended"].apply(np.sign).nunique() == 1]
+    sig_ccf = ccf[ccf["p_holm_all"] < ALPHA]
+    one = trend[trend["p_detrended_holm"] < ALPHA]
+    co_ok = co.dropna(subset=["p"])
+    co_sig = co_ok[co_ok["p"] < ALPHA]
+    reject = bool(both) or len(sig_ccf) > 0
+    decide("H7a (iteration 7: pollution, global)",
+           "Do nutrient (fertiliser) and pesticide run-off, plastic production, oil spills or ocean acidification "
+           "track world % stocks overexploited beyond their shared trend?",
+           f"Levels ρ {trend['spearman_levels'].min():+.2f} to {trend['spearman_levels'].max():+.2f} (oil spills fall "
+           "while overexploitation rises); linear-detrended ρ significant after Holm in "
+           + (", ".join(f"{r['driver']} × {r['response'].split()[0]} ({r['spearman_detrended']:+.2f}, quadratic "
+                        f"{r['spearman_quad_detrended']:+.2f})" for _, r in one.iterrows()) or "none")
+           + "; consistent under both detrends in one source only: "
+           + (", ".join(f"{r['driver']} × {r['response'].split()[0]} ({r['spearman_detrended']:+.2f} / "
+                        f"{r['spearman_quad_detrended']:+.2f})" for _, r in cons.iterrows()) or "none")
+           + f"; consistent in both sources and both detrends: {', '.join(both) or 'none'}; cointegration p < 0.05 in "
+             f"{len(co_sig)} of {len(co_ok)} tests"
+           + (" (" + "; ".join(f"{r['driver']} × {r['response'].split()[0]} {r['trend_term']}" for _, r in co_sig.iterrows())
+              + ")" if len(co_sig) else "")
+           + f"; CCF {len(sig_ccf)} of {len(ccf)} lag tests significant across all (min Holm p "
+             f"{fmt_p(ccf['p_holm_all'].min())})",
+           reject,
+           "Pesticides and acidity start in 1990 (≤ 32 overlapping years). Acidity is measured at one open-ocean "
+           "station (Hawaii) and stands for the global trend. Fertiliser and pesticides are applied on land; they "
+           "measure the run-off pressure, not the concentration in the sea.",
+           verdict=None if reject else "Fail to reject H0 (shared trend only; no consistent link beyond it)")
+
+    # Figure: (1) drivers indexed, (2) levels vs detrended ρ, (3) strongest year-to-year link per pair
+    fig = plt.figure(figsize=(16, 6.6))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.15, 1, 0.8], wspace=0.42)
+    a1, a2, a3 = (fig.add_subplot(gs[i]) for i in range(3))
+    for i, (dn, x, log) in enumerate(drivers):
+        s = x.dropna().loc[1970:]
+        smooth = s.rolling(3, center=True, min_periods=1).mean() if "Oil" in dn else s
+        base = smooth.loc[1990] if 1990 in smooth.index else smooth.iloc[0]
+        a1.plot(smooth.index, smooth / base * 100, color=v.SERIES[i], lw=1.8,
+                label=dn + (" (3-yr mean)" if "Oil" in dn else ""))
+    a1.set_yscale("log")
+    a1.axhline(100, color=v.AXIS, lw=0.8)
+    a1.set_ylabel("Index, 1990 = 100 (log scale)")
+    a1.legend(loc="lower left", fontsize=8)
+    a1.set_title("1 · Run-off, plastic and acidity rise; oil spills fall", fontsize=9.5)
+    labels = [f"{I7_SHORT[dn]} × {rn.split()[0]}" for dn, _, _ in drivers for rn, _ in responses]
+    ypos = np.arange(len(trend))[::-1]
+    for yp, (_, r) in zip(ypos, trend.iterrows()):
+        a2.plot([r["spearman_levels"], r["spearman_detrended"]], [yp, yp], color=v.GRID, lw=2.5, zorder=1)
+        a2.scatter(r["spearman_levels"], yp, s=46, facecolor=v.SURFACE, edgecolor=v.INK_2, lw=1.4, zorder=3)
+        a2.scatter(r["spearman_detrended"], yp, s=52, zorder=4,
+                   color=v.SERIES[0] if r["p_detrended_holm"] < ALPHA else v.NEUTRAL, edgecolor=v.SURFACE, lw=1)
+        a2.scatter(r["spearman_quad_detrended"], yp, s=46, marker="D", zorder=4,
+                   color=v.SERIES[1] if r["p_quad_holm"] < ALPHA else v.NEUTRAL, edgecolor=v.SURFACE, lw=1)
+    a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_yticks(ypos, labels, fontsize=8)
+    a2.set_xlim(-1.05, 1.05)
+    a2.set_xlabel("Spearman ρ: ○ levels, ● linear detrend, ◆ quadratic detrend\n(coloured = Holm p < 0.05, grey = not)")
+    a2.grid(axis="y", visible=False)
+    a2.set_title("2 · Levels vs beyond the trend", fontsize=9.5)
+    mins = ccf.groupby(["driver", "response"], sort=False)["p_holm"].min().reset_index()
+    a3.barh(np.arange(len(mins))[::-1], -np.log10(mins["p_holm"]),
+            color=[v.SERIES[0] if p < ALPHA else v.NEUTRAL for p in mins["p_holm"]], height=0.6)
+    a3.axvline(-np.log10(ALPHA), color=v.INK_2, lw=1, ls=(0, (3, 3)))
+    a3.set_yticks(np.arange(len(mins))[::-1], [""] * len(mins))
+    a3.set_xlabel("−log10(min Holm p) across lags")
+    a3.grid(axis="y", visible=False)
+    a3.text(-np.log10(ALPHA), len(mins) - 0.4, " p = 0.05", color=v.INK_2, fontsize=8, va="bottom")
+    a3.set_title("3 · Year-to-year changes (same rows; Holm within pair)", fontsize=9.5)
+    v.suptitle(fig, "Iteration 7 · H7a — " + (
+        "Pollution grew alongside overexploitation, but no pollution driver is linked to it beyond the trend"
+        if not reject else f"A pollution driver tracks overexploitation beyond the shared trend: "
+                           f"{', '.join(both) or 'year-to-year link'}"),
+               f"Consistent beyond the trend in both sources and both detrends: {', '.join(both) or 'none'}; "
+               f"year-to-year lag tests significant across all {len(ccf)}: {len(sig_ccf)}. "
+               "Pesticides and acidity start in 1990")
+    fig.subplots_adjust(top=0.8, bottom=0.17, left=0.05, right=0.98)
+    save_fig(fig, sec, "I7.01_h7a_global_pollution",
+             "FAO via OWID (fertiliser, pesticides); Geyer et al. 2017 via OWID (plastic); ITOPF via OWID (oil "
+             "spills); HOT/ALOHA via OWID (pH); Sea Around Us")
+
+
+def i7_country_panel() -> pd.DataFrame:
+    """Country-year panel 1961–2019: % overexploited, MTL, log fertiliser/ha, log pesticides/ha, chlorophyll-a."""
+    cs = country_series()
+    f, p, c = n_fertiliser(), pesticides(), chlorophyll()
+    rows = []
+    for u in SEA5:
+        d = cs[u][["over", "mtl"]].copy()
+        d["log_fert"] = np.log(f[u])
+        d["log_pest"] = np.log(p[u])
+        d["chl"] = c[u]
+        rows.append(d.loc[1961:2019].assign(unit=u, country=u).rename_axis("year").reset_index())
+    return pd.concat(rows, ignore_index=True)
+
+
+def section_i7_h7b() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7b — SEA pollution vs % overexploited and MTL (CCF + panel)")
+    sea, cs = sea_series(), country_series()
+    tabs, lv_rows = [], []
+    for unit in ["SEA"] + SEA5:
+        src = sea if unit == "SEA" else cs[unit]
+        for dn, x, log in i7_sea_drivers(unit):
+            dx = i4_change(x, log)
+            for resp, lbl in [("over", "Δ % overexploited"), ("mtl", "Δ MTL")]:
+                dy = src[resp].diff().dropna()
+                n = len(pd.concat([dx, dy], axis=1).dropna())
+                if n < 12:
+                    continue
+                t = ccf_table(dx, dy, f"{unit}: {dn} -> {lbl}", i4_max_lag(n))
+                t.insert(0, "unit", unit)
+                t.insert(1, "driver", dn)
+                t.insert(2, "response", lbl)
+                tabs.append(t)
+            if unit == "SEA":
+                xl = np.log(x) if log else x
+                r_lv, p_lv, r_dt, p_dt, n = detrended_corr(xl, src["over"])
+                r_q, p_q = quad_detrended_corr(xl, src["over"])
+                lv_rows.append({"driver": dn, "response": "SEA % overexploited", "n_years": n,
+                                "spearman_levels": r_lv, "p_levels": p_lv, "spearman_detrended": r_dt,
+                                "p_detrended": p_dt, "spearman_quad_detrended": r_q, "p_quad_detrended": p_q})
+    ccf = pd.concat(tabs, ignore_index=True)
+    ccf["p_holm_all"] = holm(ccf["p"])
+    save_table(ccf, "13_I7_H7b_ccf_sea")
+    lv = pd.DataFrame(lv_rows)
+    lv["p_detrended_holm"] = holm(lv["p_detrended"])
+    lv["p_quad_holm"] = holm(lv["p_quad_detrended"])
+    lv["consistent_link"] = i4_consistent(lv)
+    # Robustness for a SEA-wide beyond-trend link: SEA is the mean of 5 countries, so one country can carry it.
+    # Re-compute both detrended ρ with each country left out; the link counts only if it keeps its sign and
+    # p < 0.05 under both detrends every time. Per-country ρ show where it comes from.
+    loo_rows = []
+    over = pd.DataFrame({c: cs[c]["over"] for c in SEA5})
+    for dn, _, log in i7_sea_drivers("SEA"):
+        raw = {"Nitrogen fertiliser per ha": n_fertiliser, "Pesticides per ha": pesticides,
+               "Chlorophyll-a deviation": chlorophyll}[dn]()
+        for drop in [None] + SEA5:
+            keep = [c for c in SEA5 if c != drop]
+            x = raw[keep].mean(axis=1, skipna=False).dropna()
+            x = np.log(x) if log else x
+            _, _, r_dt, p_dt, n = detrended_corr(x, over[keep].mean(axis=1))
+            r_q, p_q = quad_detrended_corr(x, over[keep].mean(axis=1))
+            loo_rows.append({"driver": dn, "check": "SEA without " + drop if drop else "SEA (all 5)", "n_years": n,
+                             "spearman_detrended": r_dt, "p_detrended": p_dt, "spearman_quad_detrended": r_q,
+                             "p_quad_detrended": p_q})
+        for c in SEA5:
+            x = raw[c].dropna()
+            x = np.log(x) if log else x
+            _, _, r_dt, p_dt, n = detrended_corr(x, over[c])
+            r_q, p_q = quad_detrended_corr(x, over[c])
+            loo_rows.append({"driver": dn, "check": f"{c} alone", "n_years": n, "spearman_detrended": r_dt,
+                             "p_detrended": p_dt, "spearman_quad_detrended": r_q, "p_quad_detrended": p_q})
+    loo = pd.DataFrame(loo_rows)
+    loo["holds"] = (loo["p_detrended"] < ALPHA) & (loo["p_quad_detrended"] < ALPHA) & (
+        np.sign(loo["spearman_detrended"]) == np.sign(loo["spearman_quad_detrended"]))
+    save_table(loo, "13_I7_H7b_leave_one_country_out")
+    lv["holds_leaving_out_any_country"] = [bool(loo[(loo["driver"] == r["driver"]) &
+                                                    loo["check"].str.startswith("SEA")]["holds"].all())
+                                           for _, r in lv.iterrows()]
+    save_table(lv, "13_I7_H7b_levels_vs_detrended")
+
+    # Pooled panel (as H5a): country + year fixed effects remove the common trend; wild cluster bootstrap
+    p = i7_country_panel().sort_values(["unit", "year"])
+    rows = []
+    for col, lbl in [("log_fert", "log N fertiliser per ha"), ("log_pest", "log pesticides per ha"),
+                     ("chl", "chlorophyll-a deviation (%)")]:
+        p[f"{col}_ma5"] = p.groupby("unit")[col].transform(lambda s: s.shift(1).rolling(5).mean())
+        for timing, xcol in [("same year", col), ("mean of previous 5 years", f"{col}_ma5")]:
+            for resp in ["over", "mtl"]:
+                d = p.dropna(subset=[xcol, resp]).reset_index(drop=True)
+                for trends in (False, True):
+                    r = fwl_residuals(d, [xcol, resp], trends)
+                    b, se, p_boot = wild_cluster_p(r[xcol].to_numpy(), r[resp].to_numpy(), d["unit"].to_numpy())
+                    rows.append({"driver": lbl, "response": "% overexploited" if resp == "over" else "mean trophic level",
+                                 "timing": timing, "spec": "country + year FE" + (" + country trends" if trends else ""),
+                                 "units": d["unit"].nunique(), "years": f"{d['year'].min()}–{d['year'].max()}",
+                                 "n_obs": len(d), "beta": b, "cluster_se": se, "p_wild_bootstrap": p_boot,
+                                 "beta_standardised": b * r[xcol].std() / r[resp].std(),
+                                 "worse_direction": (b > 0) if resp == "over" else (b < 0)})
+    pan = pd.DataFrame(rows)
+    pan["p_holm"] = holm(pan["p_wild_bootstrap"])
+    pan["significant_holm"] = pan["p_holm"] < ALPHA
+    save_table(pan, "13_I7_H7b_panel_fixed_effects")
+
+    sig = ccf[ccf["significant_holm"]]
+    sig_all = ccf[ccf["p_holm_all"] < ALPHA]
+    psig = pan[pan["significant_holm"]]
+    robust = [f"{dn} → {rn} ({tm})" for (dn, rn, tm), g in psig.groupby(["driver", "response", "timing"])
+              if g["spec"].nunique() == 2 and g["worse_direction"].all()]
+    lv_ok = lv[lv["consistent_link"] & lv["holds_leaving_out_any_country"]]
+    lv_fragile = lv[lv["consistent_link"] & ~lv["holds_leaving_out_any_country"]]
+    reject = len(sig_all) > 0 or len(lv_ok) > 0 or bool(robust)
+    weak = len(sig) > 0 or len(psig) > 0 or len(lv_fragile) > 0
+    pmin = pan.loc[pan["p_wild_bootstrap"].idxmin()]
+
+    def carried_by(dn: str) -> str:
+        """Countries whose removal breaks the SEA-wide link."""
+        g = loo[(loo["driver"] == dn) & loo["check"].str.startswith("SEA without")]
+        return ", ".join(g.loc[~g["holds"], "check"].str.replace("SEA without ", "", regex=False))
+    decide("H7b (iteration 7: pollution, SEA)",
+           "Do changes in SEA fertiliser and pesticide use or coastal chlorophyll-a (eutrophication) track % "
+           "overexploited or mean trophic level, year to year or across countries?",
+           f"CCF: {len(sig)} of {len(ccf)} lag tests ({ccf.groupby(['unit', 'driver', 'response']).ngroups} unit × "
+           "driver × response rows) significant within row"
+           + (": " + "; ".join(f"{r['unit']} {r['driver']} -> {r['response']} lag {int(r['lag'])} r = {r['r']:+.2f}"
+                               for _, r in sig.iterrows()) if len(sig) else "")
+           + f", {len(sig_all)} across all (min Holm p {fmt_p(ccf['p_holm_all'].min())}); SEA detrended ρ with % "
+             "overexploited consistent under both detrends: "
+           + (", ".join(lv[lv["consistent_link"]]["driver"]) or "none")
+           + (" (" + "; ".join(f"ρ {r['spearman_detrended']:+.2f} linear, {r['spearman_quad_detrended']:+.2f} "
+                                f"quadratic, but it disappears without {carried_by(r['driver'])}" for _, r in lv_fragile.iterrows())
+              + ")" if len(lv_fragile) else "")
+           + f". Panel (5 countries, country + year FE, wild bootstrap): {len(psig)} of {len(pan)} coefficients "
+             f"significant after Holm; robust to country trends in the 'worse' direction: {', '.join(robust) or 'none'}; "
+             f"smallest raw p: {pmin['driver']} → {pmin['response']} ({pmin['timing']}, {pmin['spec']}), standardised "
+             f"β {pmin['beta_standardised']:+.2f}, p {fmt_p(pmin['p_wild_bootstrap'])}",
+           reject,
+           "Chlorophyll-a (SDG 14.1.1a) starts in 2005, so it overlaps the Sea Around Us series for 14 changes and 10 "
+           "previous-5-year means only. Thailand's pesticide series drops by 90% in 2013 (a reporting break). SEA = "
+           "mean of the 5 countries.",
+           verdict=None if reject else ("Fail to reject H0" if not weak else
+                                        "Weak: " + "; ".join(
+                                            ([f"SEA-wide {', '.join(lv_fragile['driver']).lower()} link beyond the "
+                                              f"trend rests on {', '.join(carried_by(d) for d in lv_fragile['driver'])}"]
+                                             if len(lv_fragile) else [])
+                                            + [f"{len(sig)} isolated lag(s) within row, none across all "
+                                               f"{len(ccf)}; {len(psig)} of {len(pan)} panel coefficients"])))
+
+    # Figure: (1) CCF heatmap rows = driver × response, columns = units; (2) panel coefficients
+    units = ["SEA"] + SEA5
+    combos = [(d, r) for d in ccf["driver"].unique() for r in ["Δ % overexploited", "Δ MTL"]]
+    mat = np.full((len(combos), len(units)), np.nan)
+    lag = np.full_like(mat, np.nan)
+    sigm = np.zeros_like(mat, bool)
+    for i, (d, r) in enumerate(combos):
+        for j, u in enumerate(units):
+            t = ccf[(ccf["unit"] == u) & (ccf["driver"] == d) & (ccf["response"] == r)]
+            if len(t):
+                b = t.loc[t["p"].idxmin()]
+                mat[i, j], lag[i, j], sigm[i, j] = b["r"], b["lag"], bool(t["significant_holm"].any())
+    fig = plt.figure(figsize=(16, 6.8))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1, 0.95], wspace=0.62)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    im = a1.imshow(np.ma.masked_invalid(mat), cmap=v.DIVERGING, vmin=-0.7, vmax=0.7, aspect="auto")
+    for i in range(mat.shape[0]):
+        for j in range(mat.shape[1]):
+            if np.isnan(mat[i, j]):
+                a1.text(j, i, "n/a", ha="center", va="center", fontsize=7.5, color=v.MUTED)
+                continue
+            a1.text(j, i, f"{mat[i, j]:+.2f}\nlag {int(lag[i, j])}", ha="center", va="center", fontsize=7.5,
+                    color="#ffffff" if abs(mat[i, j]) > 0.45 else v.INK, fontweight="bold" if sigm[i, j] else "normal")
+            if sigm[i, j]:
+                a1.add_patch(plt.Rectangle((j - 0.48, i - 0.48), 0.96, 0.96, fill=False, ec=v.INK, lw=1.6))
+    for b in range(2, len(combos), 2):
+        a1.axhline(b - 0.5, color=v.SURFACE, lw=3)
+    a1.set_xticks(range(len(units)), units, fontsize=8.5)
+    a1.set_yticks(range(len(combos)), [f"{I7_SHORT[d]} · {r}" for d, r in combos], fontsize=8.5)
+    a1.grid(False)
+    for spn in a1.spines.values():
+        spn.set_visible(False)
+    cb = fig.colorbar(im, ax=a1, fraction=0.035, pad=0.02)
+    cb.set_label("r at the lag with the smallest p", color=v.INK_2, fontsize=8.5)
+    cb.outline.set_visible(False)
+    a1.set_title(f"1 · Year to year: {len(sig)} of {len(ccf)} lag tests significant within row (outlined), "
+                 f"{len(sig_all)} across all", fontsize=9.5)
+    pc = list(dict.fromkeys(zip(pan["driver"], pan["response"])))
+    offs = {("same year", False): 0.27, ("same year", True): 0.09,
+            ("mean of previous 5 years", False): -0.09, ("mean of previous 5 years", True): -0.27}
+    cols = {"same year": v.SERIES[0], "mean of previous 5 years": v.SERIES[1]}
+    for i, (dn, rn) in enumerate(pc):
+        y0 = len(pc) - 1 - i
+        for _, r in pan[(pan["driver"] == dn) & (pan["response"] == rn)].iterrows():
+            tr = "trends" in r["spec"]
+            yp = y0 + offs[(r["timing"], tr)]
+            half = 1.96 * r["cluster_se"] * abs(r["beta_standardised"] / r["beta"]) if r["beta"] else 0
+            a2.plot([r["beta_standardised"] - half, r["beta_standardised"] + half], [yp, yp], color=v.GRID, lw=2, zorder=1)
+            a2.scatter(r["beta_standardised"], yp, marker="D" if tr else "o", s=44, zorder=3, lw=1.4,
+                       edgecolor=cols[r["timing"]], color=cols[r["timing"]] if r["significant_holm"] else v.SURFACE)
+    for b in range(1, len(pc)):
+        a2.axhline(b - 0.5, color=v.GRID, lw=0.8)
+    a2.axvline(0, color=v.AXIS, lw=0.8)
+    short = {"log N fertiliser per ha": "N fertiliser (log)", "log pesticides per ha": "Pesticides (log)",
+             "chlorophyll-a deviation (%)": "Chlorophyll-a (%)"}
+    a2.set_yticks(range(len(pc))[::-1], [f"{short[d]} → {r}" for d, r in pc], fontsize=8.3)
+    a2.set_xlabel("Standardised effect (SD of response per SD of driver), grey = 95% clustered CI")
+    a2.grid(axis="y", visible=False)
+    handles = [plt.Line2D([], [], marker="o", ls="", color=v.SERIES[0], label="same year"),
+               plt.Line2D([], [], marker="o", ls="", color=v.SERIES[1], label="previous 5-year mean"),
+               plt.Line2D([], [], marker="o", ls="", color=v.INK_2, label="country + year FE"),
+               plt.Line2D([], [], marker="D", ls="", color=v.INK_2, label="+ country trends")]
+    a2.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.4, -0.13), ncol=4, fontsize=8,
+              title="Filled = significant after Holm (wild cluster bootstrap); hollow = not", title_fontsize=8)
+    a2.set_title(f"2 · Across countries (fixed-effects panel): {len(psig)} of {len(pan)} significant", fontsize=9.5)
+    v.suptitle(fig, "Iteration 7 · H7b — " + (
+        "Southeast Asian run-off and eutrophication do not track the fisheries indicators" if not reject else
+        "Some SEA pollution drivers track the fisheries indicators"),
+               "Fertiliser and pesticides per hectare of cropland (FAO, from 1961/1990), coastal chlorophyll-a "
+               "deviation (SDG 14.1.1a, from 2005); 'n/a' = fewer than 12 overlapping years")
+    fig.subplots_adjust(top=0.84, bottom=0.2, left=0.13, right=0.98)
+    save_fig(fig, sec, "I7.02_h7b_sea_pollution",
+             "FAO via OWID; UNEP SDG 14.1.1a via OWID; Sea Around Us (11 SEA EEZs)")
+
+
+def section_i7_descriptive() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: pollution series too short to test (descriptive)")
+    nut = coastal_nutrients()
+    pcs = plastic_cross_section()
+    bl = beach_litter()
+    cs = country_series()
+    over19 = pd.Series({c: cs[c].loc[2019, "over"] for c in SEA5})
+    rows = []
+    for lme, g in nut.groupby("lme"):
+        g = g.set_index("year")
+        rows.append({"item": f"Nutrient loading · {lme}", "years": f"{g.index.min()}–{g.index.max()}",
+                     "value_first": g["Nitrogen"].iloc[0], "value_last": g["Nitrogen"].iloc[-1],
+                     "change_pct": (g["Nitrogen"].iloc[-1] / g["Nitrogen"].iloc[0] - 1) * 100,
+                     "phosphorus_change_pct": (g["Phosphorus"].iloc[-1] / g["Phosphorus"].iloc[0] - 1) * 100,
+                     "nitrogen_years_unchanged_after_2010": int((g["Nitrogen"].loc[2010:].diff().abs().round(1) == 0).sum()),
+                     "note": "modelled loading (t N per year); too short to test alone (16 years, nitrogen constant after 2010), so tested as a 5-LME panel in H7f"})
+    for c in SEA5 + ["World"]:
+        rows.append({"item": f"Plastic to the ocean · {c}", "years": "2019",
+                     "value_first": pcs.loc[c, "plastic_to_ocean_t"], "value_last": pcs.loc[c, "mismanaged_kg_per_person"],
+                     "change_pct": np.nan, "phosphorus_change_pct": np.nan, "nitrogen_years_unchanged_after_2010": np.nan,
+                     "note": "value_first = t emitted to the ocean, value_last = kg mismanaged per person; "
+                             f"% overexploited 2019 = {over19.get(c, np.nan):.1f}" if c in SEA5 else
+                             "value_first = t emitted to the ocean, value_last = kg mismanaged per person"})
+    for c in SEA5:
+        s = bl[c].dropna()
+        rows.append({"item": f"Beach litter · {c}", "years": ", ".join(str(int(y)) for y in s.index),
+                     "value_first": s.iloc[0], "value_last": s.iloc[-1], "change_pct": (s.iloc[-1] / s.iloc[0] - 1) * 100,
+                     "phosphorus_change_pct": np.nan, "nitrogen_years_unchanged_after_2010": np.nan,
+                     "note": "items per km² (SDG 14.1.1b); why not tested: 5 points with a 2019–2020 gap"})
+    save_table(pd.DataFrame(rows), "13_I7_descriptive")
+    rho, p_rho = stats.spearmanr(pcs.loc[SEA5, "mismanaged_kg_per_person"], over19.loc[SEA5])
+
+    fig = plt.figure(figsize=(16, 5.8))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.2, 1, 1], wspace=0.35)
+    a1, a2, a3 = (fig.add_subplot(gs[i]) for i in range(3))
+    for i, (lme, g) in enumerate(nut.groupby("lme")):
+        g = g.set_index("year")
+        a1.plot(g.index, g["Nitrogen"] / g["Nitrogen"].iloc[0] * 100, color=v.SERIES[i], lw=1.8, label=f"{lme} · N")
+        a1.plot(g.index, g["Phosphorus"] / g["Phosphorus"].iloc[0] * 100, color=v.SERIES[i], lw=1.2, ls=(0, (3, 2)))
+    a1.axvspan(2010, 2015, color=v.GRID, alpha=0.5, lw=0)
+    a1.text(2012.5, a1.get_ylim()[1] * 0.995, "N held\nconstant", ha="center", va="top", fontsize=8, color=v.INK_2)
+    a1.axhline(100, color=v.AXIS, lw=0.8)
+    a1.set_ylabel("Index, 2000 = 100 (solid = nitrogen, dashed = phosphorus)")
+    a1.legend(fontsize=7.8, loc="upper left")
+    a1.set_title("1 · Nutrient loading to SEA seas: 2000–2015 only (tested per sea in H7f)", fontsize=9.5)
+    order = pcs.loc[SEA5].sort_values("plastic_to_ocean_t").index
+    a2.barh(range(len(order)), pcs.loc[order, "plastic_to_ocean_t"] / 1000, color=[v.COUNTRY_COLOR[c] for c in order],
+            height=0.6)
+    for k, c in enumerate(order):
+        a2.text(pcs.loc[c, "plastic_to_ocean_t"] / 1000 + 4, k,
+                f"{pcs.loc[c, 'mismanaged_kg_per_person']:.0f} kg/person · {over19[c]:.0f}% overexploited",
+                va="center", fontsize=8, color=v.INK_2)
+    a2.set_yticks(range(len(order)), order, fontsize=8.8)
+    a2.set_xlim(0, pcs.loc[SEA5, "plastic_to_ocean_t"].max() / 1000 * 1.75)
+    a2.set_xlabel("Plastic reaching the ocean, 2019 (thousand t)")
+    a2.grid(axis="y", visible=False)
+    a2.set_title(f"2 · Plastic, one year only (ρ with % overexploited = {rho:+.2f}, n = 5)", fontsize=9.5)
+    for c in SEA5:
+        s = bl[c].dropna()
+        a3.plot(s.index, s / 1e6, marker="o", ms=4, color=v.COUNTRY_COLOR[c], lw=1.2, label=c)
+    a3.axvspan(2018.5, 2020.5, color=v.GRID, alpha=0.5, lw=0)
+    a3.text(2019.5, a3.get_ylim()[1] * 0.98, "no data", ha="center", va="top", fontsize=8, color=v.INK_2)
+    a3.set_ylabel("Beach litter (million items per km²)")
+    a3.legend(fontsize=7.8, loc="upper right")
+    a3.set_title("3 · Beach litter (SDG 14.1.1b): 5 sparse points", fontsize=9.5)
+    v.suptitle(fig, "Iteration 7 · Pollution series too short or too sparse to test on their own",
+               "Coastal nutrient loading is modelled for 2000–2015 and nitrogen is constant after 2010; plastic "
+               "emissions exist for 2019 only; beach litter has 5 points per country. Nutrients are tested as a 5-sea "
+               "panel in H7f; plastic and litter are shown for context only")
+    fig.subplots_adjust(top=0.82, bottom=0.12, left=0.05, right=0.98)
+    save_fig(fig, sec, "I7.03_pollution_descriptive",
+             "Global NEWS 2 / UNEP via OWID (nutrients); Meijer et al. 2021 via OWID (plastic); UNEP SDG 14.1.1b "
+             "via OWID (beach litter); Sea Around Us")
+
+
+def section_i7_h7c() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7c — pollution + each other driver, joint test on year-to-year changes")
+    from itertools import combinations
+    others = [dn for _, dn, _, _ in summary_drivers()]
+    poll = [dn for dn, _, _ in i7_world_drivers()]
+    pairs = [(a, b) for a in poll for b in others] + list(combinations(poll, 2))
+    responses = [("FAO", st.world_fao()), ("SAU", st.world_sau())]
+    single_rows, rows = [], []
+    for rn, resp in responses:
+        for dn in others + poll:
+            d = i7_world_frame([dn], resp)
+            r = i6_joint_test(d["y"].to_numpy(), i6_design(d, [dn], "changes"), 1, f"H7c {rn}: {dn}")
+            single_rows.append({"response": rn, "driver": dn, "pollution": dn in poll, "n_years": r["n"],
+                                "beta": r["betas"][0], "p": r["p_joint"], "partial_r2": r["partial_r2"]})
+        for a, b in pairs:
+            d = i7_world_frame([a, b], resp)
+            r = i6_joint_test(d["y"].to_numpy(), i6_design(d, [a, b], "changes"), 2, f"H7c {rn}: {a} + {b}")
+            r12 = float(np.corrcoef(d[a], d[b])[0, 1])
+            rows.append({"response": rn, "pollution_driver": a, "other_driver": b,
+                         "pair_type": "pollution + pollution" if b in poll else "pollution + other",
+                         "years": f"{d.index.min()}–{d.index.max()}", "n_years": r["n"],
+                         "F_joint": r["F"], "p_joint": r["p_joint"], "partial_r2": r["partial_r2"],
+                         "beta_pollution": r["betas"][0], "p_pollution_in_pair": r["p_each"][0],
+                         "beta_other": r["betas"][1], "p_other_in_pair": r["p_each"][1],
+                         "r_drivers": r12, "vif": 1 / (1 - r12 ** 2)})
+    single = pd.DataFrame(single_rows)
+    single["p_holm"] = holm(single["p"])              # 14 drivers × 2 sources
+    single["significant_holm"] = single["p_holm"] < ALPHA
+    res = pd.DataFrame(rows)
+    res["p_joint_holm"] = holm(res["p_joint"])        # 63 pairs × 2 sources
+    res["significant_holm"] = res["p_joint_holm"] < ALPHA
+    sp = single.set_index(["response", "driver"])["significant_holm"]
+    res["neither_alone"] = [not sp[(r["response"], r["pollution_driver"])] and not sp[(r["response"], r["other_driver"])]
+                            for _, r in res.iterrows()]
+    save_table(single, "13_I7_H7c_single_drivers")
+    save_table(res, "13_I7_H7c_pairs")
+
+    key = ["pollution_driver", "other_driver"]
+    g = res.groupby(key)["significant_holm"].agg(["all", "size"])
+    consistent = [f"{a} + {b}" for (a, b), r in g.iterrows() if r["all"] and r["size"] == 2]
+    sig = res[res["significant_holm"]]
+    masked = sig[sig["neither_alone"]]
+    sing_sig = single[single["significant_holm"]]
+    decide("H7c (iteration 7: pollution + other drivers, world)",
+           "Does a pollution driver TOGETHER with another driver (or a second pollution driver) explain year-to-year "
+           "changes in world % overexploited, in both data sources?",
+           f"{len(pairs)} pairs ({len(poll)} pollution × {len(others)} other drivers + {len(poll) * (len(poll) - 1) // 2} "
+           f"pollution pairs) × 2 sources, joint Newey-West F-test, Holm across all {len(res)}: "
+           + ", ".join(f"{rr} {int(gg['significant_holm'].sum())}" for rr, gg in res.groupby("response"))
+           + (" (" + "; ".join(f"{r['pollution_driver']} + {r['other_driver']} ({r['response']}, n = {r['n_years']}) "
+                                f"Holm p {fmt_p(r['p_joint_holm'])}" for _, r in sig.iterrows()) + ")" if len(sig) else "")
+           + f"; significant only as a pair (neither driver alone): {len(masked)}; drivers significant alone: "
+           + (", ".join(f"{r['driver']} ({r['response']})" for _, r in sing_sig.iterrows()) or "none")
+           + f"; supported in both sources: {', '.join(consistent) or 'none'}",
+           bool(consistent),
+           "Year-to-year changes only (iteration 6 showed levels-with-trend regressions are spurious here). Pairs "
+           "with pesticides or acidity start in 1991 and pairs with shipping in 2001, so they use about 20–30 years.",
+           verdict=None if consistent or len(sig) == 0 else
+           f"Weak: {len(sig)} pair test(s) significant, but none supported in both data sources")
+
+    # Figure: rows = pollution drivers, columns = every driver; cell = Holm p of the joint test; own column = alone
+    cols_all = others + poll
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6.2))
+    for ax, (rn, _) in zip(axes, responses):
+        m = np.full((len(poll), len(cols_all)), np.nan)
+        txt = {}
+        for i, a in enumerate(poll):
+            ps = single.set_index(["response", "driver"]).loc[(rn, a), "p_holm"]
+            j = cols_all.index(a)
+            m[i, j] = -np.log10(max(ps, 1e-4))
+            txt[(i, j)] = ("alone\n" + (f"{ps:.2f}" if ps >= 0.01 else "<.01"))
+        for _, r in res[res["response"] == rn].iterrows():
+            for a, b in ((r["pollution_driver"], r["other_driver"]), (r["other_driver"], r["pollution_driver"])):
+                if a in poll:
+                    i, j = poll.index(a), cols_all.index(b)
+                    m[i, j] = -np.log10(max(r["p_joint_holm"], 1e-4))
+                    txt[(i, j)] = f"{r['p_joint_holm']:.2f}" if r["p_joint_holm"] >= 0.01 else "<.01"
+        im = ax.imshow(np.ma.masked_invalid(m), cmap=v.SEQ_BLUE, vmin=0, vmax=3, aspect="auto")
+        for (i, j), s in txt.items():
+            strong = m[i, j] >= -np.log10(ALPHA)
+            ax.text(j, i, s, ha="center", va="center", fontsize=7.4 if "alone" in s else 8,
+                    color="white" if m[i, j] > 1.8 else v.INK, fontweight="bold" if strong else "normal")
+            if strong:
+                ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False, ec=v.INK, lw=1.6))
+        ax.axvline(len(others) - 0.5, color=v.INK_2, lw=1.2)
+        ax.set_xticks(range(len(cols_all)), [I6_SHORT[c] for c in cols_all], rotation=45, ha="right", fontsize=8.3)
+        ax.set_yticks(range(len(poll)), [I7_SHORT[c] for c in poll], fontsize=8.8)
+        ax.grid(False)
+        for s_ in ax.spines.values():
+            s_.set_visible(False)
+        rs = res[(res["response"] == rn) & res["significant_holm"]]
+        n_ship = int(rs["other_driver"].isin(["Container port traffic", "Seaborne trade volume"]).sum())
+        ax.set_title(f"{rn} % overexploited — {len(rs)} of {len(pairs)} pairs significant"
+                     + (f" ({n_ship} with shipping, 2001–2019)" if n_ship else "")
+                     + "\n(left of the line: drivers of iterations 1–4; right: pollution)", fontsize=9.5)
+    fig.subplots_adjust(top=0.8, bottom=0.2, left=0.08, right=0.9, wspace=0.18)
+    cb = fig.colorbar(im, cax=fig.add_axes([0.915, 0.25, 0.01, 0.5]))
+    cb.set_label("−log10(Holm p); outlined = p < 0.05", fontsize=8.5)
+    cb.set_ticks([0, -np.log10(0.05), 2, 3], labels=["1", "0.05", "0.01", "≤0.001"])
+    v.suptitle(fig, "Iteration 7 · H7c — " + (
+        f"Pollution with another driver explains overexploitation in both sources: {', '.join(consistent)}"
+        if consistent else "No pair with a pollution driver explains overexploitation in both data sources"),
+               "Cells: Holm-adjusted p of the joint Newey-West F-test that both drivers' year-to-year changes add "
+               f"nothing (Holm across all {len(res)} pair tests); 'alone' = the pollution driver by itself")
+    save_fig(fig, sec, "I7.04_h7c_pollution_pairs",
+             "FAO via OWID; Sea Around Us; ITOPF, Geyer et al., HOT via OWID; IMAS; HadSST & NOAA; WDI; UNCTAD; GDAT")
+
+
+def section_i7_h7d() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7d — pollution × pressure interactions, SEA country panel")
+    f, pe = n_fertiliser(), pesticides()
+    base = country_panel_i6()
+    extra = pd.concat([pd.DataFrame({"country": c, "year": f.index, "log_fert": np.log(f[c]).to_numpy(),
+                                     "log_pest": np.log(pe[c].reindex(f.index)).to_numpy()}) for c in SEA5])
+    p = base.merge(extra, on=["country", "year"], how="left")
+    # (pollution, pressure, label, ecological reason) — chosen in advance, before looking at results
+    pairs = [("log_fert", "log_effort", "Fertiliser × effort",
+              "low-oxygen water crowds fish into less space, where nets catch them more easily"),
+             ("log_fert", "sst", "Fertiliser × sea temperature",
+              "warm water holds less oxygen, so nutrient run-off creates dead zones faster"),
+             ("log_fert", "log_aquaculture", "Fertiliser × aquaculture",
+              "fish-farm effluent adds to farm-field nutrients in the same coastal waters"),
+             ("log_pest", "log_effort", "Pesticides × effort",
+              "toxic run-off weakens stocks that fishing already depletes")]
+    rows = []
+    for x1, x2, lbl, why in pairs:
+        d = p.dropna(subset=[x1, x2]).reset_index(drop=True).copy()
+        d["c1"], d["c2"] = d[x1] - d[x1].mean(), d[x2] - d[x2].mean()
+        d["ix"] = d["c1"] * d["c2"]
+        for resp in ["over", "mtl"]:
+            for trends in (False, True):
+                r = fwl_residuals(d, [resp, "ix", "c1", "c2"], trends)
+                Z = np.column_stack([np.ones(len(r)), r["c1"], r["c2"]])
+                ry = r[resp] - Z @ np.linalg.lstsq(Z, r[resp], rcond=None)[0]
+                rx = r["ix"] - Z @ np.linalg.lstsq(Z, r["ix"], rcond=None)[0]
+                b, se, p_boot = wild_cluster_p(rx.to_numpy(), ry.to_numpy(), d["unit"].to_numpy())
+                rows.append({"pair": lbl, "reason": why, "driver_1": x1, "driver_2": x2,
+                             "response": "% overexploited" if resp == "over" else "mean trophic level",
+                             "spec": "country + year FE" + (" + country trends" if trends else ""),
+                             "countries": d["unit"].nunique(), "years": f"{d['year'].min()}–{d['year'].max()}",
+                             "n_obs": len(d), "beta_interaction": b, "cluster_se": se, "p_wild_bootstrap": p_boot,
+                             "beta_standardised": b * rx.std() / ry.std()})
+    res = pd.DataFrame(rows)
+    res["p_holm"] = holm(res["p_wild_bootstrap"])
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "13_I7_H7d_interactions")
+
+    sig = res[res["significant_holm"]]
+    robust = [f"{pr} → {rp}" for (pr, rp), g in sig.groupby(["pair", "response"])
+              if g["spec"].nunique() == 2 and np.sign(g["beta_interaction"]).nunique() == 1]
+    reject = bool(robust)
+    pmin = res.loc[res["p_wild_bootstrap"].idxmin()]
+    decide("H7d (iteration 7: pollution × pressure interactions, SEA)",
+           "Does nutrient or pesticide run-off change the effect of fishing effort, sea temperature or aquaculture on "
+           "% overexploited or mean trophic level (SEA country panel)?",
+           f"{len(pairs)} pre-chosen pairs × 2 responses × 2 specifications; {len(sig)} of {len(res)} interaction terms "
+           "significant after Holm (wild cluster bootstrap)"
+           + (": " + "; ".join(f"{r['pair']} → {r['response']} ({r['spec']}) standardised β {r['beta_standardised']:+.2f}, "
+                                f"Holm p {fmt_p(r['p_holm'])}" for _, r in sig.iterrows()) if len(sig) else "")
+           + f"; robust to country trends: {', '.join(robust) or 'none'}; smallest raw p: {pmin['pair']} → "
+             f"{pmin['response']} ({pmin['spec']}) p {fmt_p(pmin['p_wild_bootstrap'])}",
+           reject,
+           "5 countries; fertiliser pairs 1961–2017, pesticide pair 1990–2017 (effort ends in 2017). Drivers centred "
+           "before multiplying; main effects and fixed effects partialled out (Frisch-Waugh-Lovell); all 6^5 Webb "
+           "draws enumerated.",
+           verdict=None if reject or len(sig) == 0 else
+           f"Weak: {len(sig)} interaction(s) significant, but not robust to country trends")
+
+    combos = list(dict.fromkeys(zip(res["pair"], res["response"])))
+    fig, ax = plt.subplots(figsize=(12.5, 6.4))
+    for i, (pr, rp) in enumerate(combos):
+        y0 = len(combos) - 1 - i
+        for _, r in res[(res["pair"] == pr) & (res["response"] == rp)].iterrows():
+            tr = "trends" in r["spec"]
+            yp = y0 + (-0.15 if tr else 0.15)
+            col = v.SERIES[0] if rp == "% overexploited" else v.SERIES[1]
+            half = 1.96 * r["cluster_se"] * abs(r["beta_standardised"] / r["beta_interaction"]) if r["beta_interaction"] else 0
+            ax.plot([r["beta_standardised"] - half, r["beta_standardised"] + half], [yp, yp], color=v.GRID, lw=2, zorder=1)
+            ax.scatter(r["beta_standardised"], yp, marker="D" if tr else "o", s=52, zorder=3, lw=1.4, edgecolor=col,
+                       color=col if r["significant_holm"] else v.SURFACE)
+            ax.text(1.01, yp, f"p {fmt_p(r['p_wild_bootstrap'])}", transform=ax.get_yaxis_transform(),
+                    va="center", fontsize=8, color=v.INK_2)
+    ax.text(1.01, len(combos) - 0.45, "bootstrap p\n(raw)", transform=ax.get_yaxis_transform(),
+            va="bottom", fontsize=8, color=v.MUTED)
+    for b in range(1, len(combos)):
+        ax.axhline(b - 0.5, color=v.GRID, lw=0.8)
+    ax.axvline(0, color=v.AXIS, lw=0.8)
+    ax.set_yticks(range(len(combos))[::-1], [f"{pr} → {rp}" for pr, rp in combos], fontsize=8.8)
+    ax.set_xlabel("Standardised interaction effect (SD of response per SD of the product term)\n"
+                  "grey bar = conventional 95% clustered CI, too narrow with only 5 countries; "
+                  "significance uses the wild cluster bootstrap")
+    ax.grid(axis="y", visible=False)
+    handles = [plt.Line2D([], [], marker="o", ls="", color=v.INK_2, label="country + year fixed effects"),
+               plt.Line2D([], [], marker="D", ls="", color=v.INK_2, label="+ a trend per country"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[0], label="% overexploited"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[1], label="mean trophic level")]
+    ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.4, -0.17), ncol=4, fontsize=8.5,
+              title="Filled = significant after Holm (wild cluster bootstrap); hollow = not", title_fontsize=8.5)
+    v.suptitle(fig, "Iteration 7 · H7d — " + (
+        f"Pollution changes the effect of another pressure: {', '.join(robust)}" if reject else
+        "Run-off does not change the effect of fishing, warming or aquaculture in the SEA country panel"),
+               f"Interaction term in a two-way fixed-effects panel (5 countries), main effects held constant. "
+               f"{len(sig)} of {len(res)} interaction terms significant after Holm")
+    fig.subplots_adjust(top=0.85, bottom=0.24, left=0.3, right=0.91)
+    save_fig(fig, sec, "I7.05_h7d_pollution_interactions",
+             "Sea Around Us (11 SEA EEZs); FAO via OWID; IMAS Global Fishing Effort; NOAA ERSST v5")
+
+
+def section_i7_h7e() -> None:
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7e — best combination with pollution added (512 subsets, rolling origin)")
+    names = I7_LONG
+    poll = [n for n in names if n not in I6_LONG]
+    responses = [("FAO", st.world_fao()), ("SAU", st.world_sau())]
+    summary, shap_rows, oos_all = [], [], []
+    for rn, resp in responses:
+        d = i7_world_frame(names, resp)
+        fits = i6_fit_subsets(d, names)
+        best = min(fits, key=lambda s: fits[s][1])
+        best_np = min((s for s in fits if not set(s) & set(poll)), key=lambda s: fits[s][1])
+        r2_trend, r2_all = fits[()][0], fits[tuple(names)][0]
+        shap = i6_shapley({s: (r2 - r2_trend, b) for s, (r2, b) in fits.items()}, names)
+        for dn in names:
+            shap_rows.append({"response": rn, "driver": dn, "pollution": dn in poll, "shapley_r2_beyond_trend": shap[dn]})
+        jb = i6_joint_test(d["y"].to_numpy(), i6_design(d, list(best), "changes"), len(best),
+                           f"H7e {rn}: BIC subset") if best else None
+        ja = i6_joint_test(d["y"].to_numpy(), i6_design(d, names, "changes"), len(names), f"H7e {rn}: all drivers")
+        jp = i6_joint_test(d["y"].to_numpy(), i6_design(d, list(I6_LONG) + poll, "changes"), len(poll),
+                           f"H7e {rn}: pollution block given the 6 others")
+        T = np.ones((len(d), 1))
+        Bx = np.linalg.lstsq(T, d[names].to_numpy(), rcond=None)[0]
+        by = np.linalg.lstsq(T, d["y"].to_numpy(), rcond=None)[0]
+        lasso, _, _ = i6_lasso_resid_fit(d[names].to_numpy() - T @ Bx, d["y"].to_numpy() - T @ by)
+        oos = i6_rolling(d, names).assign(response=rn, driver_set="with pollution (9)")
+        oos_np = i6_rolling(d, I6_LONG).assign(response=rn, driver_set="without pollution (6, as H6c)")
+        oos_all += [oos, oos_np]
+        def rm(o: pd.DataFrame) -> pd.Series:
+            return o.assign(e2=(o["predicted"] - o["observed"]) ** 2).groupby("model")["e2"].mean() ** 0.5
+
+        rmse, rmse_np = rm(oos), rm(oos_np)
+        summary.append({"response": rn, "years": f"{d.index.min()}–{d.index.max()}", "n_years": len(d),
+                        "r2_trend_only": r2_trend, "r2_all_9_drivers": r2_all, "r2_added_by_all": r2_all - r2_trend,
+                        "shapley_r2_pollution_total": sum(shap[n] for n in poll),
+                        "p_pollution_block_given_others_hac": jp["p_joint"],
+                        "bic_best_subset": ", ".join(best) or "(trend only)",
+                        "bic_best_includes_pollution": bool(set(best) & set(poll)),
+                        "bic_best_without_pollution": ", ".join(best_np) or "(trend only)",
+                        "r2_added_by_best": fits[best][0] - r2_trend,
+                        "p_best_subset_hac": jb["p_joint"] if jb else np.nan,
+                        "p_all_drivers_hac": ja["p_joint"], "p_all_drivers_circular_shift": i6_shift_p(d, names),
+                        "lasso_selected": ", ".join(n for n, c in zip(names, lasso.coef_) if abs(c) > 1e-8) or "(none)",
+                        "oos_years": f"{oos['year'].min()}–{oos['year'].max()}",
+                        "rmse_trend_only": rmse["Trend only"],
+                        "rmse_best_subset_with_pollution": rmse["Best subset (BIC)"],
+                        "rmse_best_subset_without_pollution": rmse_np["Best subset (BIC)"],
+                        "rmse_lasso_with_pollution": rmse["LASSO"], "rmse_all_9_drivers": rmse["All drivers"],
+                        "beats_trend_oos": rmse["Best subset (BIC)"] < rmse["Trend only"],
+                        "beats_no_pollution_oos": rmse["Best subset (BIC)"] < rmse_np["Best subset (BIC)"],
+                        "bic_subsets_chosen_oos": "; ".join(f"{k or '(trend only)'} ×{n}" for k, n in
+                                                            oos[oos["model"] == "Best subset (BIC)"]["drivers_used"]
+                                                            .value_counts().items())})
+    summ = pd.DataFrame(summary)
+    shp = pd.DataFrame(shap_rows)
+    oos = pd.concat(oos_all, ignore_index=True)
+    save_table(summ, "13_I7_H7e_best_combination")
+    save_table(shp, "13_I7_H7e_shapley_r2")
+    save_table(oos, "13_I7_H7e_rolling_origin_predictions")
+
+    ok = summ.apply(lambda r: r["bic_best_includes_pollution"] and r["p_best_subset_hac"] < ALPHA
+                    and r["beats_trend_oos"] and r["beats_no_pollution_oos"], axis=1)
+    reject = bool(ok.all())
+    decide("H7e (iteration 7: best combination with pollution, world)",
+           "Does adding fertiliser, plastic and oil spills to the six long-run drivers give a combination that "
+           "predicts year-to-year changes in world % overexploited better than the trend and than the best model "
+           "without pollution, on years it has not seen?",
+           "; ".join(f"{r['response']} ({r['years']}): BIC picks {r['bic_best_subset']} (adds R² {r['r2_added_by_best']:.2f}, "
+                     f"HAC p {fmt_p(r['p_best_subset_hac']) if pd.notna(r['p_best_subset_hac']) else 'n/a'}); the 3 "
+                     f"pollution drivers add Shapley R² {r['shapley_r2_pollution_total']:.2f} (block p given the other 6 "
+                     f"{fmt_p(r['p_pollution_block_given_others_hac'])}); all 9 add R² {r['r2_added_by_all']:.2f} "
+                     f"(circular-shift p {fmt_p(r['p_all_drivers_circular_shift'])}); LASSO keeps {r['lasso_selected']}; "
+                     f"held-out RMSE {r['rmse_best_subset_with_pollution']:.2f} pp with pollution vs "
+                     f"{r['rmse_best_subset_without_pollution']:.2f} without vs {r['rmse_trend_only']:.2f} trend only"
+                     for _, r in summ.iterrows()),
+           reject,
+           "Year-to-year changes; 9 drivers → 512 subsets, BIC subset and LASSO λ re-chosen in every training window. "
+           "The no-pollution comparison runs on the same years (the oil-spill series starts in 1970 and plastic has no "
+           "1974 value, so the years differ slightly from H6c).",
+           verdict=None if reject or not ok.any() else
+           "Mixed: pollution improves the held-out fit in " + ", ".join(summ.loc[ok, "response"]) + " only")
+
+    fig = plt.figure(figsize=(15.5, 7.0))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.2, 1], wspace=0.3)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    yy = np.arange(len(names))[::-1]
+    for k, (rn, _) in enumerate(responses):
+        vals = shp[shp["response"] == rn].set_index("driver").loc[names, "shapley_r2_beyond_trend"]
+        a1.barh(yy + (0.18 if k == 0 else -0.18), vals.to_numpy(), height=0.34, color=v.SERIES[k], label=rn)
+        for y_, val in zip(yy + (0.18 if k == 0 else -0.18), vals.to_numpy()):
+            a1.text(max(val, 0) + shp["shapley_r2_beyond_trend"].max() * 0.012, y_, f"{val:.2f}", va="center",
+                    fontsize=8, color=v.INK_2)
+    a1.set_yticks(yy, [I6_SHORT[n] for n in names], fontsize=9)
+    for t_ in a1.get_yticklabels():
+        if t_.get_text() in [I7_SHORT[n] for n in poll]:
+            t_.set_fontweight("bold")
+    a1.axhspan(-0.5, len(poll) - 0.5, color=v.GRID, alpha=0.45, lw=0, zorder=0)
+    a1.axvline(0, color=v.AXIS, lw=0.8)
+    a1.set_xlabel("Shapley share of the R² of year-to-year changes (sums to the total); shaded = pollution")
+    a1.grid(axis="y", visible=False)
+    a1.legend(loc="lower right", fontsize=8.5)
+    tot = ", ".join(f"{r['response']} {r['r2_added_by_all']:.2f} (pollution {r['shapley_r2_pollution_total']:.2f})"
+                    for _, r in summ.iterrows())
+    a1.set_title(f"1 · Split of the variation all 9 drivers explain — total R²: {tot}", fontsize=9.5)
+    models = [("Trend only", "rmse_trend_only"), ("Best subset,\nno pollution", "rmse_best_subset_without_pollution"),
+              ("Best subset,\nwith pollution", "rmse_best_subset_with_pollution"),
+              ("LASSO,\nwith pollution", "rmse_lasso_with_pollution"), ("All 9 drivers", "rmse_all_9_drivers")]
+    xm = np.arange(len(models))
+    for k, (_, r) in enumerate(summ.iterrows()):
+        vals = [r[c] for _, c in models]
+        a2.bar(xm + (-0.2 if k == 0 else 0.2), vals, width=0.38, color=v.SERIES[k], label=r["response"])
+        for x_, val in zip(xm + (-0.2 if k == 0 else 0.2), vals):
+            a2.text(x_, val + 0.03, f"{val:.2f}", ha="center", fontsize=8, color=v.INK_2)
+    a2.set_xticks(xm, [m for m, _ in models], fontsize=8.5)
+    a2.set_ylabel("Error on held-out years (RMSE of the yearly change, pp)")
+    a2.grid(axis="x", visible=False)
+    a2.legend(fontsize=8.5, loc="upper left")
+    a2.set_title("2 · One-year-ahead error on unseen years (lower = better)", fontsize=9.5)
+    better = [r["response"] for _, r in summ.iterrows() if r["beats_trend_oos"] and r["beats_no_pollution_oos"]]
+    v.suptitle(fig, "Iteration 7 · H7e — " + (
+        "Adding pollution gives a combination that beats the trend and the no-pollution model" if reject else
+        "Adding pollution does not make any combination predict overexploitation better than the trend"
+        if not better else f"Pollution helps on unseen years only for {', '.join(better)}, not in both sources"),
+               "Year-to-year change in % overexploited ~ drift + changes in catch, effort, SST, ocean heat, dams, "
+               "aquaculture + N fertiliser, plastic, oil spills. BIC over all 512 subsets, re-chosen in every "
+               "training window")
+    fig.subplots_adjust(top=0.84, bottom=0.17, left=0.08, right=0.98)
+    save_fig(fig, sec, "I7.06_h7e_best_combination_with_pollution",
+             "FAO via OWID; Sea Around Us; IMAS effort; HadSST & NOAA; GDAT; ITOPF, Geyer et al. via OWID")
+
+
+# =========================================================================== #
 # Diagnostics + decisions
 # =========================================================================== #
 def section_diagnostics() -> None:
@@ -2954,6 +3845,150 @@ def section_diagnostics() -> None:
     save_fig(fig, sec, "D.01_h1a_residual_diagnostics", "FAO via OWID")
 
 
+def section_i7_h7f() -> None:
+    """
+    H7f — coastal nutrient loading vs the fisheries indicators of the sea it flows into.
+    The OWID/Global NEWS loading series (5 SEA large marine ecosystems, 2000–2015) is too
+    short to test on its own, but Sea Around Us reports the same 5 LMEs, so the two can be
+    stacked into an LME × year panel: 5 seas × 15 yearly changes. LME and year fixed effects
+    remove each sea's own level and the shocks common to all 5 seas (incl. the shared trend);
+    what is left asks: in years when loading rose faster in one sea than in the others, did
+    its stocks deteriorate faster too? Inference: wild cluster bootstrap over the 5 LMEs.
+    """
+    sec = "13_iteration7_pollution"
+    print("Iteration 7: H7f — coastal nutrient loading per LME vs Sea Around Us (5-LME panel)")
+    nut = coastal_nutrients()
+    nut = nut.assign(log_n=np.log(nut["Nitrogen"]), log_p=np.log(nut["Phosphorus"]))[["lme", "year", "log_n", "log_p"]]
+    fish = sau_lme_panel()
+    p = fish.merge(nut, on=["lme", "year"], how="inner").sort_values(["lme", "year"]).reset_index(drop=True)
+    p["unit"] = p["lme"]
+    for c in ["over", "mtl", "log_n", "log_p"]:
+        p[f"d_{c}"] = p.groupby("lme")[c].diff()
+    for c in ["log_n", "log_p", "d_log_n", "d_log_p"]:
+        p[f"{c}_l1"] = p.groupby("lme")[c].shift(1)
+    # nitrogen is held constant after 2010 in the source, so its changes there are zeros, not data
+    p.loc[p["year"] > 2010, ["d_log_n", "d_log_n_l1"]] = np.nan
+    p.loc[p["year"] > 2011, ["d_log_n_l1"]] = np.nan
+
+    drivers = [("Nitrogen loading", "log_n"), ("Phosphorus loading", "log_p")]
+    responses = [("% overexploited", "over"), ("mean trophic level", "mtl")]
+    rows, keep = [], {}
+    for spec in ("changes", "levels"):
+        for dl, dv in drivers:
+            for rl, rv in responses:
+                for lag in (0, 1):
+                    if spec == "changes":
+                        x, y = f"d_{dv}" + ("_l1" if lag else ""), f"d_{rv}"
+                        trends = False
+                    else:
+                        x, y = dv + ("_l1" if lag else ""), rv
+                        trends = True
+                    d = p.dropna(subset=[x, y]).reset_index(drop=True)
+                    if spec == "levels" and dv == "log_n":
+                        d = d[d["year"] <= 2010 + lag].reset_index(drop=True)
+                    r = fwl_residuals(d, [y, x], trends)
+                    b, se, pb = wild_cluster_p(r[x].to_numpy(), r[y].to_numpy(), d["unit"].to_numpy())
+                    sd_x, sd_y = r[x].std(), r[y].std()
+                    rows.append({"spec": "year-to-year changes, LME + year FE" if spec == "changes"
+                                 else "levels, LME + year FE + a trend per LME",
+                                 "driver": dl, "response": rl, "lag_years": lag,
+                                 "lmes": d["unit"].nunique(), "years": f"{d['year'].min()}–{d['year'].max()}",
+                                 "n_obs": len(d), "beta": b, "cluster_se": se, "p_wild_bootstrap": pb,
+                                 "beta_standardised": b * sd_x / sd_y if sd_y > 0 else np.nan})
+                    keep[(spec, dl, rl, lag)] = (r[x].to_numpy() / sd_x, r[y].to_numpy() / sd_y, d["unit"].to_numpy())
+    res = pd.DataFrame(rows)
+    res["p_holm"] = np.nan
+    for s_ in res["spec"].unique():                       # Holm within each specification (8 tests each)
+        m = res["spec"] == s_
+        res.loc[m, "p_holm"] = holm(res.loc[m, "p_wild_bootstrap"])
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "13_I7_H7f_lme_nutrient_panel")
+
+    ch, lv = res[res["spec"].str.startswith("year")], res[res["spec"].str.startswith("levels")]
+    key = ["driver", "response", "lag_years"]
+    both = ch.merge(lv, on=key, suffixes=("_ch", "_lv"))
+    robust = both[both["significant_holm_ch"] & both["significant_holm_lv"]
+                  & (np.sign(both["beta_ch"]) == np.sign(both["beta_lv"]))]
+    # "worse" = more overexploited, or a lower trophic level (fishing down the food web)
+    worse = robust[((robust["response"] == "% overexploited") & (robust["beta_ch"] > 0))
+                   | ((robust["response"] == "mean trophic level") & (robust["beta_ch"] < 0))]
+    reject = len(worse) > 0
+    n_sig = int(res["significant_holm"].sum())
+    pmin = ch.loc[ch["p_wild_bootstrap"].idxmin()]
+    lst = lambda g: "; ".join(f"{r['driver']} → {r['response']} lag {r['lag_years']} ({'changes' if r['spec'].startswith('year') else 'levels'}) "
+                              f"standardised β {r['beta_standardised']:+.2f}, Holm p {fmt_p(r['p_holm'])}" for _, r in g.iterrows())
+    decide("H7f (iteration 7: coastal nutrient loading, SEA seas)",
+           "Where nitrogen or phosphorus loading to a Southeast Asian sea rises faster than in the other seas, "
+           "do its stocks become more overexploited or its catch fall down the food web faster?",
+           f"5 large marine ecosystems (Bay of Bengal, Gulf of Thailand, South China Sea, Sulu-Celebes, Indonesian "
+           f"Sea), Sea Around Us; 2 nutrients × 2 responses × lag 0/1 × 2 specifications; {n_sig} of {len(res)} "
+           "significant after Holm (wild cluster bootstrap)" + (f": {lst(res[res['significant_holm']])}" if n_sig else "")
+           + f"; significant in both specifications with the same sign: {len(robust)}"
+           + f"; smallest raw p (changes): {pmin['driver']} → {pmin['response']} lag {pmin['lag_years']} "
+             f"β_std {pmin['beta_standardised']:+.2f}, p {fmt_p(pmin['p_wild_bootstrap'])}",
+           reject,
+           "Loading is modelled (Global NEWS 2 via OWID), 2000–2015; nitrogen is constant after 2010 in the source, "
+           "so nitrogen tests use 2001–2010 only (phosphorus 2001–2015). 5 clusters: all 6^5 Webb draws enumerated. "
+           "Fixed effects absorb each sea's level and the shocks shared by all 5 seas, so only differences between "
+           "seas are tested.",
+           verdict=None if reject or n_sig == 0 else
+           f"Weak: {n_sig} test(s) significant, but not in both specifications in the 'worse' direction")
+
+    # ---- figure: forest of the 16 tests + the residual scatter behind the smallest p -------------------------
+    fig = plt.figure(figsize=(15, 6.6))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.35, 1], wspace=0.5)
+    a1, a2 = fig.add_subplot(gs[0]), fig.add_subplot(gs[1])
+    combos = list(dict.fromkeys(zip(res["driver"], res["response"], res["lag_years"])))
+    for i, (dl, rl, lag) in enumerate(combos):
+        y0 = len(combos) - 1 - i
+        for _, r in res[(res["driver"] == dl) & (res["response"] == rl) & (res["lag_years"] == lag)].iterrows():
+            lev = r["spec"].startswith("levels")
+            yp = y0 + (-0.15 if lev else 0.15)
+            col = v.SERIES[0] if rl == "% overexploited" else v.SERIES[1]
+            a1.scatter(r["beta_standardised"], yp, marker="D" if lev else "o", s=52, zorder=3, lw=1.4,
+                       edgecolor=col, color=col if r["significant_holm"] else v.SURFACE)
+            a1.text(1.01, yp, f"p {fmt_p(r['p_wild_bootstrap'])}", transform=a1.get_yaxis_transform(),
+                    va="center", fontsize=8, color=v.INK_2)
+    a1.text(1.01, len(combos) - 0.45, "bootstrap p\n(raw)", transform=a1.get_yaxis_transform(),
+            va="bottom", fontsize=8, color=v.MUTED)
+    for b_ in range(1, len(combos)):
+        a1.axhline(b_ - 0.5, color=v.GRID, lw=0.8)
+    a1.axvline(0, color=v.AXIS, lw=0.8)
+    a1.set_yticks(range(len(combos))[::-1],
+                  [f"{dl.split()[0]} → {rl}" + (" (lag 1)" if lag else "") for dl, rl, lag in combos], fontsize=8.6)
+    a1.set_xlabel("Standardised effect (SD of response per SD of loading, after fixed effects)")
+    a1.grid(axis="y", visible=False)
+    a1.set_title("1 · All 16 tests (hollow = not significant after Holm)", fontsize=9.5)
+    handles = [plt.Line2D([], [], marker="o", ls="", color=v.INK_2, label="year-to-year changes, LME + year FE"),
+               plt.Line2D([], [], marker="D", ls="", color=v.INK_2, label="levels, + a trend per LME"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[0], label="% overexploited"),
+               plt.Line2D([], [], marker="s", ls="", color=v.SERIES[1], label="mean trophic level")]
+    a1.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.45, -0.13), ncol=2, fontsize=8.3)
+
+    xs, ys, us = keep[("changes", pmin["driver"], pmin["response"], int(pmin["lag_years"]))]
+    lmes = sorted(set(us))
+    for k, u in enumerate(lmes):
+        m = us == u
+        a2.scatter(xs[m], ys[m], s=30, color=v.SERIES[k], label=u, zorder=3, edgecolor=v.SURFACE, lw=0.6)
+    gx = np.linspace(xs.min(), xs.max(), 2)
+    a2.plot(gx, pmin["beta_standardised"] * gx, color=v.INK_2, lw=1.2, ls=(0, (4, 2)))
+    a2.axhline(0, color=v.AXIS, lw=0.8); a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_xlabel(f"Δ log {pmin['driver'].split()[0].lower()} loading" + (" (previous year)" if pmin["lag_years"] else "")
+                  + "\nrelative to the other seas that year (SD units)")
+    a2.set_ylabel(f"Δ {pmin['response']}, relative to the other seas (SD units)")
+    a2.legend(fontsize=7.8, loc="best")
+    a2.set_title(f"2 · Smallest p of the changes tests: β {pmin['beta_standardised']:+.2f}, "
+                 f"p {fmt_p(pmin['p_wild_bootstrap'])} (Holm {fmt_p(pmin['p_holm'])})", fontsize=9.5)
+    v.suptitle(fig, "Iteration 7 · H7f — " + (
+        "Nutrient loading tracks the state of the sea it flows into" if reject else
+        "Seas receiving faster-rising nutrient loads do not show faster overfishing"),
+               "Panel of the 5 SEA large marine ecosystems, 2000–2015 (Sea Around Us × modelled N/P loading). "
+               f"{n_sig} of {len(res)} tests significant after Holm; 5 clusters, wild cluster bootstrap")
+    fig.subplots_adjust(top=0.84, bottom=0.25, left=0.2, right=0.97)
+    save_fig(fig, sec, "I7.07_h7f_lme_nutrient_panel",
+             "Global NEWS 2 / UNEP via OWID (nutrient loading); Sea Around Us (LMEs 34–38)")
+
+
 SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": section_h1b,
             "h2a": section_h2a, "h2b": section_h2b, "h2c": section_h2c,
             # iteration 2: fishing effort replaces catch as the pressure variable
@@ -2968,6 +4003,10 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             "i5_h5a": section_i5_h5a, "i5_h5b": section_i5_h5b, "i5_h5c": section_i5_h5c, "i5_h5d": section_i5_h5d,
             # iteration 6: drivers in combination — pairs, interactions, best subset (new hypothesis H6)
             "i6_h6a": section_i6_h6a, "i6_h6b": section_i6_h6b, "i6_h6c": section_i6_h6c,
+            # iteration 7: sea and water pollution, alone and with the other drivers (new hypothesis H7)
+            "i7_data": section_i7_data, "i7_h7a": section_i7_h7a, "i7_h7b": section_i7_h7b,
+            "i7_descriptive": section_i7_descriptive, "i7_h7c": section_i7_h7c, "i7_h7d": section_i7_h7d,
+            "i7_h7e": section_i7_h7e, "i7_h7f": section_i7_h7f,
             # summary across iterations (report figure S.01)
             "summary": section_summary,
             "diagnostics": section_diagnostics}

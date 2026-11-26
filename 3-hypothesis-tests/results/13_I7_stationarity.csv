@@ -1,0 +1,10 @@
+series,n,level_adf_p,level_kpss_p,transformation_used,transformed_adf_p,transformed_kpss_p,stationary_after
+World: Nitrogen fertiliser per ha,64,6.3e-05,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+World: Pesticides per ha,35,0.21166,0.068367,Δlog (growth rate),0.0,0.1,yes
+World: Plastic production,69,0.250751,0.01,detrended Δlog (growth rate),0.0,0.1,yes
+World: Oil spills (number ≥ 7 t),56,0.002098,0.1,Δlog (growth rate),0.0,0.1,yes
+World: Oil spilled (tonnes),56,0.0,0.1,Δlog (growth rate),0.000969,0.1,yes
+World: Ocean acidity [H⁺] (Hawaii),35,0.229895,0.07136,Δlog (growth rate),0.0,0.1,yes
+SEA: Nitrogen fertiliser per ha,64,0.639559,0.01,Δlog (growth rate),0.0,0.01,"ADF yes, KPSS no"
+SEA: Pesticides per ha,35,0.947,0.1,Δlog (growth rate),2e-06,0.1,yes
+SEA: Chlorophyll-a deviation,18,0.446073,0.041286,detrended first difference,0.748445,0.041667,no

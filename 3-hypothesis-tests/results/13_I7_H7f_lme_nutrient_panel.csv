@@ -1,0 +1,17 @@
+spec,driver,response,lag_years,lmes,years,n_obs,beta,cluster_se,p_wild_bootstrap,beta_standardised,p_holm,significant_holm
+"year-to-year changes, LME + year FE",Nitrogen loading,% overexploited,0,5,2001–2010,50,16.85004,6.670424,0.091564,0.256166,0.640947,False
+"year-to-year changes, LME + year FE",Nitrogen loading,% overexploited,1,5,2002–2010,45,-6.843305,8.942861,0.398148,-0.104591,1.0,False
+"year-to-year changes, LME + year FE",Nitrogen loading,mean trophic level,0,5,2001–2010,50,0.078595,0.037543,0.07536,0.260963,0.602881,False
+"year-to-year changes, LME + year FE",Nitrogen loading,mean trophic level,1,5,2002–2010,45,-0.052843,0.027681,0.125514,-0.187812,0.753086,False
+"year-to-year changes, LME + year FE",Phosphorus loading,% overexploited,0,5,2001–2015,75,4.381158,2.744979,0.220165,0.108369,1.0,False
+"year-to-year changes, LME + year FE",Phosphorus loading,% overexploited,1,5,2002–2015,70,0.324158,3.126931,0.972994,0.007377,1.0,False
+"year-to-year changes, LME + year FE",Phosphorus loading,mean trophic level,0,5,2001–2015,75,-0.001499,0.017274,0.937243,-0.007116,1.0,False
+"year-to-year changes, LME + year FE",Phosphorus loading,mean trophic level,1,5,2002–2015,70,-0.01247,0.026112,0.685185,-0.056634,1.0,False
+"levels, LME + year FE + a trend per LME",Nitrogen loading,% overexploited,0,5,2000–2010,55,34.413624,16.115989,0.079733,0.427966,0.63786,False
+"levels, LME + year FE + a trend per LME",Nitrogen loading,% overexploited,1,5,2001–2011,55,9.514148,7.102132,0.308899,0.127024,1.0,False
+"levels, LME + year FE + a trend per LME",Nitrogen loading,mean trophic level,0,5,2000–2010,55,0.069849,0.031017,0.093879,0.252666,0.65715,False
+"levels, LME + year FE + a trend per LME",Nitrogen loading,mean trophic level,1,5,2001–2011,55,-0.003303,0.030744,0.899434,-0.009528,1.0,False
+"levels, LME + year FE + a trend per LME",Phosphorus loading,% overexploited,0,5,2000–2015,80,11.408877,5.933131,0.16358,0.258255,0.981481,False
+"levels, LME + year FE + a trend per LME",Phosphorus loading,% overexploited,1,5,2001–2015,75,2.430094,5.301776,0.86394,0.05274,1.0,False
+"levels, LME + year FE + a trend per LME",Phosphorus loading,mean trophic level,0,5,2000–2015,80,0.026965,0.044101,0.54784,0.135003,1.0,False
+"levels, LME + year FE + a trend per LME",Phosphorus loading,mean trophic level,1,5,2001–2015,75,0.000159,0.047187,0.996656,0.000787,1.0,False

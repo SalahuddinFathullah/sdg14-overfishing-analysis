@@ -1,4 +1,4 @@
-# 3-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures), H5 (panel, rebuilding, FiB, 2030 forecast) and H6 (drivers in combination)
+# 3-hypothesis-tests — Formal tests of H1a–H2c, plus H3 (warming), H4 (shipping & structures), H5 (panel, rebuilding, FiB, 2030 forecast), H6 (drivers in combination) and H7 (pollution, alone and combined)
 
 `hypothesis_tests.py` runs the analysis pipeline from the main README (§4) on the checked data written by step 0 ([`data/processed/`](../data/processed/); it will not run until [`0-data-quality`](../0-data-quality/) has passed). Data loaders, chart style and shared statistics come from [`src/`](../src/).
 
@@ -10,13 +10,14 @@ python 3-hypothesis-tests/hypothesis_tests.py --only i3_h3a i3_h3b            # 
 python 3-hypothesis-tests/hypothesis_tests.py --only i4_data i4_h4a i4_h4b i4_h4c i4_descriptive   # iteration 4
 python 3-hypothesis-tests/hypothesis_tests.py --only i5_h5a i5_h5b i5_h5c i5_h5d   # iteration 5
 python 3-hypothesis-tests/hypothesis_tests.py --only i6_h6a i6_h6b i6_h6c          # iteration 6 (combinations)
+python 3-hypothesis-tests/hypothesis_tests.py --only i7_data i7_h7a i7_h7b i7_descriptive i7_h7c i7_h7d i7_h7e   # iteration 7 (pollution)
 python 3-hypothesis-tests/hypothesis_tests.py --only summary                  # all drivers, one figure
 ```
 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 23 figures (6 for iteration 1, 3 + 2 + 4 + 4 + 3 for iterations 2–6, 1 summary).
+- `figures/<section>/*.png`: 30 figures (6 for iteration 1, 3 + 2 + 4 + 4 + 3 + 7 for iterations 2–7, 1 summary).
 
 ## Verdicts
 
@@ -211,6 +212,49 @@ Iterations 1–5 tested one driver at a time. Two drivers could matter only toge
 | ![](figures/12_iteration6/I6.01_h6a_driver_pairs.png) | ![](figures/12_iteration6/I6.02_h6b_interactions.png) | ![](figures/12_iteration6/I6.03_h6c_best_combination.png) |
 
 Tables: `12_I6_H6a_pairs.csv`, `12_I6_H6a_single_drivers.csv`, `12_I6_H6b_interactions.csv`, `12_I6_H6c_best_combination.csv`, `12_I6_H6c_shapley_r2.csv`, `12_I6_H6c_rolling_origin_predictions.csv`. Verdicts are rows in `decisions.csv`.
+
+## Iteration 7 — sea and water pollution, alone and with the other drivers (new hypothesis H7)
+
+Pollution was the one SDG 14 pressure not yet tested (target 14.1: marine pollution, including nutrients and plastic; target 14.3: ocean acidification). It can harm stocks without any catch: nutrient run-off feeds algal blooms and low-oxygen dead zones, pesticides are toxic to fish larvae, plastic and oil damage habitats, and acidification weakens shells and reefs. Iteration 7 repeats the tests of iterations 4–6 with pollution drivers:
+- **H7a (global, alone):** nitrogen fertiliser and pesticides per hectare of cropland (run-off pressure), plastic production, oil spills (number and tonnes), ocean acidity (hydrogen-ion concentration from Hawaii pH) vs world % overexploited. Same three steps and decision rule as H4a.
+- **H7b (SEA, alone):** fertiliser, pesticides and coastal chlorophyll-a (SDG 14.1.1a, eutrophication) per country. CCF as in H4b; a SEA-wide beyond-trend link must also survive leaving out any one country; plus a 5-country two-way fixed-effects panel with a wild cluster bootstrap, as in H5a.
+- **H7c (pollution + other drivers, world):** each of the 6 pollution drivers paired with each of the 8 earlier world drivers, plus the 15 pollution pairs (63 pairs × 2 sources). Joint Newey-West F-test on year-to-year changes, as in H6a.
+- **H7d (pollution × pressure, SEA):** 4 interactions chosen in advance: fertiliser × effort, fertiliser × sea temperature, fertiliser × aquaculture, pesticides × effort. Country panel, as in H6b.
+- **H7e (best combination, world):** the 6 long-run drivers of H6c plus fertiliser, plastic and oil spills (512 subsets). BIC, LASSO, Shapley R², circular-shift permutation, and held-out years against both the trend and the best model **without** pollution.
+- **H7f (nutrient loading per sea, SEA):** coastal nitrogen and phosphorus loading to the 5 SEA large marine ecosystems (Bay of Bengal, Gulf of Thailand, South China Sea, Sulu-Celebes, Indonesian Sea) vs Sea Around Us % overexploited and mean trophic level for the **same 5 seas**. A 5-LME × year panel with LME and year fixed effects on year-to-year changes (lag 0 and 1), levels with a trend per LME as the robustness check, wild cluster bootstrap. Added after the first run of iteration 7 (see Method choices).
+- **Descriptive only:** plastic reaching the ocean (2019 only), beach litter (SDG 14.1.1b, 5 points per country). Nutrient loading is also shown in I7.03 for context.
+
+| Test | Result |
+|---|---|
+| **Pollution trends** | World fertiliser use per hectare 8.6 → 71 kg N/ha (1961–2024), pesticides 1.2 → 2.5 kg/ha (1990–2024), plastic production 2 → 460 Mt (1950–2019), surface pH 8.11 → 8.04 (1990–2024, acidity +18%). Oil spills **fell** about 90% since the 1970s. |
+| **H7a global** | **Fail to reject H₀.** Levels ρ = −0.93 (oil spills) to +1.00: the shared trend. Beyond the trend, links that hold under both detrends exist in Sea Around Us only, and they are **negative** (fertiliser −0.80 / −0.68, plastic −0.89 / −0.51), the opposite of "pollution worsens stocks": the S-shape curvature seen in iterations 3–4. In FAO, fertiliser and pesticides are cointegrated even with a trend term (p = 0.02, 0.03), but not in SAU (p ≥ 0.83). Year to year: 0 of 130 CCF lag tests significant across all (min Holm p = 0.40). |
+| **H7b SEA** | **Weak.** SEA pesticide use tracks % overexploited beyond the trend (ρ +0.44 linear, +0.45 quadratic), but the link disappears when Indonesia, Thailand or Vietnam is left out, so it rests on those three. 2 of 312 CCF lag tests significant within row (Indonesia fertiliser → ΔMTL lag 3, r = −0.38; Thailand fertiliser → ΔMTL lag 6, r = +0.47), none across all. Panel: 0 of 24 coefficients significant after Holm (smallest raw p = 0.049). Chlorophyll-a overlaps the fisheries data for 2005–2019 only and is not stationary over that window. |
+| **H7c pairs** | **Weak, not supported in both sources.** FAO: 1 of 63 pairs (acidity + effort, n = 27, Holm p = 0.034, neither significant alone). SAU: 6 of 63, five of them with shipping (2001–2019, n = 19; shipping is significant alone there), plus pesticides + oil spilled (n = 29, Holm p = 0.003). No pair holds in both sources. |
+| **H7d interactions** | **Fail to reject H₀.** 0 of 16 interaction terms significant after Holm. The smallest raw p is fertiliser × aquaculture → mean trophic level (p = 0.046), and it vanishes with country trends (p = 0.97). |
+| **H7f nutrients per sea** | **Fail to reject H₀.** 0 of 16 tests significant after Holm (2 nutrients × 2 responses × lag 0/1 × 2 specifications). Nitrogen uses 2001–2010 (constant in the source after 2010), phosphorus 2001–2015; 45–80 LME-years. The smallest raw p (nitrogen → mean trophic level, same year, β_std +0.26, p = 0.075) points to a *higher* trophic level, the opposite of fishing down the food web. Seas whose loading rose faster than the others' did not become more overexploited. |
+| **H7e best combination** | **Fail to reject H₀.** FAO: BIC keeps no driver. SAU: BIC keeps catch + fertiliser (adds R² 0.17, HAC p = 0.04), but fertiliser growth goes with a *smaller* rise in overexploitation. All 9 drivers explain no more than chance (circular-shift p = 0.65 FAO, 0.35 SAU). On held-out years the trend alone still predicts best (RMSE 1.49 vs 1.66 pp FAO, 0.90 vs 1.01 pp SAU); adding pollution improves on the no-pollution model by 0.01 pp in SAU only. |
+
+**What the seventh iteration adds:**
+- Pollution behaves like every earlier driver. Run-off, plastic and acidity rose with overexploitation, and oil spills fell. No pollution link holds beyond the shared trend in both data sources, year to year, across countries, in interaction with fishing, warming or aquaculture, or in the best combination of drivers.
+- The only SEA signal, pesticide use, is carried by three countries and isn't confirmed by the fixed-effects panel, which uses the same countries but removes the common trend.
+- Nutrient loading to the sea itself, the measure closest to the dead-zone mechanism, is too short to test as one series (2000–2015, modelled), but matched to the same 5 seas in Sea Around Us it gives a 5-sea panel (H7f): no link. Plastic emissions (one year) stay untestable. Measured marine pollution records, e.g. dissolved oxygen or dead-zone extent per EEZ, would be needed for a stronger test. That goes in the report's limitations.
+
+**Method choices:**
+- **Same tests as iterations 4–6**, so the pollution results are directly comparable with the earlier drivers.
+- **Acidity as hydrogen-ion concentration** (10^(−pH)) rather than pH, so "higher = more pollution" like every other driver. Its year-to-year change is −ln(10) × ΔpH, so only the sign of the correlation changes. The calendar-year mean of the deseasonalised running average is used, so uneven cruise timing can't add a seasonal signal.
+- **Fertiliser and pesticides in logs.** Use per hectare spans two orders of magnitude across countries and years (Vietnam 2 → 150 kg N/ha), so growth rates are comparable.
+- **Leave-one-country-out check for SEA (added after the first run).** The SEA aggregate is a mean of 5 countries, so one country can produce a SEA-wide link on its own. The check was added because the pesticide link was the only positive signal in the first run. It is reported alongside the original result, not in place of it.
+- **Oil spills by number, not tonnes, in H7e.** Tonnes are dominated by a few huge spills, so their year-to-year change is mostly noise. Both are tested in H7a and H7c.
+- **H7f: the nutrient series tested per sea (added after the first run).** The loading series is only 16 years, too short alone, but it is reported for the same 5 large marine ecosystems that Sea Around Us covers (LMEs 34–38, already in `data/raw/validation/sau_regions/`). Stacking them gives 5 seas × 15 changes. Year fixed effects remove everything the 5 seas share (including the common trend), so the test only asks whether a sea whose loading rose faster than the others' also deteriorated faster. Nitrogen changes after 2010 are zeros in the source (held constant), so they are dropped rather than counted as 'no change'. Holm is applied within each specification (8 tests each); a 'reject' needs the same sign in both specifications.
+- **Plastic's missing 1974 value stays missing.** The series is put on a full year index, so 1973 → 1975 can't be counted as one yearly change.
+
+| | | |
+|---|---|---|
+| ![](figures/13_iteration7_pollution/I7.01_h7a_global_pollution.png) | ![](figures/13_iteration7_pollution/I7.02_h7b_sea_pollution.png) | ![](figures/13_iteration7_pollution/I7.03_pollution_descriptive.png) |
+| ![](figures/13_iteration7_pollution/I7.04_h7c_pollution_pairs.png) | ![](figures/13_iteration7_pollution/I7.05_h7d_pollution_interactions.png) | ![](figures/13_iteration7_pollution/I7.06_h7e_best_combination_with_pollution.png) |
+| ![](figures/13_iteration7_pollution/I7.07_h7f_lme_nutrient_panel.png) | | |
+
+Tables: `13_I7_driver_coverage.csv`, `13_I7_stationarity.csv`, `13_I7_H7a_levels_vs_detrended.csv`, `13_I7_H7a_cointegration.csv`, `13_I7_H7a_ccf.csv`, `13_I7_H7b_ccf_sea.csv`, `13_I7_H7b_levels_vs_detrended.csv`, `13_I7_H7b_leave_one_country_out.csv`, `13_I7_H7b_panel_fixed_effects.csv`, `13_I7_descriptive.csv`, `13_I7_H7c_single_drivers.csv`, `13_I7_H7c_pairs.csv`, `13_I7_H7d_interactions.csv`, `13_I7_H7e_best_combination.csv`, `13_I7_H7e_shapley_r2.csv`, `13_I7_H7e_rolling_origin_predictions.csv`, `13_I7_H7f_lme_nutrient_panel.csv`. Verdicts are rows in `decisions.csv`.
 
 ## Summary across iterations — all drivers on one method
 

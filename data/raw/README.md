@@ -25,6 +25,7 @@ Retrieved: **2026-11-18** (see `manifest.json`).
 | **H2c** SEA vs World | Same indicators, SEA vs World | combine the above |
 | **H3** warming (iteration 3) | SST anomaly, ocean heat content, EEZ SST | `owid/sea-surface-temperature-anomaly.csv`, `owid/ocean-heat-content-upper.csv`, `validation/climate/*.csv` |
 | **H4** shipping & structures (iteration 4) | Port traffic, seaborne trade, liner connectivity, dams, aquaculture, platforms, offshore wind | `validation/human_use/*.csv`, `owid/aquaculture-farmed-fish-production.csv` |
+| **H7** pollution (iteration 7) | Fertiliser, pesticides, chlorophyll-a, plastic, oil spills, seawater pH; nutrient loading per SEA sea (H7f, with `validation/sau_regions/` LMEs 34–38), plastic to the ocean, beach litter (descriptive) | the 11 `owid/` files listed in §8 |
 | EDA context | Catch by gear, discards, aquaculture | `owid/fish-catch-gear-type.csv`, `owid/fish-discards.csv`, `owid/aquaculture-farmed-fish-production.csv` |
 
 ---
@@ -251,6 +252,30 @@ Re-create with `python src/download_data.py --only human_use`. Transfer check (S
 
 ---
 
+## 8. Sea and water pollution — `owid/` (added for iteration 7 of the analysis)
+
+All from Our World in Data (CC BY 4.0), columns `Entity, Code, Year, <value>` unless noted. Filtered to World + SEA5 except where stated.
+
+| File | Value | Unit | Original source | Coverage |
+|---|---|---|---|---|
+| `nitrogen-fertilizer-application-per-hectare-of-cropland.csv` | Use of nutrient nitrogen per area of cropland | kg N / ha | FAO (FAOSTAT inputs) | World + SEA5, 1961–2024 |
+| `pesticide-use-per-hectare-of-cropland.csv` | Use of pesticides per area of cropland | kg / ha | FAO | World + SEA5, 1990–2024 (Thailand drops ~90% in 2013: reporting break) |
+| `chlorophyll-a-deviation-from-the-global-average.csv` | Chlorophyll-a deviations, remote sensing | % | UNEP, SDG 14.1.1a (coastal eutrophication) | World + SEA5, 2005–2022 |
+| `global-plastics-production.csv` | Annual plastic production | t / year | Geyer, Jambeck & Law (2017) | World, 1950–2019 (1974 missing; 2016–19 extrapolated by the source) |
+| `number-oil-spills.csv` | Large (> 700 t) and medium (7–700 t) tanker spills | count | ITOPF | World, 1970–2025 |
+| `quantity-oil-spills.csv` | Quantity of oil spilled | t | ITOPF | World, 1970–2025 |
+| `seawater-ph.csv` | Surface seawater pH; columns `Entity, Day, Annual average, Monthly average` (whole file) | pH | Hawaii Ocean Time-series, Station ALOHA | Hawaii, Oct 1988 – Dec 2024, one row per cruise |
+| `coastal-eutrophication.csv` | Nitrogen, Phosphorus loading; columns `Entity, Year, Nitrogen, Phosphorus` | t / year | UNEP / Global NEWS 2 model (SDG 14.1.1 support) | 5 SEA large marine ecosystems (Bay of Bengal, Gulf of Thailand, South China Sea, Sulu-Celebes Sea, Indonesian Sea), 2000–2015; nitrogen constant 2010–2015 in all five |
+| `plastic-waste-emitted-to-the-ocean.csv` | Plastic waste emitted to the ocean | t | Meijer et al. (2021) | World + SEA5, 2019 only |
+| `mismanaged-plastic-waste-per-capita.csv` | Mismanaged plastic waste per capita | kg / person / year | Meijer et al. (2021) | World + SEA5, 2019 only |
+| `beach-litter.csv` | Beach litter per km² | items | UNEP, SDG 14.1.1b | SEA5 2016–18 and 2021–22; World 2015–2022 |
+
+How they are used (`src/loaders.py`): fertiliser and pesticides in logs (growth rates); acidity as the hydrogen-ion concentration 10^(−pH) from the calendar-year mean of the deseasonalised running annual average (1990–2024); "SEA" = simple mean of the 5 countries. Nutrient loading is too short as one series, so `sau_lme_panel()` matches it to Sea Around Us for the same 5 large marine ecosystems (`validation/sau_regions/`, LMEs 34–38) and H7f tests the 5-sea panel; plastic emissions and beach litter are too short or sparse to test and are shown descriptively (figure I7.03).
+
+Re-create with `python src/download_data.py --only pollution`. Files were fetched in the browser and passed through chat; transfer check (SHA-256 of each file, all matched): fertiliser `e31f97de…`, pesticides `fb83ad8c…`, chlorophyll-a `965ae973…`, plastic production `68e2dd59…`, oil spills number `4e98a53c…`, quantity `99a30b02…`, seawater pH `d9bc4265…`, coastal eutrophication `e7be389c…`, plastic to ocean `43d0acea…`, mismanaged plastic `7d614139…`, beach litter `d9e9624a…`.
+
+---
+
 ## Known data issues (handle in the cleaning notebook)
 
 1. **World overexploited series has interpolated years.** Several stretches (e.g. 1974–1978, 1993–1995) change by a constant step each year, i.e. linear interpolation between FAO assessment years. This inflates autocorrelation; mention it, and consider testing on FAO assessment years only as a robustness check.
@@ -306,4 +331,10 @@ The cloud workspace used to build this repo could not reach OWID or SAU directly
 - Hoeser, T., Feuerstein, S. & Kuenzer, C. (2022). DeepOWT: a global offshore wind turbine data set derived with deep learning from Sentinel-1 data. *Earth System Science Data*, 14, 4251–4270. Data: https://doi.org/10.5281/zenodo.5933967, accessed 22 Nov 2026.
 - Si, L., Zhou, S., Irakulis-Loitxate, I., Roger, J. & Guanter, L. (2026). Building a dataset of offshore oil and gas extraction platforms from satellite data (2017–2023). *Earth System Science Data*, 18, 6545–6564. Data: https://doi.org/10.5281/zenodo.18350974, accessed 22 Nov 2026.
 - CSIS Asia Maritime Transparency Initiative (AMTI). Island Tracker and reports "Vietnam's Major Spratly Expansion" (Dec 2022) and "Vietnam Ramps Up Spratly Island Dredging" (Nov 2023). https://amti.csis.org; US Department of Defense (2016), *Annual Report to Congress: Military and Security Developments Involving the People's Republic of China* (>3,200 acres reclaimed).
+- FAO (2026) – processed by Our World in Data. "Use of nutrient nitrogen per area of cropland" and "Use of pesticides per area of cropland" [datasets]. FAOSTAT [original data]. https://ourworldindata.org/grapher/nitrogen-fertilizer-application-per-hectare-of-cropland, accessed 26 Nov 2026.
+- UNEP (2025) – processed by Our World in Data. SDG 14.1.1a "Chlorophyll-a deviations, remote sensing" and 14.1.1b "Beach litter per square kilometer" [datasets]. UN SDG Indicators Database [original data], accessed 26 Nov 2026.
+- Geyer, R., Jambeck, J. R. & Law, K. L. (2017). Production, use, and fate of all plastics ever made. *Science Advances*, 3(7), e1700782. Via Our World in Data, "Global plastics production" [dataset], accessed 26 Nov 2026.
+- ITOPF (2026). *Oil Tanker Spill Statistics*. Via Our World in Data, "Number of oil spills" and "Quantity of oil spilled" [datasets], accessed 26 Nov 2026.
+- Hawaii Ocean Time-series (HOT), Station ALOHA, University of Hawai'i. Via Our World in Data, "Ocean acidification: mean seawater pH" [dataset], accessed 26 Nov 2026.
+- Meijer, L. J. J., van Emmerik, T., van der Ent, R., Schmidt, C. & Lebreton, L. (2021). More than 1000 rivers account for 80% of global riverine plastic emissions into the ocean. *Science Advances*, 7(18), eaaz5803. Via Our World in Data, accessed 26 Nov 2026.
 - Nigrini, M. J. (2012). *Benford's Law: Applications for Forensic Accounting, Auditing, and Fraud Detection*. Wiley. (MAD conformity thresholds)

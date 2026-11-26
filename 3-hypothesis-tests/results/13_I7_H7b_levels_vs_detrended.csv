@@ -1,0 +1,4 @@
+driver,response,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,p_detrended_holm,p_quad_holm,consistent_link,holds_leaving_out_any_country
+Nitrogen fertiliser per ha,SEA % overexploited,59,0.95824,0.0,-0.605961,0.0,0.002455,0.985279,1e-06,1.0,False,False
+Pesticides per ha,SEA % overexploited,30,0.88832,0.0,0.436707,0.015828,0.445606,0.013593,0.031656,0.04078,True,False
+Chlorophyll-a deviation,SEA % overexploited,15,-0.685714,0.004772,-0.235714,0.397703,0.057143,0.8397,0.397703,1.0,False,False

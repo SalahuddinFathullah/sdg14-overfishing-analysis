@@ -26,7 +26,7 @@ These cover the tests that were previously reported only as tables, so every tes
 
 ## Figure catalogue
 
-`figure_index.csv` lists all 71 figures in the repo (34 EDA, 8 course methods, 23 hypothesis tests, 2 data quality, 4 overview) with:
+`figure_index.csv` lists all 78 figures in the repo (34 EDA, 8 course methods, 30 hypothesis tests, 2 data quality, 4 overview) with:
 
 - `figure_id`, `title`, `chart` type and one-line `message`
 - `step` (pipeline folder) and `rubric_section` (Introduction … Conclusion)

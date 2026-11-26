@@ -1,0 +1,377 @@
+year,model,predicted,observed,drivers_used,response,driver_set
+1996,Trend only,0.8025,-1.330002,,FAO,with pollution (9)
+1996,Best subset (BIC),0.8025,-1.330002,,FAO,with pollution (9)
+1996,All drivers,-0.852956,-1.330002,,FAO,with pollution (9)
+1996,LASSO,0.717627,-1.330002,,FAO,with pollution (9)
+1997,Trend only,0.700952,-1.319999,,FAO,with pollution (9)
+1997,Best subset (BIC),-0.205431,-1.319999,Catch,FAO,with pollution (9)
+1997,All drivers,-2.440934,-1.319999,,FAO,with pollution (9)
+1997,LASSO,0.700952,-1.319999,,FAO,with pollution (9)
+1998,Trend only,0.609091,1.400001,,FAO,with pollution (9)
+1998,Best subset (BIC),-2.26171,1.400001,Catch,FAO,with pollution (9)
+1998,All drivers,-2.743653,1.400001,,FAO,with pollution (9)
+1998,LASSO,-0.233578,1.400001,,FAO,with pollution (9)
+1999,Trend only,0.643478,1.39,,FAO,with pollution (9)
+1999,Best subset (BIC),0.643478,1.39,,FAO,with pollution (9)
+1999,All drivers,0.775145,1.39,,FAO,with pollution (9)
+1999,LASSO,0.643478,1.39,,FAO,with pollution (9)
+2000,Trend only,0.674583,1.39,,FAO,with pollution (9)
+2000,Best subset (BIC),0.674583,1.39,,FAO,with pollution (9)
+2000,All drivers,-0.933006,1.39,,FAO,with pollution (9)
+2000,LASSO,0.573856,1.39,,FAO,with pollution (9)
+2001,Trend only,0.7032,-0.900002,,FAO,with pollution (9)
+2001,Best subset (BIC),0.7032,-0.900002,,FAO,with pollution (9)
+2001,All drivers,1.029354,-0.900002,,FAO,with pollution (9)
+2001,LASSO,0.7032,-0.900002,,FAO,with pollution (9)
+2002,Trend only,0.641538,-0.899994,,FAO,with pollution (9)
+2002,Best subset (BIC),0.641538,-0.899994,,FAO,with pollution (9)
+2002,All drivers,-1.553102,-0.899994,,FAO,with pollution (9)
+2002,LASSO,0.595432,-0.899994,,FAO,with pollution (9)
+2003,Trend only,0.584445,-0.900002,,FAO,with pollution (9)
+2003,Best subset (BIC),0.584445,-0.900002,,FAO,with pollution (9)
+2003,All drivers,-2.332826,-0.900002,,FAO,with pollution (9)
+2003,LASSO,0.584445,-0.900002,,FAO,with pollution (9)
+2004,Trend only,0.531429,-0.900002,,FAO,with pollution (9)
+2004,Best subset (BIC),1.136893,-0.900002,Catch,FAO,with pollution (9)
+2004,All drivers,0.574023,-0.900002,,FAO,with pollution (9)
+2004,LASSO,0.656733,-0.900002,,FAO,with pollution (9)
+2005,Trend only,0.482069,2.010003,,FAO,with pollution (9)
+2005,Best subset (BIC),0.482069,2.010003,,FAO,with pollution (9)
+2005,All drivers,0.610731,2.010003,,FAO,with pollution (9)
+2005,LASSO,0.34796,2.010003,,FAO,with pollution (9)
+2006,Trend only,0.533,2.009994,,FAO,with pollution (9)
+2006,Best subset (BIC),0.533,2.009994,,FAO,with pollution (9)
+2006,All drivers,-0.01484,2.009994,,FAO,with pollution (9)
+2006,LASSO,0.533,2.009994,,FAO,with pollution (9)
+2007,Trend only,0.580645,2.670006,,FAO,with pollution (9)
+2007,Best subset (BIC),0.580645,2.670006,,FAO,with pollution (9)
+2007,All drivers,1.075911,2.670006,,FAO,with pollution (9)
+2007,LASSO,0.580645,2.670006,,FAO,with pollution (9)
+2008,Trend only,0.645938,2.68,,FAO,with pollution (9)
+2008,Best subset (BIC),0.645938,2.68,,FAO,with pollution (9)
+2008,All drivers,0.529455,2.68,,FAO,with pollution (9)
+2008,LASSO,0.645938,2.68,,FAO,with pollution (9)
+2009,Trend only,0.707576,-2.530006,,FAO,with pollution (9)
+2009,Best subset (BIC),0.707576,-2.530006,,FAO,with pollution (9)
+2009,All drivers,-0.91742,-2.530006,,FAO,with pollution (9)
+2009,LASSO,0.707576,-2.530006,,FAO,with pollution (9)
+2010,Trend only,0.612353,-0.769997,,FAO,with pollution (9)
+2010,Best subset (BIC),0.612353,-0.769997,,FAO,with pollution (9)
+2010,All drivers,0.783933,-0.769997,,FAO,with pollution (9)
+2010,LASSO,0.612353,-0.769997,,FAO,with pollution (9)
+2011,Trend only,0.572857,-0.760002,,FAO,with pollution (9)
+2011,Best subset (BIC),0.572857,-0.760002,,FAO,with pollution (9)
+2011,All drivers,1.531486,-0.760002,,FAO,with pollution (9)
+2011,LASSO,0.572857,-0.760002,,FAO,with pollution (9)
+2012,Trend only,0.535833,1.540002,,FAO,with pollution (9)
+2012,Best subset (BIC),0.535833,1.540002,,FAO,with pollution (9)
+2012,All drivers,-0.136484,1.540002,,FAO,with pollution (9)
+2012,LASSO,0.535833,1.540002,,FAO,with pollution (9)
+2013,Trend only,0.562973,1.54,,FAO,with pollution (9)
+2013,Best subset (BIC),0.562973,1.54,,FAO,with pollution (9)
+2013,All drivers,-1.113801,1.54,,FAO,with pollution (9)
+2013,LASSO,0.562973,1.54,,FAO,with pollution (9)
+2014,Trend only,0.588684,0.67,,FAO,with pollution (9)
+2014,Best subset (BIC),0.588684,0.67,,FAO,with pollution (9)
+2014,All drivers,-0.287903,0.67,,FAO,with pollution (9)
+2014,LASSO,0.588684,0.67,,FAO,with pollution (9)
+2015,Trend only,0.590769,0.66,,FAO,with pollution (9)
+2015,Best subset (BIC),0.590769,0.66,,FAO,with pollution (9)
+2015,All drivers,-1.777647,0.66,,FAO,with pollution (9)
+2015,LASSO,0.590769,0.66,,FAO,with pollution (9)
+2016,Trend only,0.5925,0.409998,,FAO,with pollution (9)
+2016,Best subset (BIC),0.5925,0.409998,,FAO,with pollution (9)
+2016,All drivers,0.902944,0.409998,,FAO,with pollution (9)
+2016,LASSO,0.5925,0.409998,,FAO,with pollution (9)
+2017,Trend only,0.588049,0.410002,,FAO,with pollution (9)
+2017,Best subset (BIC),0.588049,0.410002,,FAO,with pollution (9)
+2017,All drivers,-0.129882,0.410002,,FAO,with pollution (9)
+2017,LASSO,0.588049,0.410002,,FAO,with pollution (9)
+1996,Trend only,0.8025,-1.330002,,FAO,"without pollution (6, as H6c)"
+1996,Best subset (BIC),0.8025,-1.330002,,FAO,"without pollution (6, as H6c)"
+1996,All drivers,-1.170172,-1.330002,,FAO,"without pollution (6, as H6c)"
+1996,LASSO,0.717627,-1.330002,,FAO,"without pollution (6, as H6c)"
+1997,Trend only,0.700952,-1.319999,,FAO,"without pollution (6, as H6c)"
+1997,Best subset (BIC),-0.205431,-1.319999,Catch,FAO,"without pollution (6, as H6c)"
+1997,All drivers,-2.052254,-1.319999,,FAO,"without pollution (6, as H6c)"
+1997,LASSO,0.700952,-1.319999,,FAO,"without pollution (6, as H6c)"
+1998,Trend only,0.609091,1.400001,,FAO,"without pollution (6, as H6c)"
+1998,Best subset (BIC),-2.26171,1.400001,Catch,FAO,"without pollution (6, as H6c)"
+1998,All drivers,-2.698075,1.400001,,FAO,"without pollution (6, as H6c)"
+1998,LASSO,-0.233578,1.400001,,FAO,"without pollution (6, as H6c)"
+1999,Trend only,0.643478,1.39,,FAO,"without pollution (6, as H6c)"
+1999,Best subset (BIC),0.643478,1.39,,FAO,"without pollution (6, as H6c)"
+1999,All drivers,0.444152,1.39,,FAO,"without pollution (6, as H6c)"
+1999,LASSO,0.642224,1.39,,FAO,"without pollution (6, as H6c)"
+2000,Trend only,0.674583,1.39,,FAO,"without pollution (6, as H6c)"
+2000,Best subset (BIC),0.674583,1.39,,FAO,"without pollution (6, as H6c)"
+2000,All drivers,-0.627268,1.39,,FAO,"without pollution (6, as H6c)"
+2000,LASSO,0.573856,1.39,,FAO,"without pollution (6, as H6c)"
+2001,Trend only,0.7032,-0.900002,,FAO,"without pollution (6, as H6c)"
+2001,Best subset (BIC),0.7032,-0.900002,,FAO,"without pollution (6, as H6c)"
+2001,All drivers,-0.014117,-0.900002,,FAO,"without pollution (6, as H6c)"
+2001,LASSO,0.7032,-0.900002,,FAO,"without pollution (6, as H6c)"
+2002,Trend only,0.641538,-0.899994,,FAO,"without pollution (6, as H6c)"
+2002,Best subset (BIC),0.641538,-0.899994,,FAO,"without pollution (6, as H6c)"
+2002,All drivers,-1.772728,-0.899994,,FAO,"without pollution (6, as H6c)"
+2002,LASSO,0.595432,-0.899994,,FAO,"without pollution (6, as H6c)"
+2003,Trend only,0.584445,-0.900002,,FAO,"without pollution (6, as H6c)"
+2003,Best subset (BIC),0.584445,-0.900002,,FAO,"without pollution (6, as H6c)"
+2003,All drivers,-1.298577,-0.900002,,FAO,"without pollution (6, as H6c)"
+2003,LASSO,0.584445,-0.900002,,FAO,"without pollution (6, as H6c)"
+2004,Trend only,0.531429,-0.900002,,FAO,"without pollution (6, as H6c)"
+2004,Best subset (BIC),1.136893,-0.900002,Catch,FAO,"without pollution (6, as H6c)"
+2004,All drivers,0.523612,-0.900002,,FAO,"without pollution (6, as H6c)"
+2004,LASSO,0.656733,-0.900002,,FAO,"without pollution (6, as H6c)"
+2005,Trend only,0.482069,2.010003,,FAO,"without pollution (6, as H6c)"
+2005,Best subset (BIC),0.482069,2.010003,,FAO,"without pollution (6, as H6c)"
+2005,All drivers,0.337734,2.010003,,FAO,"without pollution (6, as H6c)"
+2005,LASSO,0.34796,2.010003,,FAO,"without pollution (6, as H6c)"
+2006,Trend only,0.533,2.009994,,FAO,"without pollution (6, as H6c)"
+2006,Best subset (BIC),0.533,2.009994,,FAO,"without pollution (6, as H6c)"
+2006,All drivers,-0.621995,2.009994,,FAO,"without pollution (6, as H6c)"
+2006,LASSO,0.533,2.009994,,FAO,"without pollution (6, as H6c)"
+2007,Trend only,0.580645,2.670006,,FAO,"without pollution (6, as H6c)"
+2007,Best subset (BIC),0.580645,2.670006,,FAO,"without pollution (6, as H6c)"
+2007,All drivers,0.425333,2.670006,,FAO,"without pollution (6, as H6c)"
+2007,LASSO,0.580645,2.670006,,FAO,"without pollution (6, as H6c)"
+2008,Trend only,0.645938,2.68,,FAO,"without pollution (6, as H6c)"
+2008,Best subset (BIC),0.645938,2.68,,FAO,"without pollution (6, as H6c)"
+2008,All drivers,0.685053,2.68,,FAO,"without pollution (6, as H6c)"
+2008,LASSO,0.645938,2.68,,FAO,"without pollution (6, as H6c)"
+2009,Trend only,0.707576,-2.530006,,FAO,"without pollution (6, as H6c)"
+2009,Best subset (BIC),0.707576,-2.530006,,FAO,"without pollution (6, as H6c)"
+2009,All drivers,-0.962719,-2.530006,,FAO,"without pollution (6, as H6c)"
+2009,LASSO,0.707576,-2.530006,,FAO,"without pollution (6, as H6c)"
+2010,Trend only,0.612353,-0.769997,,FAO,"without pollution (6, as H6c)"
+2010,Best subset (BIC),0.612353,-0.769997,,FAO,"without pollution (6, as H6c)"
+2010,All drivers,0.327193,-0.769997,,FAO,"without pollution (6, as H6c)"
+2010,LASSO,0.612353,-0.769997,,FAO,"without pollution (6, as H6c)"
+2011,Trend only,0.572857,-0.760002,,FAO,"without pollution (6, as H6c)"
+2011,Best subset (BIC),0.572857,-0.760002,,FAO,"without pollution (6, as H6c)"
+2011,All drivers,0.84291,-0.760002,,FAO,"without pollution (6, as H6c)"
+2011,LASSO,0.572857,-0.760002,,FAO,"without pollution (6, as H6c)"
+2012,Trend only,0.535833,1.540002,,FAO,"without pollution (6, as H6c)"
+2012,Best subset (BIC),0.535833,1.540002,,FAO,"without pollution (6, as H6c)"
+2012,All drivers,0.315433,1.540002,,FAO,"without pollution (6, as H6c)"
+2012,LASSO,0.535833,1.540002,,FAO,"without pollution (6, as H6c)"
+2013,Trend only,0.562973,1.54,,FAO,"without pollution (6, as H6c)"
+2013,Best subset (BIC),0.562973,1.54,,FAO,"without pollution (6, as H6c)"
+2013,All drivers,-0.64941,1.54,,FAO,"without pollution (6, as H6c)"
+2013,LASSO,0.562973,1.54,,FAO,"without pollution (6, as H6c)"
+2014,Trend only,0.588684,0.67,,FAO,"without pollution (6, as H6c)"
+2014,Best subset (BIC),0.588684,0.67,,FAO,"without pollution (6, as H6c)"
+2014,All drivers,-0.741962,0.67,,FAO,"without pollution (6, as H6c)"
+2014,LASSO,0.588684,0.67,,FAO,"without pollution (6, as H6c)"
+2015,Trend only,0.590769,0.66,,FAO,"without pollution (6, as H6c)"
+2015,Best subset (BIC),0.590769,0.66,,FAO,"without pollution (6, as H6c)"
+2015,All drivers,-0.778918,0.66,,FAO,"without pollution (6, as H6c)"
+2015,LASSO,0.590769,0.66,,FAO,"without pollution (6, as H6c)"
+2016,Trend only,0.5925,0.409998,,FAO,"without pollution (6, as H6c)"
+2016,Best subset (BIC),0.5925,0.409998,,FAO,"without pollution (6, as H6c)"
+2016,All drivers,0.428672,0.409998,,FAO,"without pollution (6, as H6c)"
+2016,LASSO,0.5925,0.409998,,FAO,"without pollution (6, as H6c)"
+2017,Trend only,0.588049,0.410002,,FAO,"without pollution (6, as H6c)"
+2017,Best subset (BIC),0.588049,0.410002,,FAO,"without pollution (6, as H6c)"
+2017,All drivers,0.179809,0.410002,,FAO,"without pollution (6, as H6c)"
+2017,LASSO,0.588049,0.410002,,FAO,"without pollution (6, as H6c)"
+1993,Trend only,0.8345,1.65,,SAU,with pollution (9)
+1993,Best subset (BIC),1.831709,1.65,"Effort, SST, Ocean heat, N fertiliser",SAU,with pollution (9)
+1993,All drivers,1.64187,1.65,,SAU,with pollution (9)
+1993,LASSO,0.8345,1.65,,SAU,with pollution (9)
+1994,Trend only,0.873333,0.38,,SAU,with pollution (9)
+1994,Best subset (BIC),1.127763,0.38,"Effort, SST, Ocean heat, N fertiliser",SAU,with pollution (9)
+1994,All drivers,1.438699,0.38,,SAU,with pollution (9)
+1994,LASSO,1.38809,0.38,,SAU,with pollution (9)
+1995,Trend only,0.850909,-1.08,,SAU,with pollution (9)
+1995,Best subset (BIC),0.503053,-1.08,"Effort, SST, Ocean heat, N fertiliser",SAU,with pollution (9)
+1995,All drivers,0.711083,-1.08,,SAU,with pollution (9)
+1995,LASSO,0.87126,-1.08,,SAU,with pollution (9)
+1996,Trend only,0.766957,0.97,,SAU,with pollution (9)
+1996,Best subset (BIC),-0.038838,0.97,"Effort, SST, Ocean heat, Dams, N fertiliser",SAU,with pollution (9)
+1996,All drivers,0.374553,0.97,,SAU,with pollution (9)
+1996,LASSO,0.766957,0.97,,SAU,with pollution (9)
+1997,Trend only,0.775417,2.58,,SAU,with pollution (9)
+1997,Best subset (BIC),2.766605,2.58,"Effort, SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+1997,All drivers,2.63027,2.58,,SAU,with pollution (9)
+1997,LASSO,1.078561,2.58,,SAU,with pollution (9)
+1998,Trend only,0.8476,0.95,,SAU,with pollution (9)
+1998,Best subset (BIC),1.745813,0.95,"Effort, SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+1998,All drivers,1.484788,0.95,,SAU,with pollution (9)
+1998,LASSO,1.616871,0.95,,SAU,with pollution (9)
+1999,Trend only,0.851538,1.29,,SAU,with pollution (9)
+1999,Best subset (BIC),-0.89222,1.29,"Effort, SST, Ocean heat, N fertiliser",SAU,with pollution (9)
+1999,All drivers,-0.642319,1.29,,SAU,with pollution (9)
+1999,LASSO,0.338287,1.29,,SAU,with pollution (9)
+2000,Trend only,0.867778,1.28,,SAU,with pollution (9)
+2000,Best subset (BIC),2.147068,1.28,"SST, Ocean heat, Aquaculture, N fertiliser, Plastic",SAU,with pollution (9)
+2000,All drivers,2.13432,1.28,,SAU,with pollution (9)
+2000,LASSO,1.405161,1.28,,SAU,with pollution (9)
+2001,Trend only,0.8825,1.51,,SAU,with pollution (9)
+2001,Best subset (BIC),1.073658,1.51,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2001,All drivers,0.338217,1.51,,SAU,with pollution (9)
+2001,LASSO,1.047698,1.51,,SAU,with pollution (9)
+2002,Trend only,0.904138,1.89,,SAU,with pollution (9)
+2002,Best subset (BIC),1.689044,1.89,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2002,All drivers,1.898399,1.89,,SAU,with pollution (9)
+2002,LASSO,1.35835,1.89,,SAU,with pollution (9)
+2003,Trend only,0.937,1.0,,SAU,with pollution (9)
+2003,Best subset (BIC),1.881319,1.0,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2003,All drivers,2.175419,1.0,,SAU,with pollution (9)
+2003,LASSO,1.150605,1.0,,SAU,with pollution (9)
+2004,Trend only,0.939032,0.94,,SAU,with pollution (9)
+2004,Best subset (BIC),0.814106,0.94,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2004,All drivers,0.628034,0.94,,SAU,with pollution (9)
+2004,LASSO,0.907134,0.94,,SAU,with pollution (9)
+2005,Trend only,0.939063,1.66,,SAU,with pollution (9)
+2005,Best subset (BIC),0.814803,1.66,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2005,All drivers,0.38118,1.66,,SAU,with pollution (9)
+2005,LASSO,1.09203,1.66,,SAU,with pollution (9)
+2006,Trend only,0.960909,0.63,,SAU,with pollution (9)
+2006,Best subset (BIC),1.203804,0.63,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2006,All drivers,1.339623,0.63,,SAU,with pollution (9)
+2006,LASSO,0.983167,0.63,,SAU,with pollution (9)
+2007,Trend only,0.951176,1.84,,SAU,with pollution (9)
+2007,Best subset (BIC),0.467345,1.84,"SST, Ocean heat, Aquaculture, N fertiliser",SAU,with pollution (9)
+2007,All drivers,0.479406,1.84,,SAU,with pollution (9)
+2007,LASSO,0.886962,1.84,,SAU,with pollution (9)
+2008,Trend only,0.976571,1.45,,SAU,with pollution (9)
+2008,Best subset (BIC),1.684013,1.45,"Catch, N fertiliser",SAU,with pollution (9)
+2008,All drivers,1.19258,1.45,,SAU,with pollution (9)
+2008,LASSO,1.279101,1.45,,SAU,with pollution (9)
+2009,Trend only,0.989722,-0.56,,SAU,with pollution (9)
+2009,Best subset (BIC),1.180524,-0.56,"Catch, N fertiliser",SAU,with pollution (9)
+2009,All drivers,1.453398,-0.56,,SAU,with pollution (9)
+2009,LASSO,1.243601,-0.56,,SAU,with pollution (9)
+2010,Trend only,0.947838,1.14,,SAU,with pollution (9)
+2010,Best subset (BIC),1.148487,1.14,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2010,All drivers,1.208227,1.14,,SAU,with pollution (9)
+2010,LASSO,0.963083,1.14,,SAU,with pollution (9)
+2011,Trend only,0.952895,-0.01,,SAU,with pollution (9)
+2011,Best subset (BIC),0.450902,-0.01,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2011,All drivers,0.714391,-0.01,,SAU,with pollution (9)
+2011,LASSO,0.930812,-0.01,,SAU,with pollution (9)
+2012,Trend only,0.928205,1.78,,SAU,with pollution (9)
+2012,Best subset (BIC),1.535319,1.78,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2012,All drivers,1.468093,1.78,,SAU,with pollution (9)
+2012,LASSO,1.196656,1.78,,SAU,with pollution (9)
+2013,Trend only,0.9495,1.07,,SAU,with pollution (9)
+2013,Best subset (BIC),0.923976,1.07,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2013,All drivers,1.154464,1.07,,SAU,with pollution (9)
+2013,LASSO,0.992959,1.07,,SAU,with pollution (9)
+2014,Trend only,0.952439,-0.06,,SAU,with pollution (9)
+2014,Best subset (BIC),1.165571,-0.06,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2014,All drivers,1.356005,-0.06,,SAU,with pollution (9)
+2014,LASSO,1.039776,-0.06,,SAU,with pollution (9)
+2015,Trend only,0.928333,-0.76,,SAU,with pollution (9)
+2015,Best subset (BIC),1.395389,-0.76,"Catch, N fertiliser, Plastic",SAU,with pollution (9)
+2015,All drivers,1.712214,-0.76,,SAU,with pollution (9)
+2015,LASSO,1.098066,-0.76,,SAU,with pollution (9)
+2016,Trend only,0.88907,0.08,,SAU,with pollution (9)
+2016,Best subset (BIC),1.258364,0.08,"Catch, N fertiliser",SAU,with pollution (9)
+2016,All drivers,1.424654,0.08,,SAU,with pollution (9)
+2016,LASSO,0.944883,0.08,,SAU,with pollution (9)
+2017,Trend only,0.870682,1.29,,SAU,with pollution (9)
+2017,Best subset (BIC),0.748201,1.29,"Catch, N fertiliser",SAU,with pollution (9)
+2017,All drivers,0.590886,1.29,,SAU,with pollution (9)
+2017,LASSO,0.854709,1.29,,SAU,with pollution (9)
+1993,Trend only,0.8345,1.65,,SAU,"without pollution (6, as H6c)"
+1993,Best subset (BIC),1.641436,1.65,"Catch, Dams",SAU,"without pollution (6, as H6c)"
+1993,All drivers,1.257452,1.65,,SAU,"without pollution (6, as H6c)"
+1993,LASSO,0.8345,1.65,,SAU,"without pollution (6, as H6c)"
+1994,Trend only,0.873333,0.38,,SAU,"without pollution (6, as H6c)"
+1994,Best subset (BIC),1.226945,0.38,"Catch, Dams",SAU,"without pollution (6, as H6c)"
+1994,All drivers,1.398293,0.38,,SAU,"without pollution (6, as H6c)"
+1994,LASSO,1.345677,0.38,,SAU,"without pollution (6, as H6c)"
+1995,Trend only,0.850909,-1.08,,SAU,"without pollution (6, as H6c)"
+1995,Best subset (BIC),1.704657,-1.08,"Catch, Dams",SAU,"without pollution (6, as H6c)"
+1995,All drivers,1.820883,-1.08,,SAU,"without pollution (6, as H6c)"
+1995,LASSO,1.474079,-1.08,,SAU,"without pollution (6, as H6c)"
+1996,Trend only,0.766957,0.97,,SAU,"without pollution (6, as H6c)"
+1996,Best subset (BIC),0.766957,0.97,,SAU,"without pollution (6, as H6c)"
+1996,All drivers,1.387621,0.97,,SAU,"without pollution (6, as H6c)"
+1996,LASSO,0.766957,0.97,,SAU,"without pollution (6, as H6c)"
+1997,Trend only,0.775417,2.58,,SAU,"without pollution (6, as H6c)"
+1997,Best subset (BIC),0.775417,2.58,,SAU,"without pollution (6, as H6c)"
+1997,All drivers,1.924288,2.58,,SAU,"without pollution (6, as H6c)"
+1997,LASSO,0.810485,2.58,,SAU,"without pollution (6, as H6c)"
+1998,Trend only,0.8476,0.95,,SAU,"without pollution (6, as H6c)"
+1998,Best subset (BIC),1.072393,0.95,SST,SAU,"without pollution (6, as H6c)"
+1998,All drivers,1.906981,0.95,,SAU,"without pollution (6, as H6c)"
+1998,LASSO,1.269164,0.95,,SAU,"without pollution (6, as H6c)"
+1999,Trend only,0.851538,1.29,,SAU,"without pollution (6, as H6c)"
+1999,Best subset (BIC),-0.1268,1.29,SST,SAU,"without pollution (6, as H6c)"
+1999,All drivers,0.339434,1.29,,SAU,"without pollution (6, as H6c)"
+1999,LASSO,0.58443,1.29,,SAU,"without pollution (6, as H6c)"
+2000,Trend only,0.867778,1.28,,SAU,"without pollution (6, as H6c)"
+2000,Best subset (BIC),0.867778,1.28,,SAU,"without pollution (6, as H6c)"
+2000,All drivers,1.459772,1.28,,SAU,"without pollution (6, as H6c)"
+2000,LASSO,0.867778,1.28,,SAU,"without pollution (6, as H6c)"
+2001,Trend only,0.8825,1.51,,SAU,"without pollution (6, as H6c)"
+2001,Best subset (BIC),1.079499,1.51,Aquaculture,SAU,"without pollution (6, as H6c)"
+2001,All drivers,1.409781,1.51,,SAU,"without pollution (6, as H6c)"
+2001,LASSO,0.926622,1.51,,SAU,"without pollution (6, as H6c)"
+2002,Trend only,0.904138,1.89,,SAU,"without pollution (6, as H6c)"
+2002,Best subset (BIC),1.026628,1.89,Aquaculture,SAU,"without pollution (6, as H6c)"
+2002,All drivers,1.849383,1.89,,SAU,"without pollution (6, as H6c)"
+2002,LASSO,0.920092,1.89,,SAU,"without pollution (6, as H6c)"
+2003,Trend only,0.937,1.0,,SAU,"without pollution (6, as H6c)"
+2003,Best subset (BIC),1.122758,1.0,Aquaculture,SAU,"without pollution (6, as H6c)"
+2003,All drivers,1.96179,1.0,,SAU,"without pollution (6, as H6c)"
+2003,LASSO,1.450931,1.0,,SAU,"without pollution (6, as H6c)"
+2004,Trend only,0.939032,0.94,,SAU,"without pollution (6, as H6c)"
+2004,Best subset (BIC),0.944393,0.94,Aquaculture,SAU,"without pollution (6, as H6c)"
+2004,All drivers,1.182154,0.94,,SAU,"without pollution (6, as H6c)"
+2004,LASSO,1.113498,0.94,,SAU,"without pollution (6, as H6c)"
+2005,Trend only,0.939063,1.66,,SAU,"without pollution (6, as H6c)"
+2005,Best subset (BIC),1.109262,1.66,Aquaculture,SAU,"without pollution (6, as H6c)"
+2005,All drivers,1.074157,1.66,,SAU,"without pollution (6, as H6c)"
+2005,LASSO,1.134666,1.66,,SAU,"without pollution (6, as H6c)"
+2006,Trend only,0.960909,0.63,,SAU,"without pollution (6, as H6c)"
+2006,Best subset (BIC),1.105181,0.63,Aquaculture,SAU,"without pollution (6, as H6c)"
+2006,All drivers,1.513724,0.63,,SAU,"without pollution (6, as H6c)"
+2006,LASSO,1.169502,0.63,,SAU,"without pollution (6, as H6c)"
+2007,Trend only,0.951176,1.84,,SAU,"without pollution (6, as H6c)"
+2007,Best subset (BIC),1.168944,1.84,Aquaculture,SAU,"without pollution (6, as H6c)"
+2007,All drivers,1.136486,1.84,,SAU,"without pollution (6, as H6c)"
+2007,LASSO,1.127779,1.84,,SAU,"without pollution (6, as H6c)"
+2008,Trend only,0.976571,1.45,,SAU,"without pollution (6, as H6c)"
+2008,Best subset (BIC),1.15285,1.45,Aquaculture,SAU,"without pollution (6, as H6c)"
+2008,All drivers,1.393271,1.45,,SAU,"without pollution (6, as H6c)"
+2008,LASSO,1.183773,1.45,,SAU,"without pollution (6, as H6c)"
+2009,Trend only,0.989722,-0.56,,SAU,"without pollution (6, as H6c)"
+2009,Best subset (BIC),1.230236,-0.56,Aquaculture,SAU,"without pollution (6, as H6c)"
+2009,All drivers,1.872477,-0.56,,SAU,"without pollution (6, as H6c)"
+2009,LASSO,1.371057,-0.56,,SAU,"without pollution (6, as H6c)"
+2010,Trend only,0.947838,1.14,,SAU,"without pollution (6, as H6c)"
+2010,Best subset (BIC),1.110235,1.14,Aquaculture,SAU,"without pollution (6, as H6c)"
+2010,All drivers,1.347985,1.14,,SAU,"without pollution (6, as H6c)"
+2010,LASSO,1.222439,1.14,,SAU,"without pollution (6, as H6c)"
+2011,Trend only,0.952895,-0.01,,SAU,"without pollution (6, as H6c)"
+2011,Best subset (BIC),1.186919,-0.01,Aquaculture,SAU,"without pollution (6, as H6c)"
+2011,All drivers,1.246835,-0.01,,SAU,"without pollution (6, as H6c)"
+2011,LASSO,1.108374,-0.01,,SAU,"without pollution (6, as H6c)"
+2012,Trend only,0.928205,1.78,,SAU,"without pollution (6, as H6c)"
+2012,Best subset (BIC),0.928205,1.78,,SAU,"without pollution (6, as H6c)"
+2012,All drivers,1.250049,1.78,,SAU,"without pollution (6, as H6c)"
+2012,LASSO,0.938193,1.78,,SAU,"without pollution (6, as H6c)"
+2013,Trend only,0.9495,1.07,,SAU,"without pollution (6, as H6c)"
+2013,Best subset (BIC),0.90103,1.07,Catch,SAU,"without pollution (6, as H6c)"
+2013,All drivers,1.191287,1.07,,SAU,"without pollution (6, as H6c)"
+2013,LASSO,1.027539,1.07,,SAU,"without pollution (6, as H6c)"
+2014,Trend only,0.952439,-0.06,,SAU,"without pollution (6, as H6c)"
+2014,Best subset (BIC),1.001464,-0.06,Catch,SAU,"without pollution (6, as H6c)"
+2014,All drivers,1.440203,-0.06,,SAU,"without pollution (6, as H6c)"
+2014,LASSO,1.070261,-0.06,,SAU,"without pollution (6, as H6c)"
+2015,Trend only,0.928333,-0.76,,SAU,"without pollution (6, as H6c)"
+2015,Best subset (BIC),0.938986,-0.76,Catch,SAU,"without pollution (6, as H6c)"
+2015,All drivers,1.23808,-0.76,,SAU,"without pollution (6, as H6c)"
+2015,LASSO,0.928333,-0.76,,SAU,"without pollution (6, as H6c)"
+2016,Trend only,0.88907,0.08,,SAU,"without pollution (6, as H6c)"
+2016,Best subset (BIC),0.88907,0.08,,SAU,"without pollution (6, as H6c)"
+2016,All drivers,1.358052,0.08,,SAU,"without pollution (6, as H6c)"
+2016,LASSO,0.88907,0.08,,SAU,"without pollution (6, as H6c)"
+2017,Trend only,0.870682,1.29,,SAU,"without pollution (6, as H6c)"
+2017,Best subset (BIC),0.870682,1.29,,SAU,"without pollution (6, as H6c)"
+2017,All drivers,0.735399,1.29,,SAU,"without pollution (6, as H6c)"
+2017,LASSO,0.870682,1.29,,SAU,"without pollution (6, as H6c)"

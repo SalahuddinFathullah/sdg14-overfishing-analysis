@@ -13,7 +13,7 @@ Order (the data-analytics lifecycle: understand and check the data before analys
     0  0-data-quality/quality_tests.py      validation against alternative sources + integrity
     1  1-visualisation/visualise.py         exploratory figures (from the checked data)
     2  2-statistical-tests/stat_tests.py    course-method tests
-    3  3-hypothesis-tests/hypothesis_tests.py   hypothesis tests, 6 iterations
+    3  3-hypothesis-tests/hypothesis_tests.py   hypothesis tests, 7 iterations
     4  4-overview/overview.py               report-level summaries + figure catalogue
     4  dashboard/build_dashboard.py         offline interactive results page
 

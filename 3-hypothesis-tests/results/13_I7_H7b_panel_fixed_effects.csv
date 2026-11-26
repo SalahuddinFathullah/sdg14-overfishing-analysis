@@ -1,0 +1,25 @@
+driver,response,timing,spec,units,years,n_obs,beta,cluster_se,p_wild_bootstrap,beta_standardised,worse_direction,p_holm,significant_holm
+log N fertiliser per ha,% overexploited,same year,country + year FE,5,1961–2019,295,-2.070717,2.517475,0.428755,-0.100728,False,1.0,False
+log N fertiliser per ha,% overexploited,same year,country + year FE + country trends,5,1961–2019,295,3.822042,2.689418,0.416152,0.166994,True,1.0,False
+log N fertiliser per ha,mean trophic level,same year,country + year FE,5,1961–2019,295,0.036763,0.056552,0.602109,0.201389,False,1.0,False
+log N fertiliser per ha,mean trophic level,same year,country + year FE + country trends,5,1961–2019,295,-0.029648,0.021378,0.395576,-0.161261,True,1.0,False
+log N fertiliser per ha,% overexploited,mean of previous 5 years,country + year FE,5,1966–2019,270,-3.499044,3.344167,0.329218,-0.139197,False,1.0,False
+log N fertiliser per ha,% overexploited,mean of previous 5 years,country + year FE + country trends,5,1966–2019,270,4.457125,5.80073,0.626029,0.147434,True,1.0,False
+log N fertiliser per ha,mean trophic level,mean of previous 5 years,country + year FE,5,1966–2019,270,0.030527,0.049977,0.551698,0.198496,False,1.0,False
+log N fertiliser per ha,mean trophic level,mean of previous 5 years,country + year FE + country trends,5,1966–2019,270,-0.039451,0.026537,0.348508,-0.231005,True,1.0,False
+log pesticides per ha,% overexploited,same year,country + year FE,5,1990–2019,150,-2.709494,6.121456,0.811986,-0.085208,False,1.0,False
+log pesticides per ha,% overexploited,same year,country + year FE + country trends,5,1990–2019,150,4.400794,2.395738,0.118313,0.217068,True,1.0,False
+log pesticides per ha,mean trophic level,same year,country + year FE,5,1990–2019,150,0.032835,0.020352,0.049126,0.26085,False,1.0,False
+log pesticides per ha,mean trophic level,same year,country + year FE + country trends,5,1990–2019,150,0.018204,0.015178,0.290895,0.192677,False,1.0,False
+log pesticides per ha,% overexploited,mean of previous 5 years,country + year FE,5,1995–2019,125,1.26637,8.747985,0.855195,0.031918,True,1.0,False
+log pesticides per ha,% overexploited,mean of previous 5 years,country + year FE + country trends,5,1995–2019,125,7.430476,3.651958,0.151235,0.269864,True,1.0,False
+log pesticides per ha,mean trophic level,mean of previous 5 years,country + year FE,5,1995–2019,125,0.048083,0.051072,0.375257,0.291841,False,1.0,False
+log pesticides per ha,mean trophic level,mean of previous 5 years,country + year FE + country trends,5,1995–2019,125,0.009859,0.02717,0.646862,0.077566,False,1.0,False
+chlorophyll-a deviation (%),% overexploited,same year,country + year FE,5,2005–2019,75,-0.649712,0.711705,0.481996,-0.117215,False,1.0,False
+chlorophyll-a deviation (%),% overexploited,same year,country + year FE + country trends,5,2005–2019,75,-0.663272,0.701308,0.551698,-0.126306,False,1.0,False
+chlorophyll-a deviation (%),mean trophic level,same year,country + year FE,5,2005–2019,75,-0.007535,0.007088,0.16178,-0.233557,True,1.0,False
+chlorophyll-a deviation (%),mean trophic level,same year,country + year FE + country trends,5,2005–2019,75,-0.00237,0.002792,0.374743,-0.113807,True,1.0,False
+chlorophyll-a deviation (%),% overexploited,mean of previous 5 years,country + year FE,5,2010–2019,50,5.250784,2.477325,0.154321,0.516456,True,1.0,False
+chlorophyll-a deviation (%),% overexploited,mean of previous 5 years,country + year FE + country trends,5,2010–2019,50,2.370606,1.228185,0.149434,0.223471,True,1.0,False
+chlorophyll-a deviation (%),mean trophic level,mean of previous 5 years,country + year FE,5,2010–2019,50,-0.023097,0.016679,0.399949,-0.366317,True,1.0,False
+chlorophyll-a deviation (%),mean trophic level,mean of previous 5 years,country + year FE + country trends,5,2010–2019,50,-0.0133,0.009371,0.20036,-0.170678,True,1.0,False

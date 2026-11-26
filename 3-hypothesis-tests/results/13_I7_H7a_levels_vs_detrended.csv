@@ -1,0 +1,13 @@
+driver,response,years,n_years,spearman_levels,p_levels,spearman_detrended,p_detrended,spearman_quad_detrended,p_quad_detrended,p_detrended_holm,p_quad_holm,consistent_link
+Nitrogen fertiliser per ha,FAO % overexploited,1974–2021,48,0.943118,0.0,0.424989,0.002604,0.255862,0.079211,0.026042,0.554474,False
+Nitrogen fertiliser per ha,SAU % overexploited,1961–2019,59,0.989816,0.0,-0.803565,0.0,-0.677849,0.0,0.0,0.0,True
+Pesticides per ha,FAO % overexploited,1990–2021,32,0.930889,0.0,-0.130865,0.475282,-0.070381,0.701889,1.0,1.0,False
+Pesticides per ha,SAU % overexploited,1990–2019,30,0.987871,0.0,0.27386,0.143079,0.349055,0.058682,1.0,0.469458,False
+Plastic production,FAO % overexploited,1975–2019,45,0.937418,0.0,0.213834,0.158407,-0.30751,0.039891,1.0,0.383414,False
+Plastic production,SAU % overexploited,1950–2019,69,0.999004,0.0,-0.887614,0.0,-0.508257,8e-06,0.0,9.1e-05,True
+Oil spills (number ≥ 7 t),FAO % overexploited,1974–2021,48,-0.934598,0.0,-0.206253,0.159585,-0.299935,0.038341,1.0,0.383414,False
+Oil spills (number ≥ 7 t),SAU % overexploited,1970–2019,50,-0.888876,0.0,0.026074,0.857356,0.181369,0.207483,1.0,1.0,False
+Oil spilled (tonnes),FAO % overexploited,1974–2021,48,-0.78739,0.0,-0.037125,0.802186,-0.029092,0.844385,1.0,1.0,False
+Oil spilled (tonnes),SAU % overexploited,1970–2019,50,-0.788672,0.0,-0.027707,0.848526,0.015798,0.913288,1.0,1.0,False
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,1990–2021,32,0.951246,0.0,0.218109,0.230441,0.267962,0.138132,1.0,0.828791,False
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,1990–2019,30,0.970075,0.0,-0.110122,0.562385,-0.185762,0.325698,1.0,1.0,False

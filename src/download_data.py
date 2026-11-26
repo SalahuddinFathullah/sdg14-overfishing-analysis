@@ -54,6 +54,18 @@ Sources
    - validation/climate/sea_eez_sst_ersst.csv   annual EEZ-mean SST per SEA5 country and 'SEA'
                                                 from NOAA ERSST v5 (PSL OPeNDAP), 1950-2025
 
+8. Sea and water pollution (iteration 7 of the analysis)  ->  data/raw/owid/
+   - nitrogen-fertilizer-application-per-hectare-of-cropland.csv  FAO, kg N/ha, World + SEA5, 1961-2024
+   - pesticide-use-per-hectare-of-cropland.csv   FAO, kg/ha, World + SEA5, 1990-2024
+   - chlorophyll-a-deviation-from-the-global-average.csv  SDG 14.1.1a, %, World + SEA5, 2005-2022
+   - global-plastics-production.csv      Geyer et al. (2017), t/year, World, 1950-2019 (no 1974)
+   - number-oil-spills.csv, quantity-oil-spills.csv   ITOPF tanker spills >= 7 t, World, 1970-2025
+   - seawater-ph.csv                     HOT / Station ALOHA (Hawaii) surface pH, kept whole
+   - coastal-eutrophication.csv          modelled N and P loading, the 5 SEA large marine ecosystems,
+                                         2000-2015
+   - plastic-waste-emitted-to-the-ocean.csv, mismanaged-plastic-waste-per-capita.csv   2019 snapshot
+   - beach-litter.csv                    SDG 14.1.1b, items per km2, sparse 2015-2022
+
 7. Human use of the sea (iteration 4 of the analysis)  ->  data/raw/validation/human_use/
    - wb_shipping.csv            World Bank WDI: container port traffic (TEU, UNCTAD data) and liner
                                 shipping connectivity index; current WDI + the WDI Dec-2020 archive
@@ -76,6 +88,7 @@ Usage
     python src/download_data.py --only effort       # streams ~110 MB of IMAS CSVs
     python src/download_data.py --only climate      # OWID SST/ocean heat + NOAA ERSST v5 for SEA EEZs
     python src/download_data.py --only human_use    # shipping, dams, offshore wind/platforms (~20 MB)
+    python src/download_data.py --only pollution    # fertiliser, pesticides, plastic, oil spills, pH (OWID)
 
 Notes
 -----
@@ -118,6 +131,23 @@ OWID_DATASETS = {
     "fish-discards": True,
     "aquaculture-farmed-fish-production": True,
 }
+
+# Iteration 7 (pollution): slug -> entities kept ("SEA" = World + SEA5, "LME" = the 5 SEA large marine
+# ecosystems, None = whole file)
+OWID_POLLUTION = {
+    "nitrogen-fertilizer-application-per-hectare-of-cropland": "SEA",
+    "pesticide-use-per-hectare-of-cropland": "SEA",
+    "chlorophyll-a-deviation-from-the-global-average": "SEA",
+    "global-plastics-production": "SEA",
+    "number-oil-spills": "SEA",
+    "quantity-oil-spills": "SEA",
+    "plastic-waste-emitted-to-the-ocean": "SEA",
+    "mismanaged-plastic-waste-per-capita": "SEA",
+    "beach-litter": "SEA",
+    "coastal-eutrophication": "LME",
+    "seawater-ph": None,
+}
+SEA_LMES = ["Bay of Bengal", "Gulf of Thailand", "South China Sea", "Sulu-Celebes Sea", "Indonesian Sea"]
 
 SAU_BASE = "https://api.seaaroundus.org/api/v1/eez"
 
@@ -763,6 +793,17 @@ def download_human_use() -> None:
         f"{r},{y},{a[0]},{a[1]},{a[2]}\n" for (r, y), a in sorted(agg.items())), encoding="utf-8")
 
 
+def download_pollution() -> None:
+    """OWID pollution series for iteration 7, filtered on the text lines (numbers keep their formatting)."""
+    for slug, keep in OWID_POLLUTION.items():
+        print(f"OWID  {slug}")
+        lines = get(OWID_BASE.format(slug=slug)).decode("utf-8").strip().split("\n")
+        if keep:
+            names = set(OWID_KEEP_ENTITIES if keep == "SEA" else SEA_LMES)
+            lines = [lines[0]] + [r for r in lines[1:] if next(csv.reader([r]))[0] in names]
+        (RAW_DIR / "owid" / f"{slug}.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -776,11 +817,13 @@ def write_manifest(parts: list[str]) -> None:
 # --------------------------------------------------------------------------- #
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate", "human_use"],
+    parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate", "human_use",
+                                           "pollution"],
                         help="download one part only")
     args = parser.parse_args()
 
-    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate", "human_use"]
+    parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate", "human_use",
+                                           "pollution"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
@@ -795,6 +838,8 @@ def main() -> None:
         download_climate()
     if "human_use" in parts:
         download_human_use()
+    if "pollution" in parts:
+        download_pollution()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

@@ -378,6 +378,100 @@ def aquaculture() -> pd.DataFrame:
     return df
 
 
+# --------------------------------------------------------------------------- #
+# Iteration 7 — sea and water pollution (all OWID files in data/raw/owid/)
+# --------------------------------------------------------------------------- #
+def _owid_wide(slug: str, col: str | int = -1, mean_sea: bool = True) -> pd.DataFrame:
+    """Year × entity table of one OWID value column (World + SEA5); 'SEA' = simple mean of the 5 countries."""
+    o = owid(slug)
+    c = col if isinstance(col, str) else o.columns[col]
+    df = o[o["Entity"].isin(SEA5 + ["World"])].pivot(index="Year", columns="Entity", values=c).astype(float)
+    if mean_sea:
+        df["SEA"] = df[SEA5].mean(axis=1, skipna=False)
+    return df
+
+
+def n_fertiliser() -> pd.DataFrame:
+    """Nitrogen fertiliser applied per hectare of cropland (kg N/ha), FAO via OWID, 1961–2024."""
+    return _owid_wide("nitrogen-fertilizer-application-per-hectare-of-cropland")
+
+
+def pesticides() -> pd.DataFrame:
+    """Pesticides applied per hectare of cropland (kg/ha), FAO via OWID, 1990–2024."""
+    return _owid_wide("pesticide-use-per-hectare-of-cropland")
+
+
+def chlorophyll() -> pd.DataFrame:
+    """SDG 14.1.1a coastal eutrophication proxy: chlorophyll-a deviation (%), remote sensing, 2005–2022."""
+    return _owid_wide("chlorophyll-a-deviation-from-the-global-average")
+
+
+def plastic_production() -> pd.Series:
+    """World plastic production (t/year), Geyer et al. via OWID, 1950–2019 (1974 not reported)."""
+    return owid_series("global-plastics-production", "World")
+
+
+def oil_spills() -> pd.DataFrame:
+    """World tanker oil spills ≥ 7 t (ITOPF via OWID), 1970–2025: counts by size and tonnes spilled."""
+    n = owid("number-oil-spills").set_index("Year")
+    q = owid("quantity-oil-spills").set_index("Year")
+    out = pd.DataFrame({"large": n.iloc[:, -2], "medium": n.iloc[:, -1]}).astype(float)
+    out["n_spills"] = out["large"] + out["medium"]
+    out["tonnes"] = q.iloc[:, -1].astype(float)
+    return out
+
+
+def seawater_ph() -> pd.Series:
+    """
+    Ocean acidification: surface seawater pH at Station ALOHA, Hawaii (HOT), the longest open-ocean pH
+    record (OWID). Calendar-year mean of the deseasonalised running annual average, 1990–2024 (the
+    running mean is first available in Nov 1989). Lower pH = more acidic.
+    """
+    d = owid("seawater-ph").dropna(subset=["Annual average"])
+    d["year"] = pd.to_datetime(d["Day"]).dt.year
+    s = d.groupby("year")["Annual average"].mean()
+    return s.loc[1990:]
+
+
+def coastal_nutrients() -> pd.DataFrame:
+    """Modelled nitrogen and phosphorus loading (t/yr) to the 5 SEA large marine ecosystems, 2000–2015."""
+    return owid("coastal-eutrophication").rename(columns={"Entity": "lme", "Year": "year"})
+
+
+# Sea Around Us LME files (validation/sau_regions) ↔ the LME names used in the OWID nutrient file
+SAU_LME = {"lme_34_bay_of_bengal": "Bay of Bengal", "lme_35_gulf_of_thailand": "Gulf of Thailand",
+           "lme_36_south_china_sea": "South China Sea", "lme_37_sulu_celebes_sea": "Sulu-Celebes Sea",
+           "lme_38_indonesian_sea": "Indonesian Sea"}
+
+
+def sau_lme_panel() -> pd.DataFrame:
+    """
+    Long table (lme, year, over, mtl) for the 5 SEA large marine ecosystems, 1950–2019:
+    over = Sea Around Us % of stocks collapsed or over-exploited, mtl = mean trophic level of the catch.
+    LME names match coastal_nutrients(), so the two can be joined on (lme, year).
+    """
+    rows = []
+    for stem, lme in SAU_LME.items():
+        over = sau_overexploited(VAL / "sau_regions" / "stock_status" / f"{stem}.csv").rename("over")
+        mtl = pd.read_csv(VAL / "sau_regions" / "marine_trophic_index" / f"{stem}.csv").set_index("year")[
+            "mean_trophic_level"].rename("mtl")
+        d = pd.concat([over, mtl], axis=1).rename_axis("year").reset_index()
+        rows.append(d.assign(lme=lme))
+    return pd.concat(rows, ignore_index=True)[["lme", "year", "over", "mtl"]]
+
+
+def plastic_cross_section() -> pd.DataFrame:
+    """2019 snapshot per entity: plastic emitted to the ocean (t) and mismanaged plastic waste (kg/person)."""
+    e = owid("plastic-waste-emitted-to-the-ocean").set_index("Entity").iloc[:, -1]
+    m = owid("mismanaged-plastic-waste-per-capita").set_index("Entity").iloc[:, -1]
+    return pd.DataFrame({"plastic_to_ocean_t": e, "mismanaged_kg_per_person": m})
+
+
+def beach_litter() -> pd.DataFrame:
+    """SDG 14.1.1b beach litter (items per km²), 2015–2022, sparse (no 2019–2020 country values)."""
+    return _owid_wide("beach-litter", mean_sea=False)
+
+
 def eez_full_panel() -> pd.DataFrame:
     """Cleaned EEZ-year table (0-data-quality/clean_data.py output): adds industrial and rebuilding shares."""
     p = pd.read_csv(PROC / "sea_eez_annual.csv")

@@ -1,0 +1,313 @@
+unit,driver,response,pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm,p_holm_all
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,-0.264726,0.044623,-0.19247,0.257361,0.490851,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,0.049188,0.716341,0.066502,0.259608,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,0.055681,0.683569,0.221668,0.261916,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,-0.177852,0.193917,-0.088817,0.264286,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,-0.046143,0.740399,-0.048142,0.266722,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,0.098728,0.481847,0.04596,0.269227,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,-0.097294,0.492604,-0.16947,0.271803,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,0.035146,0.806578,0.1819,0.274455,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,-0.019161,0.894925,0.140072,0.277186,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,-0.17978,0.216432,-0.101429,0.28,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ % overexploited,SEA: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,0.077402,0.601038,0.125054,0.282902,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,0,58,0.090579,0.498909,0.015534,0.257361,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,1,57,-0.213822,0.110245,-0.106754,0.259608,0.992208,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,2,56,-0.034541,0.800478,-0.184416,0.261916,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,3,55,0.253954,0.061357,0.084776,0.264286,0.613566,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,4,54,-0.028085,0.840237,-0.173089,0.266722,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,5,53,0.167299,0.231161,0.03951,0.269227,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,6,52,-0.020532,0.885125,-0.150004,0.271803,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,7,51,0.06504,0.650231,0.02552,0.274455,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,8,50,-0.09124,0.52859,-0.11443,0.277186,1.0,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,9,49,-0.310701,0.029791,-0.225612,0.28,0.327703,False,1.0
+SEA,Nitrogen fertiliser per ha,Δ MTL,SEA: Nitrogen fertiliser per ha -> Δ MTL,10,48,-0.019383,0.895964,-0.120061,0.282902,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,0,29,-0.111196,0.565796,-0.358621,0.363963,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,1,28,0.248888,0.201547,0.118227,0.370405,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,2,27,0.235573,0.236852,0.266789,0.377202,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,3,26,-0.315794,0.116051,-0.210256,0.384388,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,4,25,0.272878,0.186919,0.179231,0.392,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,5,24,0.142841,0.505509,-0.027826,0.400083,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,6,23,-0.127355,0.562536,-0.249012,0.408688,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,7,22,-0.004818,0.983022,-0.13834,0.417873,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,8,21,-0.05603,0.809379,-0.141558,0.427707,1.0,False,1.0
+SEA,Pesticides per ha,Δ % overexploited,SEA: Pesticides per ha -> Δ % overexploited,9,20,-0.168187,0.47845,-0.181955,0.438269,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,0,29,0.124764,0.519027,0.174384,0.363963,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,1,28,-0.275563,0.155808,-0.180077,0.370405,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,2,27,-0.089539,0.656945,-0.119658,0.377202,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,3,26,-0.049595,0.80987,-0.070085,0.384388,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,4,25,-0.296741,0.149748,-0.291538,0.392,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,5,24,-0.127925,0.551374,-0.061739,0.400083,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,6,23,0.146236,0.505536,0.251976,0.408688,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,7,22,0.121417,0.590403,0.029927,0.417873,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,8,21,0.143242,0.535632,0.074026,0.427707,1.0,False,1.0
+SEA,Pesticides per ha,Δ MTL,SEA: Pesticides per ha -> Δ MTL,9,20,0.126443,0.59528,0.18797,0.438269,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ % overexploited,SEA: Chlorophyll-a deviation -> Δ % overexploited,0,14,-0.240543,0.407454,-0.072527,0.523832,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ % overexploited,SEA: Chlorophyll-a deviation -> Δ % overexploited,1,13,0.48293,0.094593,0.335165,0.543606,0.472965,False,1.0
+SEA,Chlorophyll-a deviation,Δ % overexploited,SEA: Chlorophyll-a deviation -> Δ % overexploited,2,12,-0.30496,0.335123,-0.27972,0.565803,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ % overexploited,SEA: Chlorophyll-a deviation -> Δ % overexploited,3,11,0.353981,0.285515,0.163636,0.590962,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ % overexploited,SEA: Chlorophyll-a deviation -> Δ % overexploited,4,10,0.052854,0.884704,0.260606,0.619806,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ MTL,SEA: Chlorophyll-a deviation -> Δ MTL,0,14,-0.011175,0.969756,-0.081319,0.523832,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ MTL,SEA: Chlorophyll-a deviation -> Δ MTL,1,13,-0.257891,0.39495,-0.21978,0.543606,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ MTL,SEA: Chlorophyll-a deviation -> Δ MTL,2,12,0.024659,0.939364,-0.034965,0.565803,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ MTL,SEA: Chlorophyll-a deviation -> Δ MTL,3,11,0.2132,0.529065,0.4,0.590962,1.0,False,1.0
+SEA,Chlorophyll-a deviation,Δ MTL,SEA: Chlorophyll-a deviation -> Δ MTL,4,10,-0.561029,0.091548,-0.527273,0.619806,0.457739,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,-0.1019,0.446577,-0.235293,0.257361,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,0.010373,0.938954,-0.014993,0.259608,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,-0.083124,0.54248,-0.110974,0.261916,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,0.206667,0.130057,0.2642,0.264286,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,0.028099,0.840159,-0.007436,0.266722,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,-0.049067,0.727158,-0.297512,0.269227,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,0.03171,0.823408,-0.053023,0.271803,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,0.136237,0.340457,0.210774,0.274455,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,-0.07856,0.587615,-0.074766,0.277186,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,-0.249649,0.083641,-0.197041,0.28,0.920047,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ % overexploited,Malaysia: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,0.017395,0.906583,-0.009987,0.282902,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,0,58,-0.095681,0.47494,-0.119567,0.257361,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,1,57,-0.087446,0.517751,-0.111421,0.259608,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,2,56,0.089237,0.513089,0.039781,0.261916,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,3,55,-0.153577,0.262948,-0.150144,0.264286,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,4,54,-0.03919,0.778437,0.002249,0.266722,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,5,53,-0.008141,0.953862,-0.062167,0.269227,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,6,52,0.200006,0.155139,-0.007257,0.271803,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,7,51,-0.008763,0.951334,0.022172,0.274455,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,8,50,0.097758,0.49943,0.129412,0.277186,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,9,49,-0.185843,0.201078,-0.14,0.28,1.0,False,1.0
+Malaysia,Nitrogen fertiliser per ha,Δ MTL,Malaysia: Nitrogen fertiliser per ha -> Δ MTL,10,48,-0.105786,0.474239,-0.130808,0.282902,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,0,29,0.000911,0.996259,-0.255172,0.363963,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,1,28,0.244306,0.210243,0.21237,0.370405,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,2,27,0.015917,0.937192,0.039072,0.377202,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,3,26,-0.098921,0.630675,-0.159658,0.384388,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,4,25,0.058755,0.780262,-0.066923,0.392,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,5,24,0.049479,0.818404,0.010435,0.400083,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,6,23,0.005575,0.97986,0.146245,0.408688,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,7,22,-0.02064,0.927358,0.003953,0.417873,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,8,21,-0.206437,0.369287,-0.131169,0.427707,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ % overexploited,Malaysia: Pesticides per ha -> Δ % overexploited,9,20,0.016558,0.944762,-0.206015,0.438269,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,0,29,-0.007819,0.967891,-0.108867,0.363963,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,1,28,-0.059975,0.761767,-0.210728,0.370405,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,2,27,0.145832,0.467958,0.037241,0.377202,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,3,26,0.090212,0.661195,-0.011282,0.384388,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,4,25,-0.21133,0.310552,-0.367692,0.392,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,5,24,0.309009,0.141764,0.335652,0.400083,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,6,23,-0.133553,0.543513,-0.051383,0.408688,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,7,22,-0.097802,0.665018,-0.086392,0.417873,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,8,21,0.34367,0.127171,0.114286,0.427707,1.0,False,1.0
+Malaysia,Pesticides per ha,Δ MTL,Malaysia: Pesticides per ha -> Δ MTL,9,20,-0.109551,0.645682,0.034586,0.438269,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ % overexploited,Malaysia: Chlorophyll-a deviation -> Δ % overexploited,0,14,-0.060272,0.837825,0.054945,0.523832,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ % overexploited,Malaysia: Chlorophyll-a deviation -> Δ % overexploited,1,13,0.571571,0.04128,0.258242,0.543606,0.2064,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ % overexploited,Malaysia: Chlorophyll-a deviation -> Δ % overexploited,2,12,0.04527,0.888898,0.118881,0.565803,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ % overexploited,Malaysia: Chlorophyll-a deviation -> Δ % overexploited,3,11,-0.276968,0.409642,-0.345455,0.590962,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ % overexploited,Malaysia: Chlorophyll-a deviation -> Δ % overexploited,4,10,0.563052,0.09013,0.430303,0.619806,0.360522,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ MTL,Malaysia: Chlorophyll-a deviation -> Δ MTL,0,14,-0.085454,0.771464,-0.173626,0.523832,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ MTL,Malaysia: Chlorophyll-a deviation -> Δ MTL,1,13,-0.237173,0.435269,-0.252747,0.543606,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ MTL,Malaysia: Chlorophyll-a deviation -> Δ MTL,2,12,0.146005,0.650709,-0.223776,0.565803,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ MTL,Malaysia: Chlorophyll-a deviation -> Δ MTL,3,11,0.397695,0.225795,0.418182,0.590962,1.0,False,1.0
+Malaysia,Chlorophyll-a deviation,Δ MTL,Malaysia: Chlorophyll-a deviation -> Δ MTL,4,10,-0.420982,0.225687,-0.321212,0.619806,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,0.053533,0.689813,0.093113,0.257361,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,-0.031311,0.817147,0.009463,0.259608,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,-0.079463,0.560463,-0.080725,0.261916,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,0.091128,0.508177,0.286003,0.264286,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,-0.074423,0.592761,-0.117286,0.266722,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,0.010525,0.940378,0.01145,0.269227,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,-0.092031,0.516409,-0.085461,0.271803,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,-0.005069,0.971837,0.181629,0.274455,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,-0.128309,0.374533,-0.349532,0.277186,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,-0.110992,0.447712,0.037041,0.28,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ % overexploited,Indonesia: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,0.108165,0.464299,-0.028333,0.282902,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,0,58,0.236085,0.074401,0.115137,0.257361,0.744005,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,1,57,0.089394,0.508428,0.122051,0.259608,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,2,56,0.183039,0.176925,0.018865,0.261916,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,3,55,-0.382915,0.003909,-0.178283,0.264286,0.043,True,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,4,54,0.165504,0.231693,0.108672,0.266722,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,5,53,-0.045771,0.744848,0.082567,0.269227,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,6,52,0.170727,0.226235,0.008879,0.271803,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,7,51,-0.161571,0.257337,0.001086,0.274455,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,8,50,-0.111263,0.441748,-0.090996,0.277186,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,9,49,-0.037019,0.800632,-0.02949,0.28,1.0,False,1.0
+Indonesia,Nitrogen fertiliser per ha,Δ MTL,Indonesia: Nitrogen fertiliser per ha -> Δ MTL,10,48,0.025386,0.864012,-0.135475,0.282902,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,0,29,0.04941,0.799083,-0.157143,0.363963,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,1,28,0.104963,0.59503,-0.058019,0.370405,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,2,27,0.186354,0.352013,0.046398,0.377202,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,3,26,-0.020013,0.922695,0.09812,0.384388,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,4,25,-0.088282,0.674755,-0.278462,0.392,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,5,24,0.097748,0.649547,0.14087,0.400083,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,6,23,-0.012688,0.954179,-0.148221,0.408688,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,7,22,-0.189449,0.39844,-0.244495,0.417873,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,8,21,0.113934,0.622898,0.097403,0.427707,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ % overexploited,Indonesia: Pesticides per ha -> Δ % overexploited,9,20,-0.318162,0.171599,-0.354887,0.438269,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,0,29,0.261631,0.170385,0.278818,0.363963,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,1,28,0.144033,0.46464,0.074439,0.370405,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,2,27,-0.385541,0.047025,-0.264957,0.377202,0.470248,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,3,26,0.016098,0.937786,-0.074872,0.384388,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,4,25,0.132359,0.528239,-0.097692,0.392,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,5,24,-0.023728,0.912368,-0.053913,0.400083,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,6,23,0.117575,0.593144,-0.009881,0.408688,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,7,22,-0.096295,0.669894,-0.071711,0.417873,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,8,21,-0.044511,0.848072,0.044156,0.427707,1.0,False,1.0
+Indonesia,Pesticides per ha,Δ MTL,Indonesia: Pesticides per ha -> Δ MTL,9,20,-0.025937,0.913565,-0.141353,0.438269,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ % overexploited,Indonesia: Chlorophyll-a deviation -> Δ % overexploited,0,14,-0.088343,0.763934,-0.178022,0.523832,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ % overexploited,Indonesia: Chlorophyll-a deviation -> Δ % overexploited,1,13,-0.491657,0.087928,0.038462,0.543606,0.380185,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ % overexploited,Indonesia: Chlorophyll-a deviation -> Δ % overexploited,2,12,0.530437,0.076037,-0.307692,0.565803,0.380185,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ % overexploited,Indonesia: Chlorophyll-a deviation -> Δ % overexploited,3,11,0.043709,0.898464,0.227273,0.590962,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ % overexploited,Indonesia: Chlorophyll-a deviation -> Δ % overexploited,4,10,0.131207,0.717875,0.10303,0.619806,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ MTL,Indonesia: Chlorophyll-a deviation -> Δ MTL,0,14,-0.437119,0.118073,-0.41978,0.523832,0.590366,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ MTL,Indonesia: Chlorophyll-a deviation -> Δ MTL,1,13,-0.276341,0.360746,-0.32967,0.543606,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ MTL,Indonesia: Chlorophyll-a deviation -> Δ MTL,2,12,0.225721,0.480563,0.335664,0.565803,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ MTL,Indonesia: Chlorophyll-a deviation -> Δ MTL,3,11,0.100101,0.769648,-0.036364,0.590962,1.0,False,1.0
+Indonesia,Chlorophyll-a deviation,Δ MTL,Indonesia: Chlorophyll-a deviation -> Δ MTL,4,10,0.109041,0.764289,0.163636,0.619806,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,0.245038,0.063753,0.27327,0.257361,0.701283,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,-0.022655,0.867158,-0.088782,0.259608,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,0.035405,0.795596,0.064119,0.261916,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,-0.030478,0.825177,-0.052959,0.264286,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,-0.030956,0.824149,-0.002706,0.266722,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,0.064336,0.647184,0.05862,0.269227,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,0.01253,0.92975,0.004354,0.271803,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,-0.171036,0.230128,-0.143891,0.274455,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,0.133123,0.356726,0.166098,0.277186,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,0.063296,0.665691,0.10051,0.28,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ % overexploited,Thailand: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,-0.183062,0.21298,-0.22525,0.282902,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,0,58,0.03099,0.81737,0.167861,0.257361,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,1,57,0.279019,0.035569,0.158348,0.259608,0.355695,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,2,56,-0.012451,0.927432,-0.032878,0.261916,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,3,55,-0.052965,0.700942,0.055844,0.264286,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,4,54,-0.03119,0.822842,0.11073,0.266722,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,5,53,0.09092,0.517329,-0.031769,0.269227,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,6,52,0.466836,0.000485,0.250747,0.271803,0.005339,True,0.151429
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,7,51,0.027322,0.849063,-0.051403,0.274455,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,8,50,-0.209254,0.144723,-0.09503,0.277186,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,9,49,0.190386,0.190087,0.206837,0.28,1.0,False,1.0
+Thailand,Nitrogen fertiliser per ha,Δ MTL,Thailand: Nitrogen fertiliser per ha -> Δ MTL,10,48,-0.163138,0.267905,-0.292662,0.282902,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,0,29,0.477564,0.008796,0.499815,0.363963,0.087962,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,1,28,-0.301744,0.118639,-0.117422,0.370405,0.949112,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,2,27,-0.052671,0.794156,-0.186536,0.377202,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,3,26,-0.010211,0.960517,0.03351,0.384388,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,4,25,-0.011047,0.958203,-0.140027,0.392,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,5,24,0.089423,0.677754,-0.07045,0.400083,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,6,23,0.304395,0.157894,0.168026,0.408688,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,7,22,0.28848,0.192918,0.305563,0.417873,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,8,21,0.173735,0.451356,0.051965,0.427707,1.0,False,1.0
+Thailand,Pesticides per ha,Δ % overexploited,Thailand: Pesticides per ha -> Δ % overexploited,9,20,-0.406937,0.074963,-0.244453,0.438269,0.674671,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,0,29,0.153593,0.426337,0.387732,0.363963,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,1,28,0.137982,0.483799,0.044067,0.370405,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,2,27,-0.291706,0.139849,-0.14868,0.377202,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,3,26,0.053996,0.793339,0.118995,0.384388,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,4,25,-0.318389,0.120871,-0.434699,0.392,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,5,24,-0.063731,0.767346,-0.154381,0.400083,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,6,23,0.430812,0.040146,0.201137,0.408688,0.401461,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,7,22,-0.158697,0.480565,-0.148546,0.417873,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,8,21,0.241597,0.291392,0.279311,0.427707,1.0,False,1.0
+Thailand,Pesticides per ha,Δ MTL,Thailand: Pesticides per ha -> Δ MTL,9,20,0.005476,0.981721,-0.06619,0.438269,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ % overexploited,Thailand: Chlorophyll-a deviation -> Δ % overexploited,0,14,0.522852,0.055064,0.252747,0.523832,0.275321,False,1.0
+Thailand,Chlorophyll-a deviation,Δ % overexploited,Thailand: Chlorophyll-a deviation -> Δ % overexploited,1,13,-0.212313,0.486193,-0.164835,0.543606,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ % overexploited,Thailand: Chlorophyll-a deviation -> Δ % overexploited,2,12,-0.150457,0.640686,-0.412587,0.565803,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ % overexploited,Thailand: Chlorophyll-a deviation -> Δ % overexploited,3,11,-0.079713,0.81578,-0.063636,0.590962,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ % overexploited,Thailand: Chlorophyll-a deviation -> Δ % overexploited,4,10,0.525614,0.118679,0.321212,0.619806,0.474716,False,1.0
+Thailand,Chlorophyll-a deviation,Δ MTL,Thailand: Chlorophyll-a deviation -> Δ MTL,0,14,0.386785,0.171883,0.534066,0.523832,0.687533,False,1.0
+Thailand,Chlorophyll-a deviation,Δ MTL,Thailand: Chlorophyll-a deviation -> Δ MTL,1,13,-0.55701,0.047993,-0.302198,0.543606,0.239965,False,1.0
+Thailand,Chlorophyll-a deviation,Δ MTL,Thailand: Chlorophyll-a deviation -> Δ MTL,2,12,0.132935,0.680441,0.027972,0.565803,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ MTL,Thailand: Chlorophyll-a deviation -> Δ MTL,3,11,-0.084866,0.804066,-0.1,0.590962,1.0,False,1.0
+Thailand,Chlorophyll-a deviation,Δ MTL,Thailand: Chlorophyll-a deviation -> Δ MTL,4,10,0.035178,0.923143,0.10303,0.619806,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,-0.126419,0.344341,-0.103681,0.257361,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,-0.043011,0.75073,-0.095077,0.259608,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,0.130035,0.339471,0.142447,0.261916,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,0.000548,0.99683,-0.061245,0.264286,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,0.088138,0.52624,0.068542,0.266722,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,0.012643,0.928406,-0.054529,0.269227,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,-0.035684,0.801704,0.037659,0.271803,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,0.051436,0.719999,-0.058829,0.274455,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,0.090004,0.53421,0.20242,0.277186,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,-0.098711,0.49981,-0.17614,0.28,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ % overexploited,Vietnam: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,-0.079381,0.591739,0.141787,0.282902,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,0,58,-0.219204,0.098282,-0.214457,0.257361,0.884534,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,1,57,-0.146875,0.275607,-0.007449,0.259608,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,2,56,0.151455,0.265166,0.096516,0.261916,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,3,55,-0.146835,0.284728,0.029258,0.264286,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,4,54,-0.105637,0.447115,-0.118871,0.266722,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,5,53,0.238361,0.085654,0.159782,0.269227,0.856538,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,6,52,-0.191987,0.172724,-0.235847,0.271803,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,7,51,-0.101117,0.480169,-0.029012,0.274455,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,8,50,0.025581,0.860028,0.026836,0.277186,1.0,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,9,49,-0.256833,0.074842,-0.212937,0.28,0.823257,False,1.0
+Vietnam,Nitrogen fertiliser per ha,Δ MTL,Vietnam: Nitrogen fertiliser per ha -> Δ MTL,10,48,0.036627,0.804791,-0.011487,0.282902,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,0,29,0.075557,0.696872,0.13399,0.363963,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,1,28,-0.070509,0.721444,-0.141762,0.370405,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,2,27,-0.141812,0.480444,-0.107448,0.377202,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,3,26,0.106835,0.603444,0.04547,0.384388,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,4,25,0.023183,0.912413,0.042308,0.392,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,5,24,0.143895,0.50234,0.075652,0.400083,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,6,23,-0.036182,0.869811,0.141304,0.408688,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,7,22,-0.005858,0.979358,-0.010728,0.417873,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,8,21,0.083084,0.72031,0.106494,0.427707,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ % overexploited,Vietnam: Pesticides per ha -> Δ % overexploited,9,20,0.274427,0.241639,0.230075,0.438269,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,0,29,0.208534,0.277663,0.308036,0.363963,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,1,28,-0.175967,0.370415,-0.080615,0.370405,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,2,27,-0.03401,0.866264,-0.060142,0.377202,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,3,26,0.09195,0.655058,0.06018,0.384388,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,4,25,0.041787,0.842791,-0.029225,0.392,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,5,24,0.146617,0.494202,-0.029058,0.400083,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,6,23,-0.030451,0.8903,-0.054045,0.408688,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,7,22,-0.030547,0.892654,-0.124333,0.417873,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,8,21,0.096344,0.677822,0.088491,0.427707,1.0,False,1.0
+Vietnam,Pesticides per ha,Δ MTL,Vietnam: Pesticides per ha -> Δ MTL,9,20,0.286176,0.221256,0.308223,0.438269,1.0,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ % overexploited,Vietnam: Chlorophyll-a deviation -> Δ % overexploited,0,14,-0.332962,0.244728,-0.287912,0.523832,0.489456,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ % overexploited,Vietnam: Chlorophyll-a deviation -> Δ % overexploited,1,13,0.563006,0.04514,0.494505,0.543606,0.225701,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ % overexploited,Vietnam: Chlorophyll-a deviation -> Δ % overexploited,2,12,-0.490641,0.105325,-0.461538,0.565803,0.4213,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ % overexploited,Vietnam: Chlorophyll-a deviation -> Δ % overexploited,3,11,0.506605,0.111774,0.463636,0.590962,0.4213,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ % overexploited,Vietnam: Chlorophyll-a deviation -> Δ % overexploited,4,10,-0.290679,0.415197,-0.139394,0.619806,0.489456,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ MTL,Vietnam: Chlorophyll-a deviation -> Δ MTL,0,14,0.326556,0.254481,0.084928,0.523832,1.0,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ MTL,Vietnam: Chlorophyll-a deviation -> Δ MTL,1,13,-0.113576,0.711798,0.050073,0.543606,1.0,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ MTL,Vietnam: Chlorophyll-a deviation -> Δ MTL,2,12,-0.112589,0.727556,-0.240296,0.565803,1.0,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ MTL,Vietnam: Chlorophyll-a deviation -> Δ MTL,3,11,0.23902,0.479045,0.506961,0.590962,1.0,False,1.0
+Vietnam,Chlorophyll-a deviation,Δ MTL,Vietnam: Chlorophyll-a deviation -> Δ MTL,4,10,-0.009437,0.979358,-0.232426,0.619806,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,0,58,0.061839,0.644695,0.104357,0.257361,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,1,57,0.07213,0.593895,0.000357,0.259608,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,2,56,0.037219,0.785366,0.006122,0.261916,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,3,55,-0.003502,0.979753,-0.009169,0.264286,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,4,54,0.065866,0.636067,0.048125,0.266722,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,5,53,0.195807,0.159976,0.105495,0.269227,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,6,52,-0.321874,0.019968,-0.250571,0.271803,0.21965,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,7,51,0.03268,0.819916,0.035617,0.274455,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,8,50,-0.060286,0.677498,-0.042693,0.277186,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,9,49,0.009208,0.949933,-0.107817,0.28,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ % overexploited,Philippines: Nitrogen fertiliser per ha -> Δ % overexploited,10,48,-0.025113,0.865458,-0.053684,0.282902,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,0,58,0.072637,0.587914,0.088917,0.257361,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,1,57,-0.006682,0.960656,-0.010947,0.259608,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,2,56,-0.068718,0.6148,-0.094698,0.261916,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,3,55,0.247192,0.06884,0.205527,0.264286,0.757242,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,4,54,-0.090269,0.516245,0.059875,0.266722,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,5,53,0.099129,0.480063,-0.060773,0.269227,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,6,52,-0.027979,0.843913,-0.042238,0.271803,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,7,51,0.163888,0.250486,0.132666,0.274455,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,8,50,-0.131541,0.36252,-0.080204,0.277186,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,9,49,0.028352,0.846661,0.024115,0.28,1.0,False,1.0
+Philippines,Nitrogen fertiliser per ha,Δ MTL,Philippines: Nitrogen fertiliser per ha -> Δ MTL,10,48,0.074086,0.616764,0.261855,0.282902,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,0,29,-0.124784,0.518958,-0.100259,0.363963,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,1,28,-0.116152,0.556132,-0.09224,0.370405,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,2,27,0.019504,0.923075,0.084262,0.377202,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,3,26,0.218183,0.284271,0.050607,0.384388,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,4,25,0.127067,0.544999,0.091556,0.392,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,5,24,0.04515,0.834067,0.121766,0.400083,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,6,23,-0.003074,0.988892,-0.042006,0.408688,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,7,22,0.17285,0.441755,0.171138,0.417873,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,8,21,-0.315208,0.163984,-0.335823,0.427707,1.0,False,1.0
+Philippines,Pesticides per ha,Δ % overexploited,Philippines: Pesticides per ha -> Δ % overexploited,9,20,-0.058361,0.806922,-0.080481,0.438269,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,0,29,0.221833,0.247461,0.313116,0.363963,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,1,28,-0.207826,0.288591,-0.172853,0.370405,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,2,27,0.04426,0.826488,0.130329,0.377202,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,3,26,-0.102641,0.617816,-0.090365,0.384388,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,4,25,0.13143,0.531162,0.187945,0.392,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,5,24,0.066974,0.755847,-0.005225,0.400083,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,6,23,-0.16898,0.440841,-0.124474,0.408688,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,7,22,0.412025,0.056729,0.156719,0.417873,0.567286,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,8,21,0.092045,0.691502,0.265452,0.427707,1.0,False,1.0
+Philippines,Pesticides per ha,Δ MTL,Philippines: Pesticides per ha -> Δ MTL,9,20,0.083983,0.724821,0.121281,0.438269,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ % overexploited,Philippines: Chlorophyll-a deviation -> Δ % overexploited,0,14,0.121454,0.679162,0.16044,0.523832,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ % overexploited,Philippines: Chlorophyll-a deviation -> Δ % overexploited,1,13,0.291263,0.334291,0.269231,0.543606,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ % overexploited,Philippines: Chlorophyll-a deviation -> Δ % overexploited,2,12,-0.414098,0.180807,-0.370629,0.565803,0.904033,False,1.0
+Philippines,Chlorophyll-a deviation,Δ % overexploited,Philippines: Chlorophyll-a deviation -> Δ % overexploited,3,11,0.001584,0.996311,-0.036364,0.590962,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ % overexploited,Philippines: Chlorophyll-a deviation -> Δ % overexploited,4,10,0.124034,0.732812,0.309091,0.619806,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ MTL,Philippines: Chlorophyll-a deviation -> Δ MTL,0,14,-0.530994,0.05073,-0.415385,0.523832,0.253648,False,1.0
+Philippines,Chlorophyll-a deviation,Δ MTL,Philippines: Chlorophyll-a deviation -> Δ MTL,1,13,0.184761,0.545656,-0.21978,0.543606,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ MTL,Philippines: Chlorophyll-a deviation -> Δ MTL,2,12,-0.015971,0.960709,0.293706,0.565803,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ MTL,Philippines: Chlorophyll-a deviation -> Δ MTL,3,11,-0.209711,0.535988,-0.227273,0.590962,1.0,False,1.0
+Philippines,Chlorophyll-a deviation,Δ MTL,Philippines: Chlorophyll-a deviation -> Δ MTL,4,10,-0.038711,0.915446,0.236364,0.619806,1.0,False,1.0

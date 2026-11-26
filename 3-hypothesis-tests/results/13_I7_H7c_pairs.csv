@@ -1,0 +1,127 @@
+response,pollution_driver,other_driver,pair_type,years,n_years,F_joint,p_joint,partial_r2,beta_pollution,p_pollution_in_pair,beta_other,p_other_in_pair,r_drivers,vif,p_joint_holm,significant_holm,neither_alone
+FAO,Nitrogen fertiliser per ha,Catch (FAO capture),pollution + other,1975–2021,47,1.296063,0.283846,0.044929,2.436133,0.724023,10.798041,0.182848,-0.071207,1.005096,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Fishing effort (nominal),pollution + other,1975–2017,43,1.597746,0.214997,0.028607,2.590726,0.730406,-21.485231,0.084725,0.236474,1.059232,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Sea-surface temperature,pollution + other,1975–2021,47,0.524978,0.595227,0.033608,1.56359,0.820849,-4.055146,0.312327,-0.003633,1.000013,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Ocean heat content,pollution + other,1975–2021,47,0.423735,0.65724,0.010202,3.02223,0.655016,-0.139481,0.426789,0.254682,1.069362,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Container port traffic,pollution + other,2001–2021,21,0.349949,0.709413,0.084349,-15.665647,0.486868,5.780227,0.452758,0.243844,1.063219,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Seaborne trade volume,pollution + other,2001–2021,21,0.641115,0.538316,0.082865,-11.364991,0.554428,7.956823,0.284959,-0.016812,1.000283,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Dams completed (cumulative),pollution + other,1975–2019,45,0.281061,0.756391,0.007171,-2.602343,0.773894,16.886863,0.471468,0.495062,1.324655,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Aquaculture production,pollution + other,1975–2021,47,1.249936,0.296497,0.074171,-1.13763,0.844969,14.530014,0.169785,0.178418,1.03288,1.0,False,True
+FAO,Pesticides per ha,Catch (FAO capture),pollution + other,1991–2021,31,0.135823,0.873569,0.006443,-0.03763,0.996958,2.762189,0.607996,-0.025914,1.000672,1.0,False,True
+FAO,Pesticides per ha,Fishing effort (nominal),pollution + other,1991–2017,27,3.065495,0.065219,0.133517,4.125912,0.654929,-30.210692,0.024661,0.037922,1.00144,1.0,False,True
+FAO,Pesticides per ha,Sea-surface temperature,pollution + other,1991–2021,31,2.248645,0.124266,0.092222,-2.368661,0.778027,-4.951951,0.074436,-0.162287,1.02705,1.0,False,True
+FAO,Pesticides per ha,Ocean heat content,pollution + other,1991–2021,31,0.453884,0.639747,0.016885,-1.330103,0.897435,-0.13521,0.372586,-0.201795,1.04245,1.0,False,True
+FAO,Pesticides per ha,Container port traffic,pollution + other,2001–2021,21,0.233966,0.793758,0.035115,0.968804,0.911518,4.04508,0.607056,0.674764,1.835895,1.0,False,True
+FAO,Pesticides per ha,Seaborne trade volume,pollution + other,2001–2021,21,0.752375,0.4855,0.055214,0.422107,0.961877,7.843681,0.244201,0.562074,1.461833,1.0,False,True
+FAO,Pesticides per ha,Dams completed (cumulative),pollution + other,1991–2019,29,0.15958,0.85333,0.011676,3.676173,0.685192,22.774125,0.707433,-0.053331,1.002852,1.0,False,True
+FAO,Pesticides per ha,Aquaculture production,pollution + other,1991–2021,31,5.080349,0.013109,0.105212,0.132085,0.988895,12.867413,0.003515,-0.018085,1.000327,1.0,False,True
+FAO,Plastic production,Catch (FAO capture),pollution + other,1976–2019,44,1.118663,0.336483,0.056966,-6.290133,0.418568,13.058088,0.143173,0.312245,1.108029,1.0,False,True
+FAO,Plastic production,Fishing effort (nominal),pollution + other,1976–2017,42,2.144446,0.130743,0.02579,0.780907,0.888933,-20.103323,0.063173,0.228221,1.054946,1.0,False,True
+FAO,Plastic production,Sea-surface temperature,pollution + other,1976–2019,44,0.737653,0.484474,0.04296,-0.516651,0.93804,-4.638966,0.245067,0.078875,1.00626,1.0,False,True
+FAO,Plastic production,Ocean heat content,pollution + other,1976–2019,44,0.223422,0.800745,0.00556,-1.719341,0.785131,-0.097894,0.589801,-0.047758,1.002286,1.0,False,True
+FAO,Plastic production,Container port traffic,pollution + other,2001–2019,19,9.512513,0.001896,0.233304,-25.097235,0.000743,10.231605,0.172851,0.399104,1.189463,0.210501,False,True
+FAO,Plastic production,Seaborne trade volume,pollution + other,2001–2019,19,10.574995,0.001184,0.249329,-22.531403,0.001595,14.888162,0.015827,0.286801,1.089627,0.134957,False,True
+FAO,Plastic production,Dams completed (cumulative),pollution + other,1976–2019,44,1.236367,0.301038,0.015094,-4.123348,0.541712,23.415408,0.153125,0.333913,1.125489,1.0,False,True
+FAO,Plastic production,Aquaculture production,pollution + other,1976–2019,44,0.742532,0.482198,0.072535,-2.602136,0.722206,14.474738,0.233212,0.066165,1.004397,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Catch (FAO capture),pollution + other,1975–2021,47,1.403541,0.25651,0.080889,-1.069399,0.145002,10.00317,0.178983,-0.063535,1.004053,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Fishing effort (nominal),pollution + other,1975–2017,43,1.959873,0.154171,0.064745,-1.172577,0.135421,-17.995038,0.137144,0.090034,1.008172,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Sea-surface temperature,pollution + other,1975–2021,47,1.486415,0.237318,0.06386,-0.984227,0.100795,-3.294672,0.370242,0.189797,1.037369,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Ocean heat content,pollution + other,1975–2021,47,2.603529,0.08538,0.059331,-1.272174,0.095084,-0.181259,0.240654,-0.188849,1.036983,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Container port traffic,pollution + other,2001–2021,21,0.391388,0.681733,0.063701,-0.602239,0.40727,4.226018,0.519998,-0.054105,1.002936,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Seaborne trade volume,pollution + other,2001–2021,21,0.721961,0.499341,0.08407,-0.60203,0.39651,7.805252,0.264265,-0.042404,1.001801,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Dams completed (cumulative),pollution + other,1975–2019,45,1.443425,0.24759,0.045164,-1.117618,0.15896,13.650379,0.472823,0.020396,1.000416,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Aquaculture production,pollution + other,1975–2021,47,1.518108,0.230381,0.099637,-0.897018,0.131588,12.774459,0.21702,-0.181085,1.033904,1.0,False,True
+FAO,Oil spilled (tonnes),Catch (FAO capture),pollution + other,1975–2021,47,1.878723,0.164837,0.043141,-0.01356,0.92919,10.666558,0.159457,0.051817,1.002692,1.0,False,True
+FAO,Oil spilled (tonnes),Fishing effort (nominal),pollution + other,1975–2017,43,2.001287,0.14847,0.029737,0.086919,0.654121,-20.947595,0.074371,0.113206,1.012982,1.0,False,True
+FAO,Oil spilled (tonnes),Sea-surface temperature,pollution + other,1975–2021,47,0.602497,0.551897,0.032889,-0.010605,0.943918,-4.066069,0.308058,-0.046675,1.002183,1.0,False,True
+FAO,Oil spilled (tonnes),Ocean heat content,pollution + other,1975–2021,47,0.359413,0.700116,0.007725,0.021471,0.875994,-0.124561,0.461711,0.184834,1.035372,1.0,False,True
+FAO,Oil spilled (tonnes),Container port traffic,pollution + other,2001–2021,21,0.548276,0.587297,0.071305,-0.16179,0.309801,4.872353,0.484025,0.093236,1.008769,1.0,False,True
+FAO,Oil spilled (tonnes),Seaborne trade volume,pollution + other,2001–2021,21,0.824717,0.454258,0.085881,-0.1478,0.290111,8.11531,0.266032,0.010385,1.000108,1.0,False,True
+FAO,Oil spilled (tonnes),Dams completed (cumulative),pollution + other,1975–2019,45,0.254908,0.776178,0.006191,0.032405,0.823125,12.683255,0.516989,0.061397,1.003784,1.0,False,True
+FAO,Oil spilled (tonnes),Aquaculture production,pollution + other,1975–2021,47,1.088965,0.345462,0.073784,-0.005096,0.968544,14.341052,0.191577,0.015386,1.000237,1.0,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Catch (FAO capture),pollution + other,1991–2021,31,4.240603,0.024617,0.231829,73.630299,0.007817,3.141013,0.517341,-0.023128,1.000535,1.0,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Fishing effort (nominal),pollution + other,1991–2017,27,11.718851,0.000281,0.318922,77.187752,0.004602,-25.790708,0.021651,-0.110606,1.012385,0.034028,True,True
+FAO,Ocean acidity [H⁺] (Hawaii),Sea-surface temperature,pollution + other,1991–2021,31,5.744953,0.008117,0.291608,69.944978,0.003498,-4.213531,0.057112,-0.08271,1.006888,0.78737,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Ocean heat content,pollution + other,1991–2021,31,4.220604,0.024998,0.223653,72.835316,0.008942,-0.012646,0.917673,-0.243195,1.062862,1.0,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Container port traffic,pollution + other,2001–2021,21,8.903125,0.00205,0.448505,94.147126,0.000516,3.852109,0.359308,0.038682,1.001499,0.223486,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Seaborne trade volume,pollution + other,2001–2021,21,8.99752,0.001956,0.445455,92.156364,0.000561,5.248012,0.228421,0.129797,1.017136,0.21511,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Dams completed (cumulative),pollution + other,1991–2019,29,3.002209,0.067131,0.204936,72.671407,0.021344,25.638182,0.687303,-0.031247,1.000977,1.0,False,True
+FAO,Ocean acidity [H⁺] (Hawaii),Aquaculture production,pollution + other,1991–2021,31,10.304789,0.000443,0.335117,74.361591,0.005475,13.253939,0.001254,-0.02043,1.000418,0.052681,False,True
+FAO,Nitrogen fertiliser per ha,Pesticides per ha,pollution + pollution,1991–2021,31,1.013209,0.375979,0.057532,-12.260741,0.212468,1.325611,0.900907,0.134293,1.018366,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Plastic production,pollution + pollution,1976–2019,44,0.112077,0.894249,0.003415,3.606196,0.685915,-2.677623,0.704335,0.33802,1.128997,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Oil spills (number ≥ 7 t),pollution + pollution,1975–2021,47,1.3851,0.260997,0.043049,-0.400301,0.946413,-1.144146,0.107634,-0.172022,1.030494,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Oil spilled (tonnes),pollution + pollution,1975–2021,47,0.04129,0.959588,0.000831,1.615823,0.808555,-0.003518,0.979191,0.101757,1.010463,1.0,False,True
+FAO,Nitrogen fertiliser per ha,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2021,31,5.159172,0.012374,0.283016,-12.358432,0.137864,73.772277,0.003623,0.012403,1.000154,1.0,False,True
+FAO,Pesticides per ha,Plastic production,pollution + pollution,1991–2019,29,2.890204,0.07355,0.08006,7.346637,0.445825,-15.613106,0.025538,0.29386,1.094516,1.0,False,True
+FAO,Pesticides per ha,Oil spills (number ≥ 7 t),pollution + pollution,1991–2021,31,1.359277,0.273276,0.076911,1.972498,0.836076,-1.074018,0.154974,0.166894,1.028652,1.0,False,True
+FAO,Pesticides per ha,Oil spilled (tonnes),pollution + pollution,1991–2021,31,1.175085,0.323561,0.031287,0.201115,0.984113,-0.156362,0.209406,0.041847,1.001754,1.0,False,True
+FAO,Pesticides per ha,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2021,31,6.098962,0.006329,0.228075,-3.056204,0.647135,74.735553,0.006427,0.13545,1.01869,0.639268,False,True
+FAO,Plastic production,Oil spills (number ≥ 7 t),pollution + pollution,1976–2019,44,1.019251,0.369826,0.038326,0.30096,0.962063,-1.100959,0.161895,0.150865,1.02329,1.0,False,True
+FAO,Plastic production,Oil spilled (tonnes),pollution + pollution,1976–2019,44,0.117703,0.889259,0.002674,-2.422156,0.720529,0.062562,0.676399,0.310625,1.106792,1.0,False,True
+FAO,Plastic production,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,6.74544,0.004367,0.232833,-10.375186,0.10829,68.668861,0.026882,-0.115563,1.013535,0.449813,False,True
+FAO,Oil spills (number ≥ 7 t),Oil spilled (tonnes),pollution + pollution,1975–2021,47,1.49397,0.235645,0.05089,-1.345559,0.122295,0.123922,0.465154,0.392925,1.182579,1.0,False,True
+FAO,Oil spills (number ≥ 7 t),Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2021,31,5.166144,0.012311,0.295744,-1.026383,0.114309,72.848278,0.005425,-0.010914,1.000119,1.0,False,True
+FAO,Oil spilled (tonnes),Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2021,31,4.03601,0.028829,0.225412,-0.040214,0.749863,71.287295,0.008806,-0.28558,1.088798,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Catch (FAO capture),pollution + other,1962–2019,58,3.72931,0.030282,0.109793,-5.19887,0.009947,-2.961235,0.272117,0.178252,1.032816,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Fishing effort (nominal),pollution + other,1962–2017,56,4.501381,0.015647,0.130802,-6.735724,0.004131,5.817605,0.360212,0.326428,1.119263,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Sea-surface temperature,pollution + other,1962–2019,58,3.812069,0.028156,0.094559,-5.640418,0.008694,0.629734,0.615837,-0.035254,1.001244,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Ocean heat content,pollution + other,1962–2019,58,3.661421,0.03215,0.089638,-5.687096,0.010466,-0.000696,0.989469,0.016418,1.00027,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Container port traffic,pollution + other,2001–2019,19,12.770933,0.000484,0.315585,-11.587151,0.298869,11.092675,0.000123,0.489127,1.314484,0.057142,False,False
+SAU,Nitrogen fertiliser per ha,Seaborne trade volume,pollution + other,2001–2019,19,9.223986,0.002166,0.155214,2.294776,0.85566,9.768564,0.000568,0.183724,1.034934,0.233924,False,False
+SAU,Nitrogen fertiliser per ha,Dams completed (cumulative),pollution + other,1962–2019,58,3.64844,0.03252,0.091633,-6.631856,0.0755,3.578439,0.701344,0.743856,2.238749,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Aquaculture production,pollution + other,1962–2019,58,4.812658,0.011855,0.098361,-5.477193,0.007372,-2.431018,0.508475,0.117668,1.01404,1.0,False,True
+SAU,Pesticides per ha,Catch (FAO capture),pollution + other,1991–2019,29,0.74078,0.486537,0.034191,6.036808,0.234851,-0.676112,0.884376,-0.070442,1.004987,1.0,False,True
+SAU,Pesticides per ha,Fishing effort (nominal),pollution + other,1991–2017,27,1.422862,0.260635,0.068571,6.991807,0.126952,4.248756,0.679783,0.037922,1.00144,1.0,False,True
+SAU,Pesticides per ha,Sea-surface temperature,pollution + other,1991–2019,29,1.400496,0.264458,0.057882,5.485749,0.248909,-1.819904,0.465812,-0.117167,1.013919,1.0,False,True
+SAU,Pesticides per ha,Ocean heat content,pollution + other,1991–2019,29,0.731938,0.490625,0.035362,5.719141,0.259031,-0.03279,0.737612,-0.253285,1.068551,1.0,False,True
+SAU,Pesticides per ha,Container port traffic,pollution + other,2001–2019,19,14.801455,0.00023,0.298614,-4.699213,0.539761,11.415055,0.024594,0.710547,2.019701,0.028244,True,False
+SAU,Pesticides per ha,Seaborne trade volume,pollution + other,2001–2019,19,7.937538,0.00403,0.162189,3.235417,0.628979,8.331358,0.107672,0.569977,1.481205,0.419163,False,False
+SAU,Pesticides per ha,Dams completed (cumulative),pollution + other,1991–2019,29,1.325894,0.282931,0.078886,6.480583,0.225826,45.60134,0.180399,-0.053331,1.002852,1.0,False,True
+SAU,Pesticides per ha,Aquaculture production,pollution + other,1991–2019,29,0.89307,0.421586,0.04184,6.164045,0.225016,-2.675218,0.617994,0.020678,1.000428,1.0,False,True
+SAU,Plastic production,Catch (FAO capture),pollution + other,1961–2019,57,1.587463,0.213836,0.049727,-1.533482,0.422927,-3.68119,0.176321,0.290509,1.092174,1.0,False,True
+SAU,Plastic production,Fishing effort (nominal),pollution + other,1951–2017,65,2.166921,0.123127,0.034696,-2.019447,0.044807,0.303182,0.956957,0.291116,1.092596,1.0,False,True
+SAU,Plastic production,Sea-surface temperature,pollution + other,1951–2019,67,1.962253,0.148906,0.028106,-1.825978,0.056243,0.443624,0.685202,-0.051036,1.002611,1.0,False,True
+SAU,Plastic production,Ocean heat content,pollution + other,1956–2019,62,1.407729,0.252796,0.027903,-2.630147,0.098652,-0.004725,0.919906,-0.037509,1.001409,1.0,False,True
+SAU,Plastic production,Container port traffic,pollution + other,2001–2019,19,15.039647,0.000211,0.343402,-10.473594,0.000704,11.223952,6.4e-05,0.399104,1.189463,0.026413,True,False
+SAU,Plastic production,Seaborne trade volume,pollution + other,2001–2019,19,8.662217,0.002824,0.169358,-5.210583,0.031134,10.902682,0.00078,0.286801,1.089627,0.299339,False,False
+SAU,Plastic production,Dams completed (cumulative),pollution + other,1951–2019,67,3.388037,0.039939,0.074296,-0.051751,0.945974,-12.157522,0.01927,0.574924,1.493736,1.0,False,True
+SAU,Plastic production,Aquaculture production,pollution + other,1961–2019,57,0.787952,0.459933,0.025433,-2.564557,0.219943,-1.906082,0.57071,-0.05394,1.002918,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Catch (FAO capture),pollution + other,1971–2019,49,1.743045,0.186345,0.085776,0.632365,0.179149,-2.74918,0.419177,-0.117496,1.013999,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Fishing effort (nominal),pollution + other,1971–2017,47,0.611397,0.547137,0.026037,0.369088,0.319924,1.157111,0.877871,0.15218,1.023708,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Sea-surface temperature,pollution + other,1971–2019,49,1.235085,0.300273,0.072299,0.662671,0.155472,0.065036,0.96745,0.229384,1.055539,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Ocean heat content,pollution + other,1971–2019,49,1.187331,0.314208,0.072611,0.678288,0.136029,0.012938,0.838673,-0.245196,1.063967,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Container port traffic,pollution + other,2001–2019,19,11.15872,0.000924,0.37344,0.785546,0.282123,9.319517,0.000303,0.012473,1.000156,0.108137,False,False
+SAU,Oil spills (number ≥ 7 t),Seaborne trade volume,pollution + other,2001–2019,19,9.140373,0.002252,0.242664,0.790063,0.296748,9.856423,0.00061,0.012653,1.00016,0.240958,False,False
+SAU,Oil spills (number ≥ 7 t),Dams completed (cumulative),pollution + other,1971–2019,49,1.683515,0.196961,0.0804,0.700034,0.107917,-6.723168,0.381793,0.148334,1.022498,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Aquaculture production,pollution + other,1971–2019,49,1.839227,0.170437,0.089241,0.647098,0.138447,-3.387451,0.348994,-0.059856,1.003596,1.0,False,True
+SAU,Oil spilled (tonnes),Catch (FAO capture),pollution + other,1971–2019,49,7.889688,0.001132,0.196118,0.268957,0.005946,-3.642634,0.186921,0.019348,1.000374,0.130235,False,True
+SAU,Oil spilled (tonnes),Fishing effort (nominal),pollution + other,1971–2017,47,3.144402,0.052916,0.05828,0.164948,0.017283,1.262254,0.849795,0.091333,1.008412,1.0,False,True
+SAU,Oil spilled (tonnes),Sea-surface temperature,pollution + other,1971–2019,49,4.975577,0.011062,0.174859,0.265782,0.003904,0.514929,0.733742,0.036467,1.001332,1.0,False,True
+SAU,Oil spilled (tonnes),Ocean heat content,pollution + other,1971–2019,49,5.477814,0.007347,0.182673,0.27581,0.001882,-0.069182,0.318529,0.131333,1.017551,0.719968,False,True
+SAU,Oil spilled (tonnes),Container port traffic,pollution + other,2001–2019,19,13.202651,0.000411,0.530691,0.310769,0.011077,8.451362,0.000483,0.106685,1.011513,0.049292,True,False
+SAU,Oil spilled (tonnes),Seaborne trade volume,pollution + other,2001–2019,19,14.463457,0.000259,0.456541,0.343402,0.002852,9.986188,0.000409,-0.002432,1.000006,0.031569,True,False
+SAU,Oil spilled (tonnes),Dams completed (cumulative),pollution + other,1971–2019,49,5.748825,0.005909,0.176491,0.268796,0.00249,-4.908359,0.516299,0.041309,1.001709,0.602668,False,True
+SAU,Oil spilled (tonnes),Aquaculture production,pollution + other,1971–2019,49,6.286986,0.003857,0.200684,0.273007,0.001825,-4.396238,0.289869,0.054843,1.003017,0.40496,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Catch (FAO capture),pollution + other,1991–2019,29,0.025795,0.97456,0.002088,2.604228,0.932268,-1.021271,0.825728,0.052792,1.002795,1.0,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Fishing effort (nominal),pollution + other,1991–2017,27,0.96057,0.396904,0.082885,29.569716,0.188088,6.317697,0.553471,-0.110606,1.012385,1.0,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Sea-surface temperature,pollution + other,1991–2019,29,0.354384,0.704942,0.031213,-0.298502,0.991775,-2.04644,0.446457,-0.127008,1.016395,1.0,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Ocean heat content,pollution + other,1991–2019,29,0.197043,0.82237,0.007853,0.170614,0.995524,-0.064088,0.544583,-0.20943,1.045873,1.0,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Container port traffic,pollution + other,2001–2019,19,14.965462,0.000217,0.285806,-1.994783,0.948578,9.436556,0.002313,0.168455,1.029206,0.026887,True,False
+SAU,Ocean acidity [H⁺] (Hawaii),Seaborne trade volume,pollution + other,2001–2019,19,10.393195,0.001281,0.155656,-5.22184,0.880339,10.295314,0.027388,0.293362,1.094165,0.144724,False,False
+SAU,Ocean acidity [H⁺] (Hawaii),Dams completed (cumulative),pollution + other,1991–2019,29,0.887855,0.423649,0.041939,3.098553,0.916038,43.563501,0.199757,-0.031247,1.000977,1.0,False,True
+SAU,Ocean acidity [H⁺] (Hawaii),Aquaculture production,pollution + other,1991–2019,29,0.11571,0.891189,0.00809,2.305896,0.938894,-2.561278,0.638758,-0.004103,1.000017,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Pesticides per ha,pollution + pollution,1991–2019,29,2.157753,0.135835,0.126118,-12.026733,0.063892,8.751092,0.10132,0.25254,1.068121,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Plastic production,pollution + pollution,1962–2019,56,5.523411,0.006624,0.128338,-9.329708,0.002882,3.6546,0.118926,0.702114,1.972248,0.662407,False,True
+SAU,Nitrogen fertiliser per ha,Oil spills (number ≥ 7 t),pollution + pollution,1971–2019,49,1.877794,0.164463,0.103469,-4.684002,0.171609,0.607757,0.154602,-0.132858,1.017968,1.0,False,True
+SAU,Nitrogen fertiliser per ha,Oil spilled (tonnes),pollution + pollution,1971–2019,49,7.960203,0.001075,0.241559,-6.980086,0.063454,0.287976,0.000594,0.122524,1.015241,0.124655,False,True
+SAU,Nitrogen fertiliser per ha,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,1.282868,0.294214,0.061882,-9.568997,0.135269,-1.686951,0.953781,-0.136901,1.0191,1.0,False,True
+SAU,Pesticides per ha,Plastic production,pollution + pollution,1991–2019,29,0.862591,0.433797,0.033591,6.222059,0.287472,-0.490224,0.929543,0.29386,1.094516,1.0,False,True
+SAU,Pesticides per ha,Oil spills (number ≥ 7 t),pollution + pollution,1991–2019,29,2.280531,0.122311,0.147428,4.713169,0.423513,0.965572,0.193975,0.122301,1.015185,1.0,False,True
+SAU,Pesticides per ha,Oil spilled (tonnes),pollution + pollution,1991–2019,29,16.353142,2.5e-05,0.332605,6.952107,0.063347,0.35551,0.001286,-0.046607,1.002177,0.003178,True,True
+SAU,Pesticides per ha,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,1.579249,0.225272,0.034354,6.378869,0.128356,-3.671278,0.884657,0.26732,1.07696,1.0,False,True
+SAU,Plastic production,Oil spills (number ≥ 7 t),pollution + pollution,1971–2019,47,1.579583,0.217523,0.090937,-0.090553,0.971567,0.780106,0.083499,0.227474,1.054568,1.0,False,True
+SAU,Plastic production,Oil spilled (tonnes),pollution + pollution,1971–2019,47,5.339546,0.008392,0.176958,-1.260089,0.614595,0.277778,0.002485,0.264939,1.075492,0.805679,False,True
+SAU,Plastic production,Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,0.071082,0.931566,0.002428,1.798394,0.712093,2.965516,0.921023,-0.115563,1.013535,1.0,False,True
+SAU,Oil spills (number ≥ 7 t),Oil spilled (tonnes),pollution + pollution,1971–2019,49,5.506292,0.00718,0.187938,0.335606,0.370652,0.235199,0.004599,0.365245,1.15394,0.710786,False,True
+SAU,Oil spills (number ≥ 7 t),Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,1.708986,0.200765,0.128294,1.015199,0.147754,2.717443,0.920013,-0.008766,1.000077,1.0,False,True
+SAU,Oil spilled (tonnes),Ocean acidity [H⁺] (Hawaii),pollution + pollution,1991–2019,29,8.570097,0.001384,0.314836,0.376099,0.000924,19.452266,0.292169,-0.25076,1.0671,0.155026,False,True

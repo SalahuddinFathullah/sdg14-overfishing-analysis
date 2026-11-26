@@ -1,0 +1,131 @@
+driver,response,pair,lag,n,r,p,spearman_rho,band_95,p_holm,significant_holm,p_holm_all
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,0,47,0.028703,0.848118,-0.048577,0.285895,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,1,46,0.010307,0.9458,-0.160076,0.288986,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,2,45,-0.0742,0.628095,-0.03578,0.29218,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,3,44,0.072538,0.639837,0.228465,0.295481,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,4,43,0.341499,0.025011,0.38497,0.298897,0.275126,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,5,42,0.159543,0.312862,0.144687,0.302435,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,6,41,-0.070907,0.659544,0.024834,0.306101,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,7,40,-0.132926,0.413542,-0.0061,0.309903,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,8,39,0.100998,0.540683,0.049514,0.313851,1.0,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,9,38,0.283892,0.084112,0.206568,0.317954,0.841125,False,1.0
+Nitrogen fertiliser per ha,FAO % overexploited,Δlog Nitrogen fertiliser per ha -> Δ FAO % overexploited,10,37,0.033383,0.844495,0.145398,0.322222,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,0,58,-0.299395,0.022422,-0.30937,0.257361,0.246647,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,1,57,-0.104506,0.439143,-0.079305,0.259608,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,2,56,-0.062929,0.644976,-0.101266,0.261916,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,3,55,-0.182292,0.182843,-0.207507,0.264286,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,4,54,-0.080868,0.561036,-0.121062,0.266722,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,5,53,-0.181989,0.192155,-0.175459,0.269227,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,6,52,-0.07572,0.593676,-0.055751,0.271803,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,7,51,-0.069095,0.629964,-0.112989,0.274455,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,8,50,-0.2282,0.110955,-0.279527,0.277186,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,9,49,-0.162554,0.264447,-0.219444,0.28,1.0,False,1.0
+Nitrogen fertiliser per ha,SAU % overexploited,Δlog Nitrogen fertiliser per ha -> Δ SAU % overexploited,10,48,0.010579,0.94311,-0.022363,0.282902,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,0,31,-0.002919,0.987565,-0.086764,0.352026,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,1,30,0.073085,0.70112,0.113338,0.357845,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,2,29,-0.014035,0.942397,0.121795,0.363963,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,3,28,0.164415,0.403128,0.293151,0.370405,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,4,27,0.059488,0.768189,0.151108,0.377202,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,5,26,0.022371,0.913619,-0.061099,0.384388,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,6,25,-0.134816,0.520539,-0.266898,0.392,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,7,24,-0.23246,0.274357,-0.347921,0.400083,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,8,23,0.035136,0.873544,0.058882,0.408688,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,9,22,0.058296,0.796647,0.045236,0.417873,1.0,False,1.0
+Pesticides per ha,FAO % overexploited,Δlog Pesticides per ha -> Δ FAO % overexploited,10,21,0.269071,0.238221,0.439675,0.427707,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,0,29,0.182898,0.342288,0.107908,0.363963,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,1,28,-0.055797,0.777936,-0.112784,0.370405,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,2,27,0.198875,0.319996,0.185038,0.377202,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,3,26,-0.029559,0.886023,-0.043605,0.384388,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,4,25,-0.089935,0.669001,-0.016545,0.392,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,5,24,0.1092,0.6115,0.31492,0.400083,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,6,23,-0.086399,0.695073,-0.203113,0.408688,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,7,22,-0.104613,0.643142,-0.141768,0.417873,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,8,21,0.039716,0.864284,0.183826,0.427707,1.0,False,1.0
+Pesticides per ha,SAU % overexploited,Δlog Pesticides per ha -> Δ SAU % overexploited,9,20,-0.440568,0.051871,-0.258647,0.438269,0.518714,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,0,44,-0.024722,0.873442,-0.00416,0.295481,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,1,43,0.155873,0.318219,0.097522,0.298897,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,2,42,0.017036,0.914724,0.008917,0.302435,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,3,41,0.107407,0.503872,0.064918,0.306101,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,4,40,-0.043771,0.788558,-0.017361,0.309903,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,5,39,-0.058221,0.724794,-0.102572,0.313851,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,6,38,-0.059601,0.722253,0.014778,0.317954,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,7,37,-0.170004,0.314441,-0.110887,0.322222,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,8,36,0.302151,0.073285,0.370075,0.326667,0.806135,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,9,35,0.158669,0.362616,0.190863,0.3313,1.0,False,1.0
+Plastic production,FAO % overexploited,Δlog Plastic production -> Δ FAO % overexploited,10,34,0.30211,0.082469,0.090812,0.336137,0.824694,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,0,67,-0.159675,0.196808,-0.080921,0.239452,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,1,66,-0.121483,0.331209,-0.054193,0.241259,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,2,65,-0.169724,0.176492,-0.115111,0.243108,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,3,64,-0.16057,0.204981,-0.107768,0.245,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,4,63,-0.139526,0.275439,-0.054661,0.246937,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,5,62,-0.134098,0.298759,-0.060662,0.24892,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,6,61,-0.095586,0.463689,-0.029844,0.250952,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,7,60,-0.034911,0.791155,-0.02265,0.253035,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,8,59,-0.153896,0.244525,-0.094656,0.25517,1.0,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,9,58,-0.246749,0.061865,-0.256442,0.257361,0.680518,False,1.0
+Plastic production,SAU % overexploited,Δlog Plastic production -> Δ SAU % overexploited,10,57,-0.178878,0.183074,-0.086744,0.259608,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,0,47,-0.207362,0.16194,-0.172538,0.285895,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,1,46,-0.230669,0.123,-0.082876,0.288986,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,2,45,0.32849,0.027587,0.283092,0.29218,0.303462,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,3,44,0.040828,0.792445,0.090056,0.295481,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,4,43,0.000778,0.996048,-0.050325,0.298897,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,5,42,-0.070621,0.656738,-0.016463,0.302435,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,6,41,0.021866,0.892061,-0.190881,0.306101,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,7,40,-0.274514,0.086486,-0.246186,0.309903,0.864857,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,8,39,0.06948,0.674271,0.143306,0.313851,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,9,38,0.092958,0.57883,0.113204,0.317954,1.0,False,1.0
+Oil spills (number ≥ 7 t),FAO % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ FAO % overexploited,10,37,0.202678,0.228951,0.108705,0.322222,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,0,49,0.268806,0.061818,0.218261,0.28,0.618178,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,1,48,0.177645,0.227065,0.0496,0.282902,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,2,47,-0.206588,0.163547,-0.185026,0.285895,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,3,46,0.135263,0.370104,0.116914,0.288986,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,4,45,-0.014051,0.927006,0.016212,0.29218,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,5,44,0.157835,0.306188,0.202728,0.295481,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,6,43,-0.43677,0.003408,-0.347107,0.298897,0.037487,True,0.439615
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,7,42,0.070652,0.656599,-0.019173,0.302435,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,8,41,0.204952,0.198636,0.2578,0.306101,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,9,40,-0.07838,0.6307,-0.052281,0.309903,1.0,False,1.0
+Oil spills (number ≥ 7 t),SAU % overexploited,Δlog Oil spills (number ≥ 7 t) -> Δ SAU % overexploited,10,39,-0.115121,0.485262,-0.085552,0.313851,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,0,47,0.000207,0.998897,-0.054449,0.285895,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,1,46,-0.009256,0.951318,-0.078283,0.288986,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,2,45,-0.11385,0.456475,-0.165332,0.29218,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,3,44,-0.001521,0.992184,0.045539,0.295481,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,4,43,0.256715,0.09656,0.195174,0.298897,0.965596,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,5,42,-0.185008,0.24081,-0.213351,0.302435,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,6,41,0.226638,0.154178,0.048233,0.306101,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,7,40,-0.39175,0.012423,-0.12815,0.309903,0.136652,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,8,39,0.060838,0.712936,-0.027138,0.313851,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,9,38,0.176854,0.288154,0.085062,0.317954,1.0,False,1.0
+Oil spilled (tonnes),FAO % overexploited,Δlog Oil spilled (tonnes) -> Δ FAO % overexploited,10,37,0.051938,0.760147,0.002965,0.322222,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,0,49,0.414802,0.003042,0.333486,0.28,0.033466,True,0.395501
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,1,48,-0.160417,0.276076,-0.132715,0.282902,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,2,47,0.00532,0.971691,-0.00451,0.285895,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,3,46,0.130968,0.385629,0.212779,0.288986,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,4,45,-0.260862,0.08349,-0.251993,0.29218,0.834904,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,5,44,0.194929,0.204801,0.218021,0.295481,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,6,43,-0.132299,0.397717,-0.049913,0.298897,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,7,42,-0.061911,0.696912,-0.288412,0.302435,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,8,41,0.164849,0.303022,0.184503,0.306101,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,9,40,-0.203833,0.207104,-0.207327,0.309903,1.0,False,1.0
+Oil spilled (tonnes),SAU % overexploited,Δlog Oil spilled (tonnes) -> Δ SAU % overexploited,10,39,-0.07873,0.633782,-0.101625,0.313851,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,0,31,0.472767,0.007236,0.452941,0.352026,0.079597,False,0.926225
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,1,30,-0.1462,0.440765,-0.119559,0.357845,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,2,29,-0.24392,0.202263,-0.253914,0.363963,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,3,28,-0.038246,0.846784,-0.020271,0.370405,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,4,27,-0.500507,0.00784,-0.479071,0.377202,0.079597,False,0.995645
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,5,26,0.135796,0.508325,0.147502,0.384388,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,6,25,0.111199,0.596684,0.085483,0.392,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,7,24,0.302929,0.150183,0.289944,0.400083,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,8,23,0.159623,0.466907,0.052449,0.408688,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,9,22,-0.275866,0.213985,-0.300255,0.417873,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),FAO % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ FAO % overexploited,10,21,-0.041266,0.859038,0.017561,0.427707,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,0,29,0.019942,0.918218,0.117009,0.363963,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,1,28,0.039858,0.840406,-0.029834,0.370405,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,2,27,0.011909,0.952987,0.142574,0.377202,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,3,26,-0.13806,0.501216,-0.178834,0.384388,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,4,25,-0.11348,0.589127,-0.206963,0.392,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,5,24,0.483324,0.016728,0.44227,0.400083,0.167284,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,6,23,-0.219377,0.314539,-0.161601,0.408688,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,7,22,0.12298,0.585593,0.177351,0.417873,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,8,21,0.092306,0.690667,0.047418,0.427707,1.0,False,1.0
+Ocean acidity [H⁺] (Hawaii),SAU % overexploited,Δlog Ocean acidity [H⁺] (Hawaii) -> Δ SAU % overexploited,9,20,-0.437943,0.053449,-0.493233,0.438269,0.481041,False,1.0
