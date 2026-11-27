@@ -5,7 +5,7 @@ Theme: **UN Sustainable Development Goal 14 — Life Below Water**
 
 We apply exploratory data analysis (EDA) and statistical hypothesis testing in Python to test whether overfishing is a genuine and worsening problem — first **globally**, and then, **only if the global result holds**, for **Southeast Asia (SEA)**.
 
-> **Status:** 🟢 Analysis complete — the pipeline runs **data quality first** ([`run_all.py`](run_all.py)): every input checked and cleaned before any analysis, with validation and integrity formally tested ([`0-data-quality/`](0-data-quality/) → [`data/processed/`](data/processed/)); 34 exploratory figures ([`1-visualisation/`](1-visualisation/)), course-method tests ([`2-statistical-tests/`](2-statistical-tests/)) and formal hypothesis tests H1a–H2c in seven iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast, drivers in combination, sea & water pollution alone and combined with the other drivers ([`3-hypothesis-tests/`](3-hypothesis-tests/)) done; overview figures for every test and a 78-figure catalogue ([`4-overview/`](4-overview/)) plus an offline interactive results dashboard ([`dashboard/`](dashboard/)); only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
+> **Status:** 🟢 Analysis complete — the pipeline runs **data quality first** ([`run_all.py`](run_all.py)): every input checked and cleaned before any analysis, with validation and integrity formally tested ([`0-data-quality/`](0-data-quality/) → [`data/processed/`](data/processed/)); 34 exploratory figures ([`1-visualisation/`](1-visualisation/)), course-method tests ([`2-statistical-tests/`](2-statistical-tests/)) and formal hypothesis tests H1a–H2c in eight iterations — catch, fishing effort, ocean warming, shipping & built structures, pooled panel + stock rebuilding + Fishing-in-Balance + 2030 forecast, drivers in combination, sea & water pollution alone and combined with the other drivers, and causes that can be confirmed (stock-level fishing pressure, the 2015 crackdowns on illegal fishing, management, subsidies) ([`3-hypothesis-tests/`](3-hypothesis-tests/)) done; overview figures for every test and a 81-figure catalogue ([`4-overview/`](4-overview/)) plus an offline interactive results dashboard ([`dashboard/`](dashboard/)); only the report write-up remains (figure set: [`figures/README.md`](figures/README.md)). See [Progress](#progress).
 
 ---
 
@@ -80,6 +80,10 @@ SDG target **14.4** calls for ending overfishing and restoring stocks to sustain
 | **H7d** | 7 · pollution × pressure | Run-off doesn't change the effect of effort, sea temperature or aquaculture in the SEA country panel | Interaction significant after Holm and robust to country trends |
 | **H7e** | 7 · best combination with pollution | Adding fertiliser, plastic and oil spills to the six long-run drivers doesn't predict year-to-year changes better than the trend or the no-pollution model | BIC combination includes pollution, is significant, and beats both on held-out years, in both sources |
 | **H7f** | 7 · nutrient loading per sea | SEA seas whose nitrogen or phosphorus loading rose faster than the others' did not become more overexploited or fish down the food web faster (5-LME panel) | Significant after Holm in both specifications, in the 'worse' direction |
+| **H8a** | 8 · stock-level fishing pressure | Across assessed stocks (RAM Legacy), fishing above the sustainable level (U/Umsy) does not predict that the stock shrinks relative to Bmsy the next year | Negative effect with stock + year fixed effects, robust to long-series stocks and 1980+ |
+| **H8b** | 8 · crackdowns on illegal fishing | Indonesia's 2014 foreign-vessel moratorium and Thailand's 2015 IUU reforms did not change % overexploited or MTL in their EEZs relative to the other SEA EEZs | Improvement significant after Holm (randomization inference) and a clean placebo |
+| **H8c** | 8 · management & illegal fishing | Countries' IUU-response and IUU-prevalence scores are not associated with their stock status | Significant after Holm in the expected direction (cross-country, controls GDP per capita and catch) |
+| **H8d** | 8 · subsidies | Capacity-enhancing subsidies per tonne of catch are not associated with worse stock status | Significant after Holm in the expected direction |
 | **H4c** | 4 · artificial islands | EEZs facing the Spratly Islands did not change after China's 2013–16 island building, relative to other SEA EEZs | Significant difference-in-differences |
 
 ---
@@ -150,6 +154,18 @@ Details: [data dictionary §4](data/raw/README.md#4-data-integrity-sources--is-r
 
 Details: [data dictionary §8](data/raw/README.md#8-sea-and-water-pollution--owid-added-for-iteration-7-of-the-analysis).
 
+### Cause sources — iteration 8 (`data/raw/causes/`)
+
+| Source | Series | Coverage |
+|--------|--------|----------|
+| RAM Legacy Stock Assessment Database v4.66 (Zenodo 10.5281/zenodo.14043031) | B/Bmsy and U/Umsy (fishing pressure relative to the sustainable level) per assessed stock and year | 432 stocks with both, 1874–2023; mostly US, Japan, NZ, Chile, Canada, Australia, Europe |
+| IUU Fishing Risk Index (Poseidon / GI-TOC) | 40 indicators of vulnerability, prevalence of and response to illegal fishing, scored 1 (best) – 5 (worst) | 152 coastal states, 2019, 2021, 2023, 2025 |
+| Sumaila et al. (2019), *Data in Brief* 27:104706 | Fisheries subsidies by country and type (capacity-enhancing, beneficial, ambiguous), constant 2018 USD | 152 countries, 2018 |
+| Yale EPI 2026 raw data | Regional Marine Trophic Index (trend in the trophic level of each EEZ's catch, from Sea Around Us) | 164 countries, 1989–2019 |
+| World Bank and FAO via OWID | GDP per capita and capture production, all countries (controls) | 1960–2024 |
+
+Details: [data dictionary §9](data/raw/README.md#9-causes-that-can-be-confirmed--added-for-iteration-8-of-the-analysis).
+
 **Dropped:** Global Fishing Watch (needs a registered account and its effort series is only 2012–2024) and SEAFDEC (PDF tables). Neither is needed for the hypotheses above; GFW can be added later as an optional extension.
 
 ---
@@ -163,10 +179,10 @@ Details: [data dictionary §8](data/raw/README.md#8-sea-and-water-pollution--owi
 | **0 · Data quality** | [`0-data-quality/`](0-data-quality/) | `data/raw/` (the only step that does) | checked copies of every input (`data/processed/clean/`), tidy tables + cleaning log (`data/processed/`), validation and integrity tests |
 | 1 · Exploration | [`1-visualisation/`](1-visualisation/) | `data/processed/` | 34 EDA figures |
 | 2 · Course methods | [`2-statistical-tests/`](2-statistical-tests/) | `data/processed/` | test tables + 8 figures |
-| 3 · Hypothesis tests | [`3-hypothesis-tests/`](3-hypothesis-tests/) | `data/processed/` | verdicts, 7 iterations, 30 figures |
+| 3 · Hypothesis tests | [`3-hypothesis-tests/`](3-hypothesis-tests/) | `data/processed/` | verdicts, 8 iterations, 33 figures |
 | 4 · Overview | [`4-overview/`](4-overview/), [`dashboard/`](dashboard/) | result tables | analysis map, figure catalogue, results page |
 
-**The gate:** step 0 checks all 90 input files (parse, exact duplicates, infinite values, missing values) and the tidy tables (duplicate keys, value ranges). If any check fails it exits with an error and the run stops. Steps 1–4 also refuse to start on their own until step 0 has passed on the *current* raw files (`require_checked_data()` in [`src/loaders.py`](src/loaders.py) compares a SHA-256 fingerprint of `data/raw/`). All data loaders and the chart style live in [`src/`](src/), so step 0 never depends on a later step.
+**The gate:** step 0 checks all 97 input files (parse, exact duplicates, infinite values, missing values) and the tidy tables (duplicate keys, value ranges). If any check fails it exits with an error and the run stops. Steps 1–4 also refuse to start on their own until step 0 has passed on the *current* raw files (`require_checked_data()` in [`src/loaders.py`](src/loaders.py) compares a SHA-256 fingerprint of `data/raw/`). All data loaders and the chart style live in [`src/`](src/), so step 0 never depends on a later step.
 
 Fishing data is strongly **trended**. Two trending series will look correlated even when unrelated (*spurious correlation*), so correlation tests are run only on **stationary** series.
 
@@ -255,6 +271,7 @@ Because years are autocorrelated, the paired-test *p*-values are optimistic; we 
 10. **Few clusters.** The pooled panel has 11 EEZs (5 countries for effort), so clustered standard errors over-reject; p-values come from a wild cluster bootstrap.
 11. **Catch-based categories.** SAU "rebuilding" (H5b) and the FiB index (H5c) both come from catch data, so they describe fisheries, not surveyed biomass.
 12. **Spurious regressions in levels (H6).** Detrended levels still wander like random walks, so levels-with-trend regressions found "links" for about half of all driver pairs, with signs flipping between specifications. Combination tests therefore use year-to-year changes; a levels result counts only if the series are cointegrated. Combinations with shipping use only ~19 years (2000–2019).
+14. **Iteration 8 data (H8).** RAM B and U come from the same stock-assessment model, so part of their link is built into how assessments work, and only 3 RAM stocks touch SEA waters (H8a is a global mechanism result). Sea Around Us 'foreign' catch cannot show Indonesia's removal of ex-foreign vessels, which were Indonesian-flagged, and only 5 post-policy years exist (H8b). The IUU index, subsidies (one year, partly modelled) and EPI trophic trend are cross-sections: associations, not causes; the RAM country values cover only 19 countries (H8c, H8d).
 13. **Pollution data (H7).** Fertiliser and pesticides measure what is applied on land, not what reaches the sea; acidity comes from one open-ocean station (Hawaii); chlorophyll-a starts in 2005 and pesticides in 1990; Thailand's pesticide series drops ~90% in 2013 (reporting break); coastal nutrient loading is modelled (2000–2015, nitrogen held constant after 2010), so it is tested only as a 5-sea panel with 45–80 LME-years and 5 clusters (H7f), which can detect only fairly large effects; plastic emissions exist for one year only and could not be tested.
 
 ---
@@ -288,10 +305,11 @@ sdg14-overfishing-analysis/
 │   ├── hypothesis_tests.py ← stationarity, H1a, H1b, H2a, H2b, H2c, residual diagnostics;
 │   │                         iterations 2 (effort), 3 (warming, H3), 4 (shipping & structures, H4),
 │   │                         5 (panel, rebuilding, FiB, forecast, H5), 6 (drivers in combination, H6),
-│   │                         7 (sea & water pollution, alone and combined, H7)
+│   │                         7 (sea & water pollution, alone and combined, H7),
+│   │                         8 (causes that can be confirmed: stocks, policies, management, subsidies, H8)
 │   ├── README.md        ← verdicts, method per hypothesis, notes for the report
 │   ├── results/         ← one CSV per test family + decisions.csv
-│   └── figures/         ← 29 PNGs (iteration 1: 6; iterations 2–7: 3 + 2 + 4 + 4 + 3 + 6; summary S.01)
+│   └── figures/         ← 33 PNGs (iteration 1: 6; iterations 2–8: 3 + 2 + 4 + 4 + 3 + 7 + 3; summary S.01)
 ├── 4-overview/
 │   ├── overview.py      ← run last: reads result tables only; analysis map, stationarity, assumption
 │   │                       checks, long-run tests; builds the figure catalogue
@@ -312,8 +330,9 @@ sdg14-overfishing-analysis/
 ├── requirements.txt     ← Python dependencies
 ├── data/
 │   ├── raw/             ← original downloads (OWID + Sea Around Us), see data/raw/README.md;
-│   │   └── validation/     read ONLY by step 0. validation/ = alternative sources (UN SDG,
-│   │                        World Bank, SAU regions), integrity sources and iteration drivers
+│   │   ├── validation/     read ONLY by step 0. validation/ = alternative sources (UN SDG,
+│   │   │                    World Bank, SAU regions), integrity sources and iteration drivers
+│   │   └── causes/         iteration 8: RAM Legacy extract, IUU index, subsidies, EPI, OWID all-country
 │   └── processed/       ← written by step 0, read by steps 1–4 (see its README):
 │       ├── clean/       ← checked copy of every raw file (same layout and columns) + pass marker
 │       └── *.csv        ← tidy analysis tables + cleaning_log.csv
@@ -340,7 +359,7 @@ python 0-data-quality/clean_data.py        # step 0: check + clean every input (
 python 0-data-quality/quality_tests.py     # step 0: validation and integrity tests
 python 1-visualisation/visualise.py        # step 1: exploratory figures
 python 2-statistical-tests/stat_tests.py   # step 2: course-method tests
-python 3-hypothesis-tests/hypothesis_tests.py   # step 3: hypothesis tests, 7 iterations
+python 3-hypothesis-tests/hypothesis_tests.py   # step 3: hypothesis tests, 8 iterations
 python 4-overview/overview.py              # step 4: overview figures + figure catalogue
 python dashboard/build_dashboard.py        # step 4: interactive results page (open dashboard/index.html)
 jupyter lab
@@ -376,9 +395,10 @@ jupyter lab
 | **Iteration 5:** pooled panel with fixed effects (H5a), stock rebuilding after 2015 (H5b), Fishing-in-Balance index (H5c), forecast to 2030 (H5d) | 1–2 | ✅ Done — no pressure effect even pooled; SEA rebuilding stalled; FiB rising (expansion), falling only in Thailand; world ~41% overexploited by 2030 | `3-hypothesis-tests/` §11 |
 | **Iteration 6:** drivers in combination — pairs of world drivers (H6a), interactions in the SEA panel (H6b), best combination with held-out-year test and Shapley R² (H6c) | 1–2 | ✅ Done — no pair, interaction or combination holds in both sources or beats the trend on unseen years; levels "links" are spurious | `3-hypothesis-tests/` §12 |
 | **Iteration 7:** sea and water pollution — fertiliser and pesticide run-off, plastic, oil spills, acidification, chlorophyll-a; alone (H7a global, H7b SEA) and combined with the other drivers (H7c pairs, H7d interactions, H7e best combination); nutrient loading per SEA sea (H7f) | 1–2 | ✅ Done — pollution shares the trend only; no pair, interaction or combination with pollution holds in both sources or beats the trend on unseen years | `3-hypothesis-tests/` §13, `data/raw/owid/` |
+| **Iteration 8:** causes that can be confirmed — stock-level fishing pressure (H8a, RAM Legacy), natural experiments: Indonesia 2014 / Thailand 2015 crackdowns on illegal fishing (H8b), management and illegal fishing across countries (H8c, IUU index), fleet-expanding subsidies (H8d) | 1–2 | ✅ Done — fishing above the sustainable level is followed by decline (432 stocks); crackdowns, IUU scores and subsidies show no significant effect | `3-hypothesis-tests/` §14, `data/raw/causes/` |
 | Final figure selection (15 figures mapped to report sections; report outline drafted) | — | ✅ Done | [`figures/README.md`](figures/README.md) |
-| Overview: analysis map, figures for the table-only tests (stationarity, assumption checks, cointegration/Granger), 78-figure catalogue | — | ✅ Done — every test now has a figure | [`4-overview/`](4-overview/) |
-| Interactive results dashboard: verdict table with drill-down, 2030 forecast chart, filterable gallery of all 78 figures | — | ✅ Done — offline single page | [`dashboard/`](dashboard/) |
+| Overview: analysis map, figures for the table-only tests (stationarity, assumption checks, cointegration/Granger), 81-figure catalogue | — | ✅ Done — every test now has a figure | [`4-overview/`](4-overview/) |
+| Interactive results dashboard: verdict table with drill-down, 2030 forecast chart, filterable gallery of all 81 figures | — | ✅ Done — offline single page | [`dashboard/`](dashboard/) |
 | Report write-up (~10 pages) | — | ⬜ Team task | — |
 
 ### Findings so far
@@ -416,6 +436,10 @@ _Exploratory figures: [`1-visualisation/`](1-visualisation/). Course-method test
 | *Iteration 7* H7d pollution × pressure (SEA) | ❌ Fail to reject | Fertiliser × effort / sea temperature / aquaculture, pesticides × effort: 0 of 16 interaction terms significant after Holm (smallest raw p = 0.046, gone with country trends) |
 | *Iteration 7* H7e best combination with pollution (world) | ❌ Fail to reject | 9 drivers (6 long-run + fertiliser, plastic, oil spills): BIC keeps nothing (FAO) or catch + fertiliser (SAU, R² +0.17, but fertiliser growth *lowers* the rise); all 9 explain no more than chance (circular-shift p = 0.65 / 0.35); on held-out years the trend alone still predicts best (RMSE 1.49 vs 1.66 pp FAO, 0.90 vs 1.01 pp SAU); pollution improves on the no-pollution model by 0.01 pp in SAU only |
 | *Iteration 7* H7f nutrient loading per sea (SEA) | ❌ Fail to reject | 5 large marine ecosystems × 2000–2015, LME + year fixed effects, wild cluster bootstrap: 0 of 16 tests significant after Holm; smallest raw p = 0.075 (nitrogen → *higher* trophic level) |
+| *Iteration 8* H8a stock-level fishing pressure (world) | ✅ Reject H₀ | RAM Legacy v4.66, 432 stocks, 21,157 stock-years, stock + year fixed effects: β = −0.030 (p < 0.001), i.e. doubling U/Umsy shrinks B/Bmsy ~2% the next year; same sign and p < 0.001 for lags 1–3, ≥ 30-year stocks and 1980+ (β −0.057). 248 stocks that fell below Bmsy were fished at a median 1.28 × Umsy in the 3 years before. Low B/Bmsy is also followed by cuts in U (management response) |
+| *Iteration 8* H8b crackdowns on illegal fishing (SEA) | ❌ Fail to reject | DiD 2008–2019, event 2015, randomization inference: Indonesia % overexploited β −3.2 pp (p = 0.50), Thailand −0.3 pp (p = 0.96); MTL p ≥ 0.07; placebos clean. Weak first stage: SAU foreign share barely moves (ex-foreign vessels were Indonesian-flagged), Indonesia's catch *rose* (+26%, p = 0.04) |
+| *Iteration 8* H8c management & illegal fishing (cross-country) | ❌ Fail to reject | IUU response and prevalence scores 2019 vs trophic-level trend (n = 139) and RAM stock status (n = 19), controls GDP per capita and catch: 0 of 6 significant after Holm |
+| *Iteration 8* H8d fleet-expanding subsidies (cross-country) | ❌ Fail to reject | Capacity-enhancing subsidies per tonne: all 3 effects in the expected direction (β_std −0.13 to −0.41), none significant after Holm; beneficial (management) subsidies go with a *falling* trophic level (β_std −0.27, Holm p = 0.013), likely reverse causation (countries spend where fisheries decline) |
 | Stage rule (both iterations) | ⚠️ Not met | Stage 2 stays exploratory |
 
 **Why iteration 2:** iteration 1 found no link between catch and overexploitation. Catch is a weak measure of pressure, because it can stay flat while fishing intensifies if each trip lands less. Effort measures pressure directly. Result: effort rose 44% worldwide and ~170% in SEA since the early 1990s while catch per unit effort fell. That is the long-run explanation (depletion). Year-to-year effort changes still don't predict year-to-year stock-status changes, which fits stock status being a slow, cumulative indicator.
@@ -427,6 +451,8 @@ _Exploratory figures: [`1-visualisation/`](1-visualisation/). Course-method test
 **Why iteration 5:** every null result so far could be blamed on short single series. Pooling all 11 EEZs with fixed effects (which also removes the shared trend) still finds no pressure effect, so the nulls reflect the data's resolution, not too few years. Two new questions close the SDG story: rebuilding sped up worldwide after 2015 but stalled in SEA, so the "restore stocks" half of SDG 14.4 is missed there too; and the Fishing-in-Balance index shows SEA catches are still expanding into new and higher-trophic stocks, which is why SEA mean trophic level rises while overexploitation also rises. Thailand is the only country past that phase (catch and FiB falling). Finally, a back-tested forecast puts the world at about 41% overexploited by 2030, so the SDG deadline will be missed by a wider margin than today.
 
 **Why iteration 6:** iterations 1–5 tested one driver at a time, so a null could hide drivers that only matter together: effects that add up, one driver masking another, or one changing the other's effect. Testing every pair jointly, four ecologically motivated interactions in the SEA panel, and every combination of the six long-run drivers (judged on years the model has not seen) finds nothing that holds in both data sources or beats the trend. It also shows why the analysis works on changes: in levels with a trend, about half of all pairs look "significant", and those links are spurious. The no-driver result is therefore not an artefact of one-at-a-time testing.
+
+**Why iteration 8:** seven iterations related national or world totals to each other; every driver shared the upward trend, so none could be separated from it. Iteration 8 changes the design instead of the driver: data at the level where the cause acts (432 individual assessed stocks), natural experiments (Indonesia's and Thailand's 2015 crackdowns on illegal fishing, compared with EEZs without a reform), and cross-country comparisons of management and subsidies. Stock by stock, the mechanism is confirmed: fishing above the sustainable level is followed by stock decline, and stocks that fell below Bmsy had been fished at ~1.3 × the sustainable rate. What sets the pressure is not confirmed: the crackdowns show no effect on stock status by 2019 (5 post-years, weak first stage), and management scores and subsidies show no significant cross-country link.
 
 **Why iteration 7:** pollution was the one SDG 14 pressure not yet tested (target 14.1 marine pollution, incl. nutrients and plastic; target 14.3 acidification). It can harm stocks without any catch: nutrient run-off causes algal blooms and low-oxygen dead zones, pesticides are toxic to larvae, plastic and oil damage habitats, and acidification weakens shells and reefs. Iteration 7 repeated the tests of iterations 4–6 with pollution, alone and combined with every earlier driver. The result is the same: run-off, plastic and acidity grew with overexploitation (and oil spills fell 90%), but no link holds beyond the shared trend in both data sources, year to year, across countries, in interaction with fishing, warming or aquaculture, or in the best combination of drivers. The one SEA-wide signal (pesticide use) rests on three countries and is not confirmed by the panel. Coastal nutrient loading is too short as one series, but matched to the same 5 seas in Sea Around Us it becomes a 5-sea panel (H7f): seas whose loading rose faster did not deteriorate faster. Plastic emissions (one year) could only be shown descriptively.
 
@@ -450,6 +476,7 @@ _Exploratory figures: [`1-visualisation/`](1-visualisation/). Course-method test
 
 | Date | Author | Change |
 |------|--------|--------|
+| 2026-11-27 | Salah | Iteration 8 (causes that can be confirmed, new H8): `data/raw/causes/` with RAM Legacy v4.66 extract (B/Bmsy, U/Umsy per stock-year + stock metadata; R data entry of the Zenodo zip fetched by HTTP range requests, CRC-32 checked), IUU Fishing Risk Index 2019–2025, Sumaila et al. 2019 subsidies, EPI 2026 regional marine trophic index, OWID GDP per capita and capture for all countries (SHA-256 in `src/download_data.py`, new `causes` part; `pyreadr` added to requirements); loaders `ram_panel`, `iuu_index`, `subsidies_2018`, `epi_rmti`, `i8_owid_all`; `hypothesis_tests.py` sections i8_h8a (stock panel, stock + year FE), i8_h8b (Indonesia 2014 / Thailand 2015 DiD with randomization inference, placebo 2011, first stage), i8_h8cd (cross-country, HC3, Holm); figures I8.01–I8.03, 7 tables, 4 decision rows; O.01 gains an iteration-8 lane and a new answer; catalogue and dashboard rebuilt (81 figures); caveat 14; step 0 now checks 97 files; every earlier result table and figure unchanged |
 | 2026-11-26 | Salah | Iteration 7 (sea and water pollution, new H7): 11 OWID files added to `data/raw/owid/` (fertiliser, pesticides, chlorophyll-a, plastic production, oil spills, seawater pH, coastal nutrients, plastic to the ocean, mismanaged plastic, beach litter; SHA-256 checked) with a `pollution` part in `src/download_data.py`; pollution loaders in `src/loaders.py`; `hypothesis_tests.py` sections i7_data, i7_h7a (global, as H4a), i7_h7b (SEA CCF + leave-one-country-out + fixed-effects panel), i7_descriptive, i7_h7c (63 pollution pairs, as H6a), i7_h7d (4 pollution × pressure interactions, as H6b), i7_h7e (512 combinations incl. pollution vs the no-pollution model, as H6c), i7_h7f (nutrient loading per SEA sea vs Sea Around Us for the same 5 LMEs, added after the first run; `sau_lme_panel()` loader); figures I7.01–I7.07, 17 tables, 6 decision rows; O.01 map gains two iteration-7 lanes, O.02 includes the pollution series; catalogue and dashboard rebuilt (78 figures); caveat 13; step 0 now checks 90 files; every earlier result table and figure unchanged |
 | 2026-11-25 | Salah | Pipeline reordered so data quality runs first: folders renamed `3-data-quality` → `0-data-quality`, `0-visualisation` → `1-visualisation`, `1-statistical-tests` → `2-statistical-tests`, `2-hypothesis-tests` → `3-hypothesis-tests`; `clean_data.py` now checks every raw file (C1–C4) and writes checked copies to `data/processed/clean/` (R1 'Viet Nam' → 'Vietnam' in 5 files, R5 partial 2026 SST row dropped, R4 6 planned GDAT dams with future completion years removed) before building the tidy tables, and exits with an error if any check fails; steps 1–4 read only `data/processed/` and refuse to run until step 0 has passed on the current raw files (SHA-256 fingerprint); data loaders, chart style and shared statistics moved unchanged into `src/` (`loaders.py`, `style.py`, `stats_utils.py`) so step 0 no longer imports later steps; new `run_all.py`; all result tables and 67 of 71 figures byte-identical (O.01 shows the gate; O.02–O.04 differ only in their source line) |
 | 2026-11-23 | Salah | Iteration 6 (drivers in combination, new H6): `hypothesis_tests.py` sections i6_h6a (28 driver pairs, joint HAC F-test on year-to-year changes, levels counted only if Engle-Granger cointegrated), i6_h6b (4 interactions in the SEA country panel, two-way FE + wild cluster bootstrap), i6_h6c (all 64 driver combinations by BIC, LASSO, held-out-year test, Shapley R², circular-shift permutation); figures I6.01–I6.03, 6 tables, H6 decision rows; O.01 analysis map gains an iteration 6 lane; figure catalogue and dashboard rebuilt (71 figures); caveat 12; iterations 1–5 kept |

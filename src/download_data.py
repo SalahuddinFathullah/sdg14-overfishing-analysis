@@ -66,6 +66,23 @@ Sources
    - plastic-waste-emitted-to-the-ocean.csv, mismanaged-plastic-waste-per-capita.csv   2019 snapshot
    - beach-litter.csv                    SDG 14.1.1b, items per km2, sparse 2015-2022
 
+9. Causes that can be confirmed (iteration 8 of the analysis)  ->  data/raw/causes/
+   - ram_v4.66_timeseries.csv, ram_v4.66_stocks.csv   RAM Legacy Stock Assessment Database v4.66
+                                         (Zenodo 10.5281/zenodo.14043031): B/Bmsy, U/Umsy, total
+                                         biomass and catch per stock-year; stock metadata incl.
+                                         primary country (ISO3). Extracted from the R data file
+                                         inside the 112 MB zip (needs `pip install pyreadr`)
+   - iuu_fishing_index_2019-2025_indicator_scores.csv   IUU Fishing Risk Index (Poseidon /
+                                         GI-TOC), 40 indicators x 152 states x 2019-2025
+   - sumaila2019_fisheries_subsidies_2018.csv   Sumaila et al. (2019) Data in Brief 27:104706,
+                                         subsidies by country and type, constant 2018 USD
+   - epi2026_regional_marine_trophic_index_raw.csv   Yale EPI 2026 raw data, RMS indicator
+   - owid_capture-fishery-production_all_countries.csv, owid_gdp-per-capita-worldbank_all_countries.csv
+                                         OWID tables kept for all countries (controls)
+   These sites refuse the analysis shell's proxy; the committed files were fetched in a browser
+   (RAM: only the R data entry of the zip, by HTTP range requests, CRC-32 checked) and are
+   checked against CAUSES_SHA256 below.
+
 7. Human use of the sea (iteration 4 of the analysis)  ->  data/raw/validation/human_use/
    - wb_shipping.csv            World Bank WDI: container port traffic (TEU, UNCTAD data) and liner
                                 shipping connectivity index; current WDI + the WDI Dec-2020 archive
@@ -89,6 +106,7 @@ Usage
     python src/download_data.py --only climate      # OWID SST/ocean heat + NOAA ERSST v5 for SEA EEZs
     python src/download_data.py --only human_use    # shipping, dams, offshore wind/platforms (~20 MB)
     python src/download_data.py --only pollution    # fertiliser, pesticides, plastic, oil spills, pH (OWID)
+    python src/download_data.py --only causes       # RAM Legacy, IUU index, subsidies, EPI RMTI (~120 MB)
 
 Notes
 -----
@@ -804,6 +822,65 @@ def download_pollution() -> None:
         (RAW_DIR / "owid" / f"{slug}.csv").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+# Iteration 8 (causes): sources and the SHA-256 of the committed files
+RAM_ZIP = "https://zenodo.org/api/records/14043031/files/RAMLDB%20v4.66.zip/content"
+IUU_ZIP = "https://iuufishingindex.net/downloads/iuu_fishing_index_2025-data_and_disclaimer.zip"
+SUMAILA_ZIP = "https://ars.els-cdn.com/content/image/1-s2.0-S2352340919310613-mmc1.zip"
+EPI_ZIP = "https://epi.yale.edu/sites/default/files/2026-09/epi2026_rawdata_na_2026-08-31.zip"
+CAUSES_SHA256 = {
+    "epi2026_regional_marine_trophic_index_raw.csv": "823485cf00904a2689a16582f3fadbc8aa01eb23260161e299f011afaac56b16",
+    "iuu_fishing_index_2019-2025_indicator_scores.csv": "1c556bbcf57fd49c20fd200cfc8bf5cbc1623c2022fb2eb9158fcdc18ad378b9",
+    "ram_v4.66_stocks.csv": "3fd5a6c5f95436ef8e87416728984a2a2c97ec08a46856b81c1b226756d1cba0",
+    "ram_v4.66_timeseries.csv": "2e038195ad3318425612b97e9f6d82b778857211d3562165ecab509d6799efda",
+    "owid_capture-fishery-production_all_countries.csv": "163873d390ea92a27530cd7be2e7d79f5f1163d50b440198fa784cbf546525ae",
+    "owid_gdp-per-capita-worldbank_all_countries.csv": "18018aea4360d625b274c8a773ebd7a54b7e22e1d79e19587d5af4f0eedac111",
+    "sumaila2019_fisheries_subsidies_2018.csv": "84c38362fa48dc7fa09739ed6bf098b717af7bc9ef04dfad4dc1215e7140f25e",
+}
+
+
+def download_causes() -> None:
+    """Iteration 8 sources: RAM Legacy extract, IUU index, Sumaila subsidies, EPI RMTI, OWID all-country tables."""
+    import hashlib
+    out = RAW_DIR / "causes"
+    out.mkdir(parents=True, exist_ok=True)
+
+    def from_zip(url: str, member_suffix: str, target: str) -> None:
+        print(f"ZIP   {url.rsplit('/', 1)[-1]} -> {target}")
+        z = zipfile.ZipFile(io.BytesIO(get(url, timeout=600)))
+        name = next(n for n in z.namelist() if n.endswith(member_suffix) and "__MACOSX" not in n)
+        (out / target).write_bytes(z.read(name))
+
+    from_zip(IUU_ZIP, "indicator scores.csv", "iuu_fishing_index_2019-2025_indicator_scores.csv")
+    from_zip(SUMAILA_ZIP, "Sumaila_dataset.csv", "sumaila2019_fisheries_subsidies_2018.csv")
+    from_zip(EPI_ZIP, "RMS_raw_na.csv", "epi2026_regional_marine_trophic_index_raw.csv")
+    for slug in ("capture-fishery-production", "gdp-per-capita-worldbank"):
+        print(f"OWID  {slug} (all countries)")
+        (out / f"owid_{slug}_all_countries.csv").write_bytes(get(OWID_BASE.format(slug=slug)))
+
+    # RAM Legacy: R data file from the zip -> two CSV extracts (requires pyreadr)
+    import pyreadr
+    import pandas as pd
+    print("ZIP   RAMLDB v4.66.zip (112 MB) -> ram_v4.66_*.csv")
+    z = zipfile.ZipFile(io.BytesIO(get(RAM_ZIP, timeout=3600)))
+    name = next(n for n in z.namelist() if n.endswith(".RData"))
+    tmp = out / "_ram.RData"
+    tmp.write_bytes(z.read(name))
+    r = pyreadr.read_r(str(tmp), encoding="latin1", use_objects=["timeseries_values_views", "stock", "metadata"])
+    tmp.unlink()
+    ts = r["timeseries_values_views"][["stockid", "year", "BdivBmsypref", "UdivUmsypref", "TBbest", "TCbest"]]
+    ts = ts.dropna(subset=["BdivBmsypref", "UdivUmsypref", "TBbest", "TCbest"], how="all")
+    ts["year"] = ts["year"].astype(int)
+    ts.to_csv(out / "ram_v4.66_timeseries.csv", index=False, float_format="%.6g")
+    st = r["stock"][["stockid", "stocklong", "scientificname", "commonname", "region", "primary_country",
+                     "ISO3_code", "primary_FAOarea", "state"]]
+    md = r["metadata"][["stockid", "taxGroup", "FisheryType", "managementauthority"]].drop_duplicates("stockid")
+    st.merge(md, on="stockid", how="left").to_csv(out / "ram_v4.66_stocks.csv", index=False)
+
+    for f, want in CAUSES_SHA256.items():          # OWID tables change when OWID updates: report, don't stop
+        got = hashlib.sha256((out / f).read_bytes()).hexdigest()
+        print(f"  {'OK ' if got == want else 'NEW'} {f}" + ("" if got == want else " (differs from the committed file)"))
+
+
 def write_manifest(parts: list[str]) -> None:
     manifest = {
         "retrieved": date.today().isoformat(),
@@ -818,12 +895,12 @@ def write_manifest(parts: list[str]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     parser.add_argument("--only", choices=["owid", "sau", "validation", "integrity", "effort", "climate", "human_use",
-                                           "pollution"],
+                                           "pollution", "causes"],
                         help="download one part only")
     args = parser.parse_args()
 
     parts = [args.only] if args.only else ["owid", "sau", "validation", "integrity", "effort", "climate", "human_use",
-                                           "pollution"]
+                                           "pollution", "causes"]
     if "owid" in parts:
         download_owid()
     if "sau" in parts:
@@ -840,6 +917,8 @@ def main() -> None:
         download_human_use()
     if "pollution" in parts:
         download_pollution()
+    if "causes" in parts:
+        download_causes()
     write_manifest(parts)
     print("Done ->", RAW_DIR)
 

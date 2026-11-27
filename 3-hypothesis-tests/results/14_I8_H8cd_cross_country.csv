@@ -1,0 +1,13 @@
+hypothesis,driver,response,n_countries,beta_standardised,se_hc3,p,expected_sign,spearman_rho_unadjusted,spearman_p,p_holm,as_expected,significant_holm
+H8c,IUU response score (5 = weakest),trophic-level trend (EPI RMTI),139,0.121162,0.092845,0.191894,−,0.002516,0.976548,1.0,False,False
+H8c,IUU response score (5 = weakest),median B/Bmsy (RAM),19,-0.055402,0.344025,0.87206,−,0.041557,0.86586,1.0,True,False
+H8c,IUU response score (5 = weakest),% stocks above Umsy (RAM),19,0.196028,0.212847,0.35706,+,-0.009309,0.96983,1.0,True,False
+H8c,IUU prevalence score (5 = most),trophic-level trend (EPI RMTI),139,0.097024,0.100821,0.335878,−,0.055692,0.514936,1.0,False,False
+H8c,IUU prevalence score (5 = most),median B/Bmsy (RAM),19,0.007426,0.353057,0.983218,−,0.044428,0.856682,1.0,False,False
+H8c,IUU prevalence score (5 = most),% stocks above Umsy (RAM),19,0.306651,0.321007,0.339438,+,-0.148783,0.543253,1.0,True,False
+H8d,capacity-enhancing subsidy per t,trophic-level trend (EPI RMTI),140,-0.1331,0.155904,0.393255,−,0.078696,0.355369,1.0,True,False
+H8d,capacity-enhancing subsidy per t,median B/Bmsy (RAM),19,-0.407124,0.319151,0.20208,−,-0.4,0.089719,1.0,True,False
+H8d,capacity-enhancing subsidy per t,% stocks above Umsy (RAM),19,0.25987,0.268441,0.333008,+,0.291997,0.225116,1.0,True,False
+H8d,beneficial subsidy per t,trophic-level trend (EPI RMTI),140,-0.270797,0.088205,0.00214,+,0.013531,0.873923,0.01284,False,True
+H8d,beneficial subsidy per t,median B/Bmsy (RAM),19,-0.127366,0.333033,0.702133,+,-0.184211,0.450285,1.0,False,False
+H8d,beneficial subsidy per t,% stocks above Umsy (RAM),19,-0.209452,0.256792,0.414702,−,0.190854,0.433821,1.0,True,False

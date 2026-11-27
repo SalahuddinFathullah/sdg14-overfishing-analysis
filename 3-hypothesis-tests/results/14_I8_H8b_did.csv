@@ -1,0 +1,25 @@
+spec,response,role,years,event_year,n_treated,n_control,did_beta,cluster_se,p_cluster,p_randomization,n_assignments,p_rand_holm
+Indonesia,foreign share of catch (%),first stage,2008–2019,2015,3,8,-1.385393,1.213413,0.253565,0.430303,165,
+Indonesia,log catch,first stage,2008–2019,2015,3,8,0.260293,0.074034,0.000438,0.042424,165,
+Indonesia,% overexploited,outcome,2008–2019,2015,3,8,-3.23144,4.183592,0.439873,0.49697,165,0.993939
+Indonesia,mean trophic level,outcome,2008–2019,2015,3,8,-0.002381,0.02248,0.91565,0.90303,165,0.993939
+Thailand,foreign share of catch (%),first stage,2008–2019,2015,2,6,1.294015,1.442897,0.369817,0.464286,28,
+Thailand,log catch,first stage,2008–2019,2015,2,6,-0.179967,0.117946,0.127049,0.178571,28,
+Thailand,% overexploited,outcome,2008–2019,2015,2,6,-0.348905,7.743423,0.964061,0.964286,28,0.964286
+Thailand,mean trophic level,outcome,2008–2019,2015,2,6,0.06,0.022438,0.007494,0.071429,28,0.142857
+Indonesia placebo: fake event 2011,foreign share of catch (%),first stage,2008–2014,2011,3,8,-0.769865,1.433663,0.591273,0.648485,165,
+Indonesia placebo: fake event 2011,log catch,first stage,2008–2014,2011,3,8,0.158775,0.063406,0.012277,0.024242,165,
+Indonesia placebo: fake event 2011,% overexploited,outcome,2008–2014,2011,3,8,-0.121146,2.679912,0.963944,1.0,165,1.0
+Indonesia placebo: fake event 2011,mean trophic level,outcome,2008–2014,2011,3,8,0.018507,0.031386,0.555422,0.575758,165,1.0
+Thailand placebo: fake event 2011,foreign share of catch (%),first stage,2008–2014,2011,2,6,2.512259,1.334922,0.059842,0.25,28,
+Thailand placebo: fake event 2011,log catch,first stage,2008–2014,2011,2,6,-0.082084,0.11998,0.493884,0.357143,28,
+Thailand placebo: fake event 2011,% overexploited,outcome,2008–2014,2011,2,6,3.836806,8.846965,0.664516,0.428571,28,0.857143
+Thailand placebo: fake event 2011,mean trophic level,outcome,2008–2014,2011,2,6,0.012639,0.031684,0.689959,0.785714,28,0.857143
+Indonesia exploratory: post = 2017–2019,foreign share of catch (%),first stage,2008–2019,2017,3,8,-1.337866,1.164593,0.250645,0.430303,165,
+Indonesia exploratory: post = 2017–2019,log catch,first stage,2008–2019,2017,3,8,0.310402,0.08765,0.000398,0.024242,165,
+Indonesia exploratory: post = 2017–2019,% overexploited,outcome,2008–2019,2017,3,8,-3.564246,4.656596,0.444022,0.484848,165,0.969697
+Indonesia exploratory: post = 2017–2019,mean trophic level,outcome,2008–2019,2017,3,8,-0.003909,0.024586,0.873683,0.884848,165,0.969697
+Thailand exploratory: post = 2017–2019,foreign share of catch (%),first stage,2008–2019,2017,2,6,1.516694,1.332813,0.255135,0.464286,28,
+Thailand exploratory: post = 2017–2019,log catch,first stage,2008–2019,2017,2,6,-0.156639,0.141958,0.269847,0.357143,28,
+Thailand exploratory: post = 2017–2019,% overexploited,outcome,2008–2019,2017,2,6,-3.96746,8.240683,0.630198,0.5,28,0.5
+Thailand exploratory: post = 2017–2019,mean trophic level,outcome,2008–2019,2017,2,6,0.061667,0.029245,0.034979,0.107143,28,0.214286

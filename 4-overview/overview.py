@@ -125,7 +125,7 @@ def section_map() -> None:
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    cols = [(2, "1 · Data"), (36, "2 · Check & clean first"), (68, "3 · Explore"), (100, "4 · Test (7 iterations)"),
+    cols = [(2, "1 · Data"), (36, "2 · Check & clean first"), (68, "3 · Explore"), (100, "4 · Test (8 iterations)"),
             (158, "5 · Answer")]
     for x, t in cols:
         ax.text(x, 99, t, ha="left", va="top", fontsize=11.5, fontweight="bold", color=v.INK)
@@ -134,16 +134,19 @@ def section_map() -> None:
     data = [("FAO via OWID", "% stocks overexploited (world 1974–2021, FAO areas), capture, aquaculture"),
             ("Sea Around Us", "Stock status, mean trophic level, catch by sector and fleet; 11 SEA EEZs, 1950–2019"),
             ("Validation & integrity", "UN SDG 14.4.1, World Bank, SAU regions, UN Comtrade, GDP, Benford digits"),
-            ("Driver data (iterations 2–7)", "Effort (IMAS), warming (HadSST, ERSST), shipping (WDI, UNCTAD), "
+            ("Driver data (iterations 2–8)", "Effort (IMAS), warming (HadSST, ERSST), shipping (WDI, UNCTAD), "
                                              "dams (GDAT), platforms (OOGP), wind (DeepOWT); pollution: fertiliser, "
-                                             "pesticides, plastic, oil spills, pH, chlorophyll-a (OWID)")]
+                                             "pesticides, plastic, oil spills, pH, chlorophyll-a (OWID); "
+                                             "RAM Legacy stocks, IUU index, subsidies, EPI")]
     ys = [78, 60, 42, 16]
     hs = [14, 14, 14, 22]
     for (t, b), y, h in zip(data, ys, hs):
         box(ax, 2, y, 30, h, t, b, wrap=44)
 
     # 2 · Check & clean first (step 0: a failed check stops every later step)
-    prep = [("Check & clean (gate)", "All 90 input files checked (parse, duplicates, ranges); rules R1–R6 → "
+    import json                                  # number of checked files, from step 0's pass marker
+    n_checked = json.loads((ROOT / "data" / "processed" / "clean" / "_quality_checks_passed.json").read_text())["csv_files"]
+    prep = [("Check & clean (gate)", f"All {n_checked} input files checked (parse, duplicates, ranges); rules R1–R6 → "
                                      "data/processed. Any failure stops the pipeline"),
             ("Validate", "21 source pairs: 7 identical, 10 agree on trend, 4 on direction only, none disagree"),
             ("Integrity", "Benford digits genuine; under-reporting 10–45% of catch; Vietnam mirror-trade gap")]
@@ -167,8 +170,9 @@ def section_map() -> None:
              ("Iteration 5", "panel, rebuilding, FiB, 2030", ["H5a", "H5b", "H5c", "H5d"]),
              ("Iteration 6", "drivers in combination", ["H6a", "H6b", "H6c"]),
              ("Iteration 7", "sea & water pollution", ["H7a", "H7b"]),
-             ("Iteration 7 (cont.)", "pollution combined, per sea", ["H7c", "H7d", "H7e", "H7f"])]
-    lane_h, gap, top = 8.0, 1.0, 92
+             ("Iteration 7 (cont.)", "pollution combined, per sea", ["H7c", "H7d", "H7e", "H7f"]),
+             ("Iteration 8", "causes: stocks, policy, money", ["H8a", "H8b", "H8c", "H8d"])]
+    lane_h, gap, top = 7.4, 0.9, 92
     lane_y = []
     for i, (t, sub, hyps) in enumerate(lanes):
         y = top - (i + 1) * lane_h - i * gap
@@ -176,7 +180,7 @@ def section_map() -> None:
         ax.add_patch(FancyBboxPatch((100, y), 56, lane_h, boxstyle="round,pad=0,rounding_size=1.2",
                                     fc="#f0efec", ec="#f0efec", zorder=1))
         ax.text(101.2, y + lane_h - 1.4, t, ha="left", va="top", fontsize=9.5, fontweight="bold", color=v.INK)
-        ax.text(101.2, y + lane_h - 5.0, sub, ha="left", va="top", fontsize=8.2, color=v.INK_2)
+        ax.text(101.2, y + lane_h - 4.6, sub, ha="left", va="top", fontsize=8.2, color=v.INK_2)
         for j, hname in enumerate(hyps):
             label = hname.replace("·e", " (effort)") if hname.endswith("·e") else hname
             w = 12.0 if hname.endswith("·e") else 7.6
@@ -193,9 +197,9 @@ def section_map() -> None:
     ans = [("Is overfishing getting worse?", "Yes. World +0.55 pp/yr (1974–2021), SEA +7.4 pp/decade; "
                                              "no slowdown after 2015. Indonesia, Thailand, Malaysia worsen "
                                              "faster than the world."),
-           ("What drives it?", "No single yearly driver, pair or combination: catch, effort, warming, "
-                               "shipping, dams, aquaculture and pollution share only the trend. More effort for "
-                               "less fish (CPUE −35% world, −50% SEA) → slow, cumulative depletion."),
+           ("What drives it?", "Fishing above the sustainable level, stock by stock (H8a, 432 stocks). No "
+                               "national driver, crackdown, management score or subsidy separates from the "
+                               "shared trend. CPUE −35% world, −50% SEA."),
            ("SDG 14.4?", "Missed. Rebuilding stalled in SEA after 2015; world on course for ~41% "
                          "overexploited by 2030.")]
     for (t, b), y in zip(ans, [70, 40, 16]):
@@ -223,8 +227,8 @@ def section_map() -> None:
             ha="left", va="center", fontsize=8.2, color=v.MUTED)
 
     v.suptitle(fig, "Analysis map — from data to answers, with every hypothesis verdict",
-               "Overfishing is confirmed and worsening; seven rounds of driver tests (pollution included) find no yearly "
-               "cause, alone or in combination, and the evidence points to slow, cumulative depletion")
+               "Overfishing is confirmed and worsening; no national driver separates from the shared trend, but stock-level "
+               "data confirm the mechanism: fishing above the sustainable level is followed by decline (H8a)")
     save(fig, "O.01_analysis_map", "this repository's result tables")
 
 
@@ -440,7 +444,8 @@ REPORT_FIG = {"1.07": 1, "A.01": 2, "3.10": 3, "V.01": 4, "I.01": 5, "1.03": 6, 
               "I2.01": 17, "I5.02": 18, "I5.03": 19, "I5.04": 20}
 APPENDIX = {"1.01", "D.01 (residuals)", "H2b.01", "I2.02", "I2.03", "I3.02", "I4.02", "I3.01", "I4.01", "C.01",
             "D.01 (chi-square)", "I4.04", "I5.01", "I6.01", "I6.02", "I6.03",
-            "I7.01", "I7.02", "I7.03", "I7.04", "I7.05", "I7.06", "I7.07"}
+            "I7.01", "I7.02", "I7.03", "I7.04", "I7.05", "I7.06", "I7.07",
+            "I8.02", "I8.03"}
 
 # id: (title, rubric section, hypotheses, iteration, message) for figures outside 1-visualisation
 CAPTIONS = {
@@ -466,6 +471,9 @@ CAPTIONS = {
     "I7.05": ("Pollution × pressure interactions", "Statistical Analysis", "H7d", "7", "Run-off does not change the effect of fishing, warming or aquaculture (0 of 16)"),
     "I7.06": ("Best combination with pollution", "Statistical Analysis", "H7e", "7", "Adding pollution doesn't make any combination predict unseen years better than the trend"),
     "I7.07": ("Nutrient loading per sea (5 LMEs)", "Statistical Analysis", "H7f", "7", "Seas whose nutrient loading rose faster than the others' do not become more overexploited (0 of 16)"),
+    "I8.01": ("Fishing pressure → stock decline (432 stocks)", "Statistical Analysis", "H8a", "8", "Across assessed stocks, fishing above the sustainable level is followed by stock decline the next year"),
+    "I8.02": ("2015 crackdowns on illegal fishing (DiD)", "Statistical Analysis", "H8b", "8", "Indonesia's and Thailand's 2015 crackdowns show no measurable effect on stock status by 2019"),
+    "I8.03": ("Management, illegal fishing, subsidies across countries", "Statistical Analysis", "H8c, H8d", "8", "Across countries, IUU-response scores and subsidies show no significant link to stock status"),
     "I5.04": ("Forecast to 2030", "Conclusion", "H5d", "5", "World on course for ~41% overexploited by 2030; SEA levelled off, no improvement"),
     "H1a.01": ("World trend tests", "Statistical Analysis", "H1a", "1", "Significant rise (+0.55 pp/yr); no slowdown after 2015"),
     "H1b.01": ("Catch CCF", "Statistical Analysis", "H1b", "1", "World catch does not lead overexploitation at any lag"),

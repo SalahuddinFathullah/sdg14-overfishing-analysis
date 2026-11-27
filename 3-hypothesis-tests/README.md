@@ -17,7 +17,7 @@ python 3-hypothesis-tests/hypothesis_tests.py --only summary                  # 
 Outputs:
 - `results/decisions.csv`: verdict per hypothesis.
 - `results/*.csv`: one table per test family.
-- `figures/<section>/*.png`: 30 figures (6 for iteration 1, 3 + 2 + 4 + 4 + 3 + 7 for iterations 2–7, 1 summary).
+- `figures/<section>/*.png`: 33 figures (6 for iteration 1, 3 + 2 + 4 + 4 + 3 + 7 + 3 for iterations 2–8, 1 summary).
 
 ## Verdicts
 
@@ -255,6 +255,41 @@ Pollution was the one SDG 14 pressure not yet tested (target 14.1: marine pollut
 | ![](figures/13_iteration7_pollution/I7.07_h7f_lme_nutrient_panel.png) | | |
 
 Tables: `13_I7_driver_coverage.csv`, `13_I7_stationarity.csv`, `13_I7_H7a_levels_vs_detrended.csv`, `13_I7_H7a_cointegration.csv`, `13_I7_H7a_ccf.csv`, `13_I7_H7b_ccf_sea.csv`, `13_I7_H7b_levels_vs_detrended.csv`, `13_I7_H7b_leave_one_country_out.csv`, `13_I7_H7b_panel_fixed_effects.csv`, `13_I7_descriptive.csv`, `13_I7_H7c_single_drivers.csv`, `13_I7_H7c_pairs.csv`, `13_I7_H7d_interactions.csv`, `13_I7_H7e_best_combination.csv`, `13_I7_H7e_shapley_r2.csv`, `13_I7_H7e_rolling_origin_predictions.csv`, `13_I7_H7f_lme_nutrient_panel.csv`. Verdicts are rows in `decisions.csv`.
+
+## Iteration 8 — causes that can be confirmed (new hypothesis H8)
+
+Iterations 1–7 related national or world totals to each other. Every driver rose with overexploitation, so none could be separated from the shared trend. Iteration 8 changes the design instead of the driver: data at the level where the cause acts, events that changed pressure in one place but not another, and cross-country comparisons.
+- **H8a (stock level, world):** RAM Legacy v4.66, 432 assessed stocks with both B/Bmsy and U/Umsy. Change in log B/Bmsy on last year's log U/Umsy and log B/Bmsy, with stock and year fixed effects, SEs clustered by stock. Robustness: lags 1–3, stocks with ≥ 30 years, 1980 onwards; the reverse direction (does low biomass lead to less fishing?); event time around the first drop below Bmsy.
+- **H8b (natural experiments, SEA):** Indonesia's foreign-vessel moratorium (Nov 2014, plus sinking of illegal boats) and Thailand's IUU reforms after the EU yellow card (2015). Difference-in-differences on the Sea Around Us EEZs 2008–2019, event 2015, as in H4c: two-way fixed effects, exact randomization inference (Indonesia 3 of 11 EEZs = 165 assignments; Thailand 2 of 8 = 28), placebo event 2011, and a first stage (did foreign share and catch actually change?). Controls: Malaysia's 4 EEZs, Vietnam, the Philippines (and Thailand for Indonesia).
+- **H8c (management & illegal fishing, cross-country):** IUU Fishing Risk Index 2019 response score (how well a state acts against illegal fishing) and prevalence score.
+- **H8d (subsidies, cross-country):** Sumaila et al. (2019) capacity-enhancing and beneficial subsidies, 2018, per tonne of catch.
+- **H8c/H8d responses:** the EPI trophic-level trend (RMTI, mean 2015–19, n ≈ 140), RAM median B/Bmsy and % of stocks above Umsy (2015–19, countries with ≥ 3 stocks, n = 19). Controls: log GDP per capita and log catch. HC3 standard errors, Holm over the 6 tests of each hypothesis.
+
+| Test | Result |
+|---|---|
+| **H8a stock level** | **Reject H₀.** β = −0.030 (p < 0.001): doubling U/Umsy shrinks B/Bmsy by ~2% the next year. Lags 1–3 sum −0.028, ≥ 30-year stocks −0.029, 1980+ −0.057 (all p < 0.001). The 248 stocks that fell below Bmsy after ≥ 3 years above it were fished at a median 1.28 × Umsy in the 3 years before; pressure peaks in the year of the drop. Reverse direction: low B/Bmsy is followed by cuts in U/Umsy (β = +0.055, p < 0.001), so managers do respond, after the decline. |
+| **H8b crackdowns** | **Fail to reject H₀.** % overexploited: Indonesia β −3.2 pp (randomization p = 0.50), Thailand −0.3 pp (p = 0.96); mean trophic level p = 0.90 and 0.07. Placebos clean. Weak first stage: the Sea Around Us foreign share barely moves (the ex-foreign vessels were Indonesian-flagged), and Indonesia's catch *rose* 26% (p = 0.04). An exploratory 2017–19 window (chosen after seeing the event study, not in the verdict) gives −3.6 and −4.0 pp, still p ≈ 0.5. |
+| **H8c management** | **Fail to reject H₀.** 0 of 6 significant after Holm; standardised effects −0.06 to +0.31. |
+| **H8d subsidies** | **Fail to reject H₀.** Capacity-enhancing subsidies: all 3 effects point the expected way (β_std −0.13 on the trophic trend, −0.41 on B/Bmsy, +0.26 on % above Umsy), none significant after Holm (the RAM tests have only 19 countries). Beneficial subsidies go with a *falling* trophic level (β_std −0.27, Holm p = 0.013), the opposite of expected — most likely reverse causation: countries spend on management where fisheries are declining. |
+
+**What the eighth iteration adds:**
+- The mechanism is confirmed where the data resolve it: across 432 stocks, fishing above the sustainable level is followed by decline, with the expected timing. This is the stock-level counterpart of the world trend in H1a.
+- Why pressure stays too high is not confirmed. A 2015 crackdown is not visible in stock status by 2019, and management scores and subsidies do not separate countries' stock status. The data are short (5 post-years), coarse (EEZs, countries) and cross-sectional; absence of evidence here is weak evidence of absence.
+
+**Method choices:**
+- **Stock and year fixed effects (H8a)** compare each stock with itself and remove anything common to all stocks in a year (climate, markets, assessment vintages). Lagged pressure, so pressure comes before the change it is meant to explain. Clustered SEs by stock (432 clusters, so ordinary clustering is reliable here, unlike the 5–11 clusters of earlier panels).
+- **Logs of the ratios:** U/Umsy and B/Bmsy are ratios that span orders of magnitude; logs make a doubling count the same at any level, and the β reads as an elasticity.
+- **Randomization inference (H8b)** for the same reason as H4c: with 8–11 EEZs, clustered SEs over-reject; re-estimating the DiD for every possible treated set gives an exact p.
+- **Window from 2008 (H8b, set after the first run):** Sea Around Us stock-status shares jump in 2007/08 in several SEA EEZs at once (a reconstruction step), which dominated the pre-period in the first run (2005 start). The first run is not in the tables; its conclusion was the same (all outcome p ≥ 0.36).
+- **First stage reported separately (H8b):** if the policy did not change foreign share or catch in the data, a null on stock status says little about illegal fishing itself.
+- **Per tonne of catch (H8d):** a large fishing nation pays more subsidies in total; per tonne measures intensity. log(1 + x) because some countries report zero.
+- **Standardised coefficients (H8c, H8d)** so effects on three differently scaled responses can be compared on one chart.
+
+| | | |
+|---|---|---|
+| ![](figures/14_iteration8_causes/I8.01_h8a_stock_pressure.png) | ![](figures/14_iteration8_causes/I8.02_h8b_policy_did.png) | ![](figures/14_iteration8_causes/I8.03_h8cd_management_subsidies.png) |
+
+Tables: `14_I8_H8a_stock_panel.csv`, `14_I8_H8a_event_time.csv`, `14_I8_H8a_shares_by_year.csv`, `14_I8_H8b_did.csv`, `14_I8_H8b_event_study.csv`, `14_I8_country_table.csv`, `14_I8_H8cd_cross_country.csv`. Verdicts are rows in `decisions.csv`.
 
 ## Summary across iterations — all drivers on one method
 

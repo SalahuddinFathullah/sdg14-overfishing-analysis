@@ -274,6 +274,22 @@ How they are used (`src/loaders.py`): fertiliser and pesticides in logs (growth 
 
 Re-create with `python src/download_data.py --only pollution`. Files were fetched in the browser and passed through chat; transfer check (SHA-256 of each file, all matched): fertiliser `e31f97de…`, pesticides `fb83ad8c…`, chlorophyll-a `965ae973…`, plastic production `68e2dd59…`, oil spills number `4e98a53c…`, quantity `99a30b02…`, seawater pH `d9bc4265…`, coastal eutrophication `e7be389c…`, plastic to ocean `43d0acea…`, mismanaged plastic `7d614139…`, beach litter `d9e9624a…`.
 
+## 9. Causes that can be confirmed — `causes/` (added for iteration 8 of the analysis)
+
+| File | Content | Unit | Source | Coverage |
+|------|---------|------|--------|----------|
+| `ram_v4.66_timeseries.csv` | `stockid, year, BdivBmsypref, UdivUmsypref, TBbest, TCbest`: biomass relative to Bmsy (preferred series), fishing pressure relative to Umsy (exploitation rate or F), total biomass, total catch | ratios; t | RAM Legacy Stock Assessment Database v4.66 (2024), Zenodo 10.5281/zenodo.14043031 | 1,438 stocks; 432 with both ratios, 1874–2023 |
+| `ram_v4.66_stocks.csv` | Stock metadata: names, RAM region, primary country and its ISO3 code, FAO area, taxonomic group, management authority | — | same | 1,514 stocks |
+| `iuu_fishing_index_2019-2025_indicator_scores.csv` | 40 indicators (`Indicator ID, Indicator name, Country, Region, Ocean, Resp, Type, Year, Score`); Type = Vulnerability / Prevalence / Response; Resp = Flag / Coastal / Port / General | score 1 (best) – 5 (worst) | IUU Fishing Risk Index (Poseidon Aquatic Resource Management & Global Initiative against Transnational Organized Crime) | 152 coastal states, 2019, 2021, 2023, 2025 |
+| `sumaila2019_fisheries_subsidies_2018.csv` | Subsidies by country, class (A beneficial, B capacity-enhancing, C ambiguous) and type; `Data Type` = Reported / Modeled / not found | constant 2018 USD | Sumaila et al. (2019) *Data in Brief* 27:104706 (supplement `Sumaila_dataset.csv`) | 152 countries, 2018 |
+| `epi2026_regional_marine_trophic_index_raw.csv` | RMS: Regional Marine Trophic Index, a rolling trend in the mean trophic level of each country's EEZ catch (< 0 = fishing down the food web) | trophic level per year | Yale EPI 2026 raw data (from Sea Around Us) | 220 countries (164 with values), 1989–2019 |
+| `owid_capture-fishery-production_all_countries.csv` | Capture fisheries production, all countries | t | FAO via OWID | 1960–2024 |
+| `owid_gdp-per-capita-worldbank_all_countries.csv` | GDP per capita, PPP | constant international $ | World Bank via OWID | 1990–2025 |
+
+How they are used (`src/loaders.py`): `ram_panel()` keeps stock-years with both ratios > 0 and adds the stock's ISO3; `iuu_index()` averages the indicator scores by Type per country and year; `subsidies_2018()` sums by category; `epi_rmti()` reshapes RMS to long; country names are matched to ISO3 through OWID's own names plus `I8_NAME_FIX`.
+
+Re-create with `python src/download_data.py --only causes` (needs `pyreadr`). These sites refuse the analysis shell's proxy, so the committed files were fetched in the browser on 2026-11-27: the IUU, Sumaila (Elsevier supplement), EPI and OWID files whole; from the 112 MB RAM zip only the R data file was read, by HTTP range requests, inflated in the browser and checked against the zip's CRC-32 (`04a672e3`), then the two CSVs were extracted with `pyreadr`. SHA-256 of every committed file is in `CAUSES_SHA256` in `src/download_data.py`.
+
 ---
 
 ## Known data issues (handle in the cleaning notebook)
@@ -298,6 +314,11 @@ Re-create with `python src/download_data.py --only pollution`. Files were fetche
     - **GDAT volume outlier:** 1921 has a reported volume of 11,969,027 million m³, about 1,000× any other year, so it is a data-entry error. The analysis uses dam counts, not volumes.
     - **Seaborne trade:** the world row is goods loaded (= discharged at world level). Country rows are summed over both flows to give total tonnes handled.
     - **Offshore structures start late:** platforms (2017) and wind (2016) overlap the fisheries data (to 2019) by only 3–4 years.
+13. **Iteration-8 data:**
+    - **RAM coverage:** assessed stocks are mostly from high-income countries; only 3 stocks (two tunas, blue shark) touch SEA waters. B and U come from the same assessment model.
+    - **RAM "primary country":** shared or high-seas stocks are assigned to one country (e.g. a NAFO redfish stock to Russia), so country aggregates are approximate; only countries with ≥ 3 stocks are used.
+    - **IUU index Timor-Leste:** spelled both "Timor Leste" and "Timor-Leste" across years; both map to TLS.
+    - **Subsidies are one year (2018)**; 'Modeled' rows are estimates where a subsidy was found but no amount reported.
 
 ---
 

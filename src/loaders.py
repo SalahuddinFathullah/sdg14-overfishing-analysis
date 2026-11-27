@@ -477,3 +477,89 @@ def eez_full_panel() -> pd.DataFrame:
     p = pd.read_csv(PROC / "sea_eez_annual.csv")
     return p.rename(columns={"eez_id": "unit", "pct_overexploited": "over", "mean_trophic_level": "mtl",
                              "catch_t": "catch"})
+
+
+# --------------------------------------------------------------------------- #
+# Iteration 8 — causes that can be confirmed (data/raw/causes/)
+# --------------------------------------------------------------------------- #
+# Country names in the IUU index and the subsidy dataset that differ from OWID's spelling
+# (OWID supplies the ISO3 codes; 'Viet Nam' is already 'Vietnam' after step 0's rule R1).
+I8_NAME_FIX = {
+    "Antigua & Barbuda": "ATG", "Antigua Barb": "ATG", "Bosnia & Herzegovina": "BIH", "Bosnia Herzg": "BIH",
+    "Brunei Darussalam": "BRN", "Brunei Darsm": "BRN", "Comoros Isl.": "COM", "Congo (DRC)": "COD",
+    "Congo Dem Rep": "COD", "Congo, R. of": "COG", "Congo Republic": "COG", "Cook Islands": "COK",
+    "Dominican Rp": "DOM", "Korea (North)": "PRK", "Korea D P Rp": "PRK", "Korea (Rep. South)": "KOR",
+    "Korea Rep": "KOR", "Marshall Isl.": "MHL", "Marshall Is": "MHL", "Micronesia (FS of)": "FSM",
+    "Micronesia": "FSM", "Russian Federation": "RUS", "Saint Kitts & Nevis": "KNA", "St Kitts Nev": "KNA",
+    "St Lucia": "LCA", "Saint Vincent & the Grenadines": "VCT", "St Vincent": "VCT",
+    "Sao Tome & Principe": "STP", "Sao Tome Prn": "STP", "Solomon Isl.": "SLB", "Solomon Is": "SLB",
+    "Taiwan": "TWN", "Timor Leste": "TLS", "Timor-Leste": "TLS", "Trinidad & Tobago": "TTO",
+    "Trinidad Tob": "TTO", "USA": "USA", "Untd Arab Em": "ARE", "Vietnam": "VNM", "Viet Nam": "VNM",
+}
+
+
+def i8_owid_all(name: str, value: str) -> pd.DataFrame:
+    """OWID all-country table (causes/owid_<name>_all_countries.csv) → iso3, year, <value>; ISO3 rows only."""
+    d = pd.read_csv(DATA / "causes" / f"owid_{name}_all_countries.csv")
+    d = d[d["Code"].astype(str).str.len() == 3]
+    return d.rename(columns={"Code": "iso3", "Year": "year", d.columns[3]: value})[["iso3", "year", value]]
+
+
+def i8_iso3(names: pd.Series) -> pd.Series:
+    """Map country names to ISO3 via OWID's own name→code list plus I8_NAME_FIX."""
+    ref = pd.concat([pd.read_csv(DATA / "causes" / f"owid_{n}_all_countries.csv")[["Entity", "Code"]]
+                     for n in ("gdp-per-capita-worldbank", "capture-fishery-production")]).dropna().drop_duplicates()
+    lut = {**dict(zip(ref["Entity"], ref["Code"])), **I8_NAME_FIX}
+    return names.map(lut)
+
+
+def iuu_index() -> pd.DataFrame:
+    """
+    IUU Fishing Risk Index (Poseidon / GI-TOC), 152 coastal states × 2019, 2021, 2023, 2025.
+    Indicator scores run 1 (best) to 5 (worst). Returns iso3, year and the mean score of the
+    Vulnerability, Prevalence and Response indicators, plus the overall mean.
+    """
+    d = pd.read_csv(DATA / "causes" / "iuu_fishing_index_2019-2025_indicator_scores.csv")
+    d["iso3"] = i8_iso3(d["Country"])
+    w = d.pivot_table(index=["iso3", "Year"], columns="Type", values="Score", aggfunc="mean")
+    w["overall"] = d.groupby(["iso3", "Year"])["Score"].mean()
+    w.columns = [c.lower() for c in w.columns]
+    return w.reset_index().rename(columns={"Year": "year"})
+
+
+def subsidies_2018() -> pd.DataFrame:
+    """Sumaila et al. (2019) fisheries subsidies, constant 2018 USD, summed per country and category."""
+    d = pd.read_csv(DATA / "causes" / "sumaila2019_fisheries_subsidies_2018.csv")
+    d["iso3"] = i8_iso3(d["Country"])
+    w = d.pivot_table(index="iso3", columns="Category", values="Constant 2018 USD", aggfunc="sum").fillna(0)
+    w.columns = [{"Capacity-enhancing": "capacity_usd", "Beneficial": "beneficial_usd",
+                  "Ambiguous": "ambiguous_usd"}[c] for c in w.columns]
+    return w.reset_index()
+
+
+def epi_rmti() -> pd.DataFrame:
+    """
+    EPI 2026 raw 'Regional Marine Trophic Index' (RMS, from Sea Around Us): a rolling trend in the
+    mean trophic level of each country's EEZ catch, 1989–2019 (< 0 = fishing down the food web).
+    Long table: iso3, year, rmti.
+    """
+    d = pd.read_csv(DATA / "causes" / "epi2026_regional_marine_trophic_index_raw.csv")
+    long = d.melt(id_vars=["code", "iso", "country"], var_name="col", value_name="rmti").dropna(subset=["rmti"])
+    long["year"] = long["col"].str[-4:].astype(int)
+    return long.rename(columns={"iso": "iso3"})[["iso3", "year", "rmti"]]
+
+
+def ram_panel() -> pd.DataFrame:
+    """
+    RAM Legacy Stock Assessment Database v4.66, one row per assessed stock and year with
+    b = B/Bmsy (preferred series) and u = U/Umsy (fishing pressure relative to the sustainable
+    level; U = exploitation rate or F). Rows need both. Adds the stock's primary country (ISO3),
+    RAM region and taxonomic group.
+    """
+    ts = pd.read_csv(DATA / "causes" / "ram_v4.66_timeseries.csv")
+    st = pd.read_csv(DATA / "causes" / "ram_v4.66_stocks.csv")
+    p = ts.rename(columns={"BdivBmsypref": "b", "UdivUmsypref": "u"}).dropna(subset=["b", "u"])
+    p = p[(p["b"] > 0) & (p["u"] > 0)]
+    return p.merge(st[["stockid", "ISO3_code", "region", "taxGroup", "primary_country"]], on="stockid",
+                   how="left").rename(columns={"ISO3_code": "iso3"})[
+        ["stockid", "year", "b", "u", "iso3", "region", "taxGroup", "primary_country"]]

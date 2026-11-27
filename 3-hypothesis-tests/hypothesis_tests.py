@@ -1,5 +1,5 @@
 """
-hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5, H6, H7), in 7 iterations
+hypothesis_tests.py — Formal tests of hypotheses H1a–H2c (+ H3, H4, H5, H6, H7, H8), in 8 iterations
 ==============================================================================
 
 KIE4033 Assignment 1 · SDG 14 overfishing analysis (Global -> Southeast Asia)
@@ -90,6 +90,18 @@ Runs the analysis pipeline in README §4 on the raw data:
     i7_h7f           coastal N and P loading vs Sea Around Us % overexploited and MTL in the 5 SEA large
                      marine ecosystems (2000–2015 panel, LME + year FE, wild cluster bootstrap)
 
+  Iteration 8 (causes that can be confirmed, new hypothesis H8):
+    i8_h8a           stock level: RAM Legacy v4.66, 432 stocks — does log U/Umsy (t−1) predict the
+                     change in log B/Bmsy (stock + year FE, SE clustered by stock)? plus lags 1–3,
+                     robustness, the reverse (management) direction and event time around the drop
+                     below Bmsy
+    i8_h8b           natural experiments: Indonesia's 2014 foreign-vessel moratorium and Thailand's
+                     2015 IUU reforms, DiD on Sea Around Us EEZs 2008–2019 with randomization
+                     inference, placebo 2011 and a first stage (foreign share, catch)
+    i8_h8cd          cross-country: IUU index response and prevalence scores (H8c) and Sumaila et al.
+                     subsidies per tonne (H8d) vs the EPI trophic-level trend and RAM stock status,
+                     controls log GDP per capita and log catch, HC3 SEs, Holm
+
   Summary (report figure):
     summary          all 8 world drivers from iterations 1–4 on one common method:
                      levels vs linear/quadratic-detrended ρ and CCF, one figure (S.01)
@@ -142,7 +154,8 @@ from loaders import (  # noqa: E402
     sau_world_mtl, fao_area, world_effort, sea_effort, world_sst, world_ohc, sea_sst, ISO3, SPLICE,
     container_teu, lsci, seaborne, dams, aquaculture, eez_full_panel,
     n_fertiliser, pesticides, chlorophyll, plastic_production, oil_spills, seawater_ph, coastal_nutrients,
-    plastic_cross_section, beach_litter, sau_lme_panel)
+    plastic_cross_section, beach_litter, sau_lme_panel, ram_panel, iuu_index, subsidies_2018, epi_rmti,
+    i8_owid_all)
 from stats_utils import (  # noqa: E402
     holm, mann_kendall)
 
@@ -3989,6 +4002,462 @@ def section_i7_h7f() -> None:
              "Global NEWS 2 / UNEP via OWID (nutrient loading); Sea Around Us (LMEs 34–38)")
 
 
+# ============================================================================================
+# Iteration 8 — causes that can be confirmed (H8): stock-level fishing pressure (H8a),
+# policy natural experiments against illegal/foreign fishing (H8b), management quality and
+# enforcement (H8c) and fleet-expanding subsidies (H8d)
+# ============================================================================================
+# Iterations 1–7 related national or world totals to each other; every driver shared the
+# upward trend, so none could be separated from it. Iteration 8 changes the design instead
+# of the driver: data at the level where the cause acts (individual assessed stocks) or an
+# event that changed fishing pressure in one place but not in another.
+I8_INDONESIA = [361, 937, 938]           # Indonesia's 3 EEZs: foreign-vessel moratorium from Nov 2014
+I8_THAILAND = [956, 957]                 # Thailand's 2 EEZs: IUU reforms after the EU yellow card (Apr 2015)
+I8_OTHERS = [459, 460, 461, 463, 704, 608]   # Malaysia (4), Vietnam, Philippines: no comparable reform in 2015
+I8_EVENT = 2015                          # first full year under both policies
+
+
+def section_i8_h8b() -> None:
+    """
+    H8b — natural experiments: did the 2015 crackdowns on foreign and illegal fishing in
+    Indonesia and Thailand change catch, foreign share, % overexploited or the trophic level of
+    their EEZs, relative to the other SEA EEZs?
+    Indonesia's moratorium (Nov 2014) barred ex-foreign vessels and its 'sink the vessels'
+    policy targeted illegal foreign boats; Thailand's reforms (2015 Royal Ordinance, vessel
+    registration, VMS, port controls) followed the EU yellow card. If illegal or foreign
+    pressure drives overexploitation, both EEZ groups should improve after 2015 relative to
+    EEZs without such a reform. Design as H4c: two-way FE DiD + exact randomization inference.
+    """
+    sec = "14_iteration8_causes"
+    print("Iteration 8: H8b — Indonesia 2014/15 moratorium and Thailand 2015 IUU reforms (DiD)")
+    panel = st.eez_panel()
+    panel = panel.assign(log_catch=np.log(panel["catch"]))
+    responses = [("foreign_share", "foreign share of catch (%)"), ("log_catch", "log catch"),
+                 ("over", "% overexploited"), ("mtl", "mean trophic level")]
+    # Window starts in 2008: Sea Around Us stock-status shares jump in 2007/08 in several SEA EEZs at once
+    # (a reconstruction step), which would otherwise dominate the pre-period.
+    specs = [("Indonesia", I8_INDONESIA, I8_OTHERS + I8_THAILAND, 2008, 2019, I8_EVENT),
+             ("Thailand", I8_THAILAND, I8_OTHERS, 2008, 2019, I8_EVENT),
+             ("Indonesia placebo: fake event 2011", I8_INDONESIA, I8_OTHERS + I8_THAILAND, 2008, 2014, 2011),
+             ("Thailand placebo: fake event 2011", I8_THAILAND, I8_OTHERS, 2008, 2014, 2011),
+             # exploratory, added after the event study: stocks respond with a lag, so compare 2017–19 only
+             ("Indonesia exploratory: post = 2017–2019", I8_INDONESIA, I8_OTHERS + I8_THAILAND, 2008, 2019, 2017),
+             ("Thailand exploratory: post = 2017–2019", I8_THAILAND, I8_OTHERS, 2008, 2019, 2017)]
+    rows, draws = [], {}
+    for name, tr, ctl, lo, hi, ev in specs:
+        p = panel[panel["eez"].isin(tr + ctl) & panel["year"].between(lo, hi)]
+        if "exploratory" in name:                  # drop 2015–16 so 'post' = 2017–19 against 2008–14
+            p = p[~p["year"].isin([2015, 2016])]
+        for y, lbl in responses:
+            b, se, pc = did_estimate(p, y, tr, ev)
+            pr, dr = randomization_p(p, y, tr, ev)
+            draws[(name, y)] = (b, dr)
+            rows.append({"spec": name, "response": lbl, "role": "first stage" if y in ("foreign_share", "log_catch")
+                         else "outcome", "years": f"{lo}–{hi}", "event_year": ev, "n_treated": len(tr),
+                         "n_control": len(ctl), "did_beta": b, "cluster_se": se, "p_cluster": pc,
+                         "p_randomization": pr, "n_assignments": len(dr)})
+    did = pd.DataFrame(rows)
+    did["p_rand_holm"] = np.nan
+    for s_ in did["spec"].unique():               # Holm over the 2 outcomes of each spec (first stage reported apart)
+        m = (did["spec"] == s_) & (did["role"] == "outcome")
+        did.loc[m, "p_rand_holm"] = holm(did.loc[m, "p_randomization"])
+    save_table(did, "14_I8_H8b_did")
+
+    # event studies (% overexploited and foreign share), relative to 2014
+    es_rows = []
+    for name, tr, ctl in [("Indonesia", I8_INDONESIA, I8_OTHERS + I8_THAILAND), ("Thailand", I8_THAILAND, I8_OTHERS)]:
+        p = panel[panel["eez"].isin(tr + ctl) & panel["year"].between(2008, 2019)].copy()
+        for y in ("over", "foreign_share"):
+            rel = [r for r in range(2008 - I8_EVENT, 2019 - I8_EVENT + 1) if r != -1]
+            X = pd.get_dummies(p[["eez", "year"]].astype(str), drop_first=True).astype(float)
+            for r in rel:
+                X.insert(0, f"rel{r}", ((p["year"] - I8_EVENT == r) & p["eez"].isin(tr)).astype(float).to_numpy())
+            X = sm.add_constant(X)
+            fit = sm.OLS(p[y].to_numpy(), X.to_numpy()).fit(cov_type="cluster", cov_kwds={"groups": p["eez"].to_numpy()})
+            nm = list(X.columns)
+            es_rows += [{"policy": name, "response": y, "year": I8_EVENT + r, "coef": fit.params[nm.index(f"rel{r}")],
+                         "se": fit.bse[nm.index(f"rel{r}")]} for r in rel]
+            es_rows.append({"policy": name, "response": y, "year": I8_EVENT - 1, "coef": 0.0, "se": 0.0})
+    es = pd.DataFrame(es_rows).sort_values(["policy", "response", "year"])
+    save_table(es, "14_I8_H8b_event_study")
+
+    main = did[did["spec"].isin(["Indonesia", "Thailand"])]
+    expl = did[did["spec"].str.contains("exploratory") & (did["role"] == "outcome")]
+    out = main[main["role"] == "outcome"]
+    # an improvement = fewer overexploited stocks or a higher trophic level after the crackdown
+    better = out[(out["p_rand_holm"] < ALPHA) & (((out["response"] == "% overexploited") & (out["did_beta"] < 0))
+                                                 | ((out["response"] == "mean trophic level") & (out["did_beta"] > 0)))]
+    plac = did[did["spec"].str.contains("placebo") & (did["role"] == "outcome")]
+    plac_ok = {nm: bool((plac[plac["spec"].str.startswith(nm)]["p_randomization"] >= ALPHA).all())
+               for nm in ("Indonesia", "Thailand")}
+    supported = [r["spec"] for _, r in better.iterrows() if plac_ok[r["spec"]]]
+    reject = len(supported) > 0
+    fs = main[main["role"] == "first stage"]
+    txt = lambda g: "; ".join(f"{r['spec']} {r['response']} β {r['did_beta']:+.2f} (p {fmt_p(r['p_randomization'])})"
+                              for _, r in g.iterrows())
+    decide("H8b (iteration 8: crackdowns on foreign/illegal fishing, SEA)",
+           "After Indonesia's 2014 foreign-vessel moratorium and Thailand's 2015 IUU reforms, did their EEZs end up "
+           "with fewer overexploited stocks or a higher trophic level than the other SEA EEZs?",
+           "DiD 2008–2019, event 2015 (randomization inference: Indonesia 3 of 11 EEZs, Thailand 2 of 8). "
+           f"First stage: {txt(fs)}. Outcomes: {txt(out)}; Holm over 2 outcomes per policy"
+           + (f"; supported for {', '.join(sorted(set(supported)))}" if reject else "")
+           + "; placebos (fake 2011 event): " + txt(plac)
+           + "; exploratory, not in the verdict (post = 2017–19, chosen after seeing the event study): " + txt(expl),
+           reject,
+           "Five post-years (data end 2019) and few EEZs. Indonesia's ex-foreign vessels were mostly Indonesian-"
+           "flagged, so Sea Around Us 'foreign' catch cannot show their removal (weak first stage). "
+           "Sea Around Us reconstructions after ~2014 lean on "
+           "national reports carried forward, so recent years are less independent. Vietnam's EU yellow card "
+           "(Oct 2017) is in the Thai control group for 2018–2019. Stock status responds to fishing with a lag, "
+           "so a short window can miss a real effect.",
+           verdict=None if reject else
+           "Fail to reject H0 (no post-2015 improvement in the policy EEZs beyond the other SEA EEZs)")
+
+    # ---- figure ---------------------------------------------------------------------------------------------
+    fig, axes = plt.subplots(2, 3, figsize=(16, 8.6), gridspec_kw={"width_ratios": [1.15, 1.15, 0.9]})
+    pp = panel[panel["year"].between(2005, 2019)]
+    for row, (name, tr, ctl) in enumerate([("Indonesia", I8_INDONESIA, I8_OTHERS + I8_THAILAND),
+                                           ("Thailand", I8_THAILAND, I8_OTHERS)]):
+        a1, a2, a3 = axes[row]
+        for lbl, eezs, col in [(f"{name} EEZs", tr, v.SERIES[0]), ("comparison EEZs", ctl, v.NEUTRAL)]:
+            g = pp[pp["eez"].isin(eezs)].groupby("year")
+            a1.plot(g["over"].mean().index, g["over"].mean().values, color=col, lw=2.2, label=lbl)
+        a1.axvline(I8_EVENT - 0.5, color=v.INK_2, lw=1, ls=(0, (3, 3)))
+        a1.axvspan(2004.5, 2007.5, color=v.GRID, alpha=0.6, lw=0)
+        a1.text(2004.7, a1.get_ylim()[0], "not used\n(reconstruction\nstep 2007/08)", fontsize=7.5,
+                color=v.MUTED, va="bottom")
+        a1.xaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=True))
+        a1.set_ylabel("% of stocks overexploited\n(mean of EEZs)")
+        a1.legend(loc="upper left", fontsize=8.3)
+        a1.set_title(f"{1 + 3 * row} · {name}: % overexploited", fontsize=9.5)
+        for y, col, lbl in [("foreign_share", v.SERIES[2], "foreign share of catch"), ("over", v.SERIES[0], "% overexploited")]:
+            e = es[(es["policy"] == name) & (es["response"] == y)]
+            off = -0.12 if y == "over" else 0.12
+            a2.errorbar(e["year"] + off, e["coef"], yerr=1.96 * e["se"], fmt="o", color=col, ecolor=col, alpha=0.9,
+                        elinewidth=1.2, capsize=0, markersize=4.5, label=lbl)
+        a2.axhline(0, color=v.AXIS, lw=0.8)
+        a2.axvline(I8_EVENT - 0.5, color=v.INK_2, lw=1, ls=(0, (3, 3)))
+        a2.set_ylabel(f"{name} minus comparison, vs 2014 (pp)")
+        a2.legend(loc="lower left", fontsize=8.3)
+        a2.set_title(f"{2 + 3 * row} · Event study (95% CI, EEZ-clustered)", fontsize=9.5)
+        b_obs, dr = draws[(name, "over")]
+        a3.hist(dr, bins=min(20, len(dr)), color=v.NEUTRAL, edgecolor=v.SURFACE)
+        a3.axvline(b_obs, color=v.SERIES[0], lw=2.2)
+        r_ = out[(out["spec"] == name) & (out["response"] == "% overexploited")].iloc[0]
+        a3.text(0.02, 0.97, f"observed β = {b_obs:+.2f} pp\nrandomization p = {r_['p_randomization']:.2f}"
+                f"\n({len(dr)} assignments)", transform=a3.transAxes, color=v.INK, fontsize=8.5, va="top")
+        a3.set_xlabel("DiD β, % overexploited, every assignment (pp)")
+        a3.set_ylabel("Assignments")
+        a3.grid(axis="x", visible=False)
+        a3.set_title(f"{3 + 3 * row} · Randomization inference", fontsize=9.5)
+    v.suptitle(fig, "Iteration 8 · H8b — " + ("The 2015 crackdowns were followed by fewer overexploited stocks"
+                                              if reject else
+                                              "The 2015 crackdowns on foreign and illegal fishing left no mark on stock status by 2019"),
+               "Difference-in-differences, Sea Around Us EEZs 2008–2019, event 2015; comparison = SEA EEZs without a "
+               "2015 reform. Dashed line = policy start")
+    v.layout(fig, 0)
+    save_fig(fig, sec, "I8.02_h8b_policy_did", "Sea Around Us; policy dates: Indonesia MMAF regulation 56/2014, "
+             "EU IUU Regulation (Thailand yellow card 2015)")
+
+
+def i8_fe_fit(d: pd.DataFrame, y: str, xs: list[str], unit: str = "stockid"):
+    """OLS of y on xs with unit and year fixed effects (dummies), SEs clustered by unit."""
+    X = pd.get_dummies(d[[unit, "year"]].astype(str), drop_first=True, sparse=False).astype(float)
+    X = pd.concat([d[xs].reset_index(drop=True), X.reset_index(drop=True)], axis=1)
+    X = sm.add_constant(X)
+    return sm.OLS(d[y].to_numpy(), X.to_numpy()).fit(cov_type="cluster", cov_kwds={"groups": d[unit].to_numpy()})
+
+
+def section_i8_h8a() -> None:
+    """
+    H8a — stock-level mechanism. For 432 assessed stocks (RAM Legacy v4.66) with both fishing
+    pressure relative to its sustainable level (U/Umsy) and biomass relative to its target
+    (B/Bmsy): does fishing above the sustainable level in one year predict that the stock
+    shrinks in the next? Stock fixed effects compare each stock with itself; year fixed effects
+    remove anything common to all stocks in a year (climate, markets, data vintages).
+    """
+    sec = "14_iteration8_causes"
+    print("Iteration 8: H8a — stock-level fishing pressure → stock size (RAM Legacy v4.66)")
+    p = ram_panel().sort_values(["stockid", "year"]).reset_index(drop=True)
+    p["lb"], p["lu"] = np.log(p["b"]), np.log(p["u"])
+    g = p.groupby("stockid")
+    consecutive = g["year"].diff() == 1
+    for k in (1, 2, 3):
+        p[f"lu_l{k}"] = g["lu"].shift(k).where(g["year"].diff(k) == k)
+    p["lb_l1"] = g["lb"].shift(1).where(consecutive)
+    p["dlb"] = (p["lb"] - p["lb_l1"])
+    p["dlu"] = (p["lu"] - g["lu"].shift(1)).where(consecutive)
+    n_years = g["year"].transform("size")
+
+    specs = [("main: Δlog B/Bmsy on log U/Umsy (t−1)", p, "dlb", ["lu_l1", "lb_l1"], ["lu_l1"]),
+             ("lags 1–3 (sum of the 3 coefficients)", p, "dlb", ["lu_l1", "lu_l2", "lu_l3", "lb_l1"],
+              ["lu_l1", "lu_l2", "lu_l3"]),
+             ("robustness: stocks with ≥ 30 years", p[n_years >= 30], "dlb", ["lu_l1", "lb_l1"], ["lu_l1"]),
+             ("robustness: 1980 onwards", p[p["year"] >= 1980], "dlb", ["lu_l1", "lb_l1"], ["lu_l1"]),
+             ("reverse (management response): Δlog U/Umsy on log B/Bmsy (t−1)", p, "dlu", ["lb_l1", "lu_l1"],
+              ["lb_l1"])]
+    rows = []
+    for name, d, y, xs, key in specs:
+        d = d.dropna(subset=[y] + xs).reset_index(drop=True)
+        fit = i8_fe_fit(d, y, xs)
+        idx = [1 + xs.index(k) for k in key]
+        b = float(np.sum(fit.params[idx]))
+        R = np.zeros(len(fit.params)); R[idx] = 1
+        se = float(np.sqrt(R @ fit.cov_params() @ R))
+        z = b / se
+        rows.append({"spec": name, "response": y, "driver": "+".join(key), "stocks": d["stockid"].nunique(),
+                     "stock_years": len(d), "years": f"{d['year'].min()}–{d['year'].max()}", "beta": b,
+                     "cluster_se": se, "p": float(2 * stats.norm.sf(abs(z))),
+                     "effect_of_doubling_u_pct": (np.exp(b * np.log(2)) - 1) * 100 if y == "dlb" else np.nan})
+    res = pd.DataFrame(rows)
+    save_table(res, "14_I8_H8a_stock_panel")
+
+    # event time: U/Umsy around the year a stock first falls below Bmsy after ≥ 3 years above it
+    ev = []
+    for sid, s in p.groupby("stockid"):
+        s = s.set_index("year")
+        below = s["b"] < 1
+        for yr in s.index[3:]:
+            if below.get(yr, False) and not below.loc[yr - 3:yr - 1].any() and len(below.loc[yr - 3:yr - 1]) == 3:
+                w = s.loc[yr - 10:yr + 10, ["u", "b"]].assign(rel=lambda x: x.index - yr, stockid=sid)
+                ev.append(w)
+                break
+    ev = pd.concat(ev, ignore_index=True)
+    evs = ev.groupby("rel").agg(stocks=("stockid", "nunique"), median_u=("u", "median"),
+                                share_u_above=("u", lambda x: float((x > 1).mean())),
+                                median_b=("b", "median")).reset_index()
+    save_table(evs, "14_I8_H8a_event_time")
+    # share of stocks above Umsy / below Bmsy each year (stocks with data that year)
+    yr = p[p["year"].between(1950, 2022)].groupby("year").agg(
+        stocks=("stockid", "nunique"), share_u_above=("u", lambda x: 100 * float((x > 1).mean())),
+        share_b_below=("b", lambda x: 100 * float((x < 1).mean()))).reset_index()
+    save_table(yr, "14_I8_H8a_shares_by_year")
+    yr = yr[yr["stocks"] >= 50]                 # plotted only where at least 50 stocks are assessed
+
+    m = res.iloc[0]
+    rob = res.iloc[2:4]
+    reject = bool(m["beta"] < 0 and m["p"] < ALPHA and (rob["beta"] < 0).all() and (rob["p"] < ALPHA).all())
+    rv = res.iloc[4]
+    decide("H8a (iteration 8: stock-level fishing pressure, world)",
+           "Across assessed stocks, does fishing above the sustainable level (U/Umsy > 1) in one year predict that "
+           "the stock shrinks relative to Bmsy the next year?",
+           f"RAM Legacy v4.66, {int(m['stocks'])} stocks, {int(m['stock_years'])} stock-years, stock + year fixed "
+           f"effects, SE clustered by stock: β = {m['beta']:+.3f} (p {fmt_p(m['p'])}): doubling U/Umsy shrinks "
+           f"B/Bmsy by {abs(m['effect_of_doubling_u_pct']):.1f}% the next year; lags 1–3 sum {res.iloc[1]['beta']:+.3f} "
+           f"(p {fmt_p(res.iloc[1]['p'])}); ≥ 30-year stocks {rob.iloc[0]['beta']:+.3f} (p {fmt_p(rob.iloc[0]['p'])}); "
+           f"1980+ {rob.iloc[1]['beta']:+.3f} (p {fmt_p(rob.iloc[1]['p'])}). Reverse direction (management "
+           f"response): low B/Bmsy is followed by a cut in U/Umsy, β = {rv['beta']:+.3f} (p {fmt_p(rv['p'])}). "
+           f"{len(ev['stockid'].unique())} stocks fell below Bmsy after ≥ 3 years above it; in the 3 years before, "
+           f"median U/Umsy = {evs.loc[evs['rel'].between(-3, -1), 'median_u'].mean():.2f}",
+           reject,
+           "Assessment outputs, not independent measurements: B and U come from the same stock-assessment model, "
+           "so part of the link is built into how assessments are made. Coverage is mostly the US, Japan, New "
+           "Zealand, Chile, Canada, Australia and Europe; only 3 stocks (two tunas, blue shark) touch SEA waters, "
+           "so this is a global mechanism result, not a SEA one. Lagged dependent variable with fixed effects "
+           "(Nickell bias) is small with ~50 years per stock.")
+
+    # ---- figure -------------------------------------------------------------------------------------------
+    fig = plt.figure(figsize=(16, 5.6))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.1, 1, 1], wspace=0.32)
+    a1, a2, a3 = (fig.add_subplot(gs[i]) for i in range(3))
+    a1.plot(yr["year"], yr["share_u_above"], color=v.SERIES[0], lw=2.2)
+    a1.plot(yr["year"], yr["share_b_below"], color=v.SERIES[1], lw=2.2)
+    a1.legend(["fished above Umsy (U/Umsy > 1)", "below Bmsy (B/Bmsy < 1)"], fontsize=8.5, loc="upper left")
+    a1.set_ylabel("% of assessed stocks (RAM)")
+    a1.set_title("1 · Share of stocks: pressure rose first, biomass followed", fontsize=9.5)
+    ax2 = a1.twinx(); ax2.fill_between(yr["year"], yr["stocks"], color=v.GRID, alpha=0.5, lw=0, zorder=0)
+    ax2.set_ylabel("stocks with data", color=v.MUTED); ax2.tick_params(colors=v.MUTED); ax2.grid(False)
+    a1.set_zorder(ax2.get_zorder() + 1); a1.patch.set_visible(False)
+    # binned residual scatter (FWL: both sides net of stock & year effects and of log B/Bmsy t-1)
+    d = p.dropna(subset=["dlb", "lu_l1", "lb_l1"]).reset_index(drop=True)
+    W = sm.add_constant(pd.concat([d[["lb_l1"]], pd.get_dummies(d[["stockid", "year"]].astype(str),
+                                                                  drop_first=True).astype(float)], axis=1)).to_numpy()
+    rx = d["lu_l1"].to_numpy() - W @ np.linalg.lstsq(W, d["lu_l1"].to_numpy(), rcond=None)[0]
+    ry = d["dlb"].to_numpy() - W @ np.linalg.lstsq(W, d["dlb"].to_numpy(), rcond=None)[0]
+    q = pd.qcut(rx, 20, labels=False)
+    bx = pd.Series(rx).groupby(q).mean(); by = pd.Series(ry).groupby(q).mean()
+    a2.scatter(bx, by * 100, color=v.SERIES[0], s=30, zorder=3)
+    gx = np.linspace(bx.min(), bx.max(), 2)
+    a2.plot(gx, m["beta"] * gx * 100, color=v.INK_2, lw=1.2, ls=(0, (4, 2)))
+    a2.axhline(0, color=v.AXIS, lw=0.8); a2.axvline(0, color=v.AXIS, lw=0.8)
+    a2.set_xlabel("log U/Umsy last year, relative to the stock's\nown average and to that year (20 bins)")
+    a2.set_ylabel("Change in B/Bmsy this year (%, same adjustment)")
+    a2.set_title(f"2 · Fixed effects: β = {m['beta']:+.3f}, p {fmt_p(m['p'])}", fontsize=9.5)
+    e = evs[evs["stocks"] >= 20]
+    a3.plot(e["rel"], e["median_u"], color=v.SERIES[0], lw=2.2, marker="o", ms=4)
+    a3.plot(e["rel"], e["median_b"], color=v.SERIES[1], lw=2.2, marker="o", ms=4)
+    a3.axhline(1, color=v.AXIS, lw=0.9, ls=(0, (3, 3)))
+    a3.axvline(0, color=v.INK_2, lw=1)
+    a3.text(0.2, a3.get_ylim()[0] + 0.02, "year B drops below Bmsy", fontsize=8, color=v.INK_2, va="bottom")
+    a3.legend(["median U/Umsy", "median B/Bmsy"], fontsize=8.5, loc="upper right")
+    a3.set_xlabel("years relative to the first drop below Bmsy")
+    a3.set_ylabel("ratio to the MSY level")
+    a3.set_title(f"3 · {ev['stockid'].nunique()} stocks: pressure peaks before the drop", fontsize=9.5)
+    v.suptitle(fig, "Iteration 8 · H8a — " + ("Fishing above the sustainable level is followed by stock decline"
+                                              if reject else "Stock-level pressure does not predict decline"),
+               f"RAM Legacy v4.66: {int(m['stocks'])} assessed stocks, {int(m['stock_years'])} stock-years with both "
+               "B/Bmsy and U/Umsy; stock + year fixed effects, SE clustered by stock")
+    fig.subplots_adjust(top=0.82, bottom=0.2, left=0.05, right=0.97)
+    save_fig(fig, sec, "I8.01_h8a_stock_pressure", "RAM Legacy Stock Assessment Database v4.66 (Zenodo 10.5281/zenodo.14043031)")
+
+
+def i8_country_table() -> pd.DataFrame:
+    """
+    One row per country for the cross-country tests (H8c, H8d):
+      drivers   IUU index 2019 response and prevalence scores (1 best – 5 worst);
+                subsidies 2018 per tonne of capture (capacity-enhancing, beneficial; log(1 + USD/t))
+      responses RMTI: EPI regional marine trophic index, mean 2015–2019 (< 0 = fishing down);
+                RAM: median B/Bmsy and % of stocks with U/Umsy > 1, 2015–2019 (countries with ≥ 3 stocks)
+      controls  log GDP per capita 2018 (World Bank via OWID), log capture production 2018 (FAO via OWID)
+    """
+    iuu = iuu_index()
+    iuu = iuu[iuu["year"] == 2019].set_index("iso3")[["response", "prevalence"]]
+    sub = subsidies_2018().set_index("iso3")
+    cap = i8_owid_all("capture-fishery-production", "capture_t")
+    cap = cap[cap["year"] == 2018].set_index("iso3")["capture_t"]
+    gdp = i8_owid_all("gdp-per-capita-worldbank", "gdp_pc")
+    gdp = gdp[gdp["year"] == 2018].set_index("iso3")["gdp_pc"]
+    rm = epi_rmti()
+    rm = rm[rm["year"].between(2015, 2019)].groupby("iso3")["rmti"].mean()
+    ram = ram_panel()
+    ram = ram[ram["year"].between(2015, 2019)].groupby(["iso3", "stockid"]).agg(b=("b", "mean"), u=("u", "mean"))
+    ram = ram.reset_index().groupby("iso3").agg(ram_stocks=("stockid", "nunique"), ram_median_b=("b", "median"),
+                                                ram_pct_u_above=("u", lambda x: 100 * float((x > 1).mean())))
+    ram = ram[ram["ram_stocks"] >= 3]
+    t = pd.concat([iuu, sub, cap, gdp, rm, ram], axis=1)
+    t["capacity_per_t"] = np.log1p(t["capacity_usd"] / t["capture_t"])
+    t["beneficial_per_t"] = np.log1p(t["beneficial_usd"] / t["capture_t"])
+    t["log_gdp_pc"], t["log_capture"] = np.log(t["gdp_pc"]), np.log(t["capture_t"])
+    return t.rename_axis("iso3").reset_index()
+
+
+def section_i8_h8cd() -> None:
+    """
+    H8c — management and enforcement: do countries with weaker responses to illegal fishing
+    (IUU index response score) or more illegal fishing (prevalence score) have worse stock
+    status? H8d — subsidies: do countries paying more capacity-enhancing subsidies per tonne of
+    catch have worse stock status (and more management spending, better)? Cross-country OLS
+    with log GDP per capita and log catch as controls, HC3 robust SEs; Holm within each
+    hypothesis (2 drivers × 3 responses).
+    """
+    sec = "14_iteration8_causes"
+    print("Iteration 8: H8c management & illegal fishing, H8d subsidies (cross-country)")
+    t = i8_country_table()
+    save_table(t, "14_I8_country_table")
+    responses = [("rmti", "trophic-level trend (EPI RMTI)", +1), ("ram_median_b", "median B/Bmsy (RAM)", +1),
+                 ("ram_pct_u_above", "% stocks above Umsy (RAM)", -1)]   # sign: +1 = higher is better
+    drivers = {"H8c": [("response", "IUU response score (5 = weakest)", -1),
+                       ("prevalence", "IUU prevalence score (5 = most)", -1)],
+               "H8d": [("capacity_per_t", "capacity-enhancing subsidy per t", -1),
+                       ("beneficial_per_t", "beneficial subsidy per t", +1)]}
+    rows = []
+    for h, dl in drivers.items():
+        for x, xl, xsign in dl:
+            for y, yl, ysign in responses:
+                d = t.dropna(subset=[x, y, "log_gdp_pc", "log_capture"])
+                if len(d) < 8:
+                    continue
+                Z = (d[[x, "log_gdp_pc", "log_capture"]] - d[[x, "log_gdp_pc", "log_capture"]].mean()) \
+                    / d[[x, "log_gdp_pc", "log_capture"]].std()
+                yz = (d[y] - d[y].mean()) / d[y].std()
+                fit = sm.OLS(yz.to_numpy(), sm.add_constant(Z.to_numpy())).fit(cov_type="HC3")
+                rho, prho = stats.spearmanr(d[x], d[y])
+                expected = xsign * ysign          # sign of β if the driver worsens (or improves) stocks as expected
+                rows.append({"hypothesis": h, "driver": xl, "response": yl, "n_countries": len(d),
+                             "beta_standardised": float(fit.params[1]), "se_hc3": float(fit.bse[1]),
+                             "p": float(fit.pvalues[1]), "expected_sign": "+" if expected > 0 else "−",
+                             "spearman_rho_unadjusted": rho, "spearman_p": prho})
+    res = pd.DataFrame(rows)
+    res["p_holm"] = np.nan
+    for h in res["hypothesis"].unique():
+        m = res["hypothesis"] == h
+        res.loc[m, "p_holm"] = holm(res.loc[m, "p"])
+    res["as_expected"] = np.sign(res["beta_standardised"]) == res["expected_sign"].map({"+": 1, "−": -1})
+    res["significant_holm"] = res["p_holm"] < ALPHA
+    save_table(res, "14_I8_H8cd_cross_country")
+
+    def summary(h):
+        g = res[res["hypothesis"] == h]
+        return "; ".join(f"{r['driver']} → {r['response']}: β_std {r['beta_standardised']:+.2f} "
+                         f"(n {r['n_countries']}, Holm p {fmt_p(r['p_holm'])})" for _, r in g.iterrows())
+    gc = res[res["hypothesis"] == "H8c"]
+    rej_c = bool((gc["significant_holm"] & gc["as_expected"]).any() and not (gc["significant_holm"] & ~gc["as_expected"]).any())
+    decide("H8c (iteration 8: management & illegal fishing, cross-country)",
+           "Do countries with a weaker response to illegal fishing, or more of it, have worse stock status?",
+           "Cross-country OLS, standardised, controls log GDP per capita and log catch, HC3 SEs, Holm over 6 tests. "
+           + summary("H8c"), rej_c,
+           "IUU index scores are expert/indicator composites for 2019 (152 coastal states); RMTI is a Sea Around Us "
+           "trophic-level trend; RAM country values cover only countries with ≥ 3 assessed stocks (mostly "
+           "high-income). Cross-section: association, not cause; richer countries both manage better and assess more.",
+           verdict=None if rej_c or not gc["significant_holm"].any() else
+           "Weak: significant only against the expected direction or mixed")
+    gd = res[res["hypothesis"] == "H8d"]
+    capd = gd[gd["driver"].str.startswith("capacity")]
+    rej_d = bool((capd["significant_holm"] & capd["as_expected"]).any())
+    decide("H8d (iteration 8: fleet-expanding subsidies, cross-country)",
+           "Do countries paying more capacity-enhancing subsidies per tonne of catch have worse stock status?",
+           "Sumaila et al. 2019 (2018 subsidies, 152 countries), per tonne of 2018 capture, log(1 + USD/t); same "
+           "controls and SEs, Holm over 6 tests. " + summary("H8d"), rej_d,
+           "One year of subsidy data (2018); 'modeled' amounts are estimates where only evidence of a subsidy was "
+           "found. Subsidies paid to distant-water fleets act on other countries' waters, which a per-country EEZ "
+           "measure (RMTI) cannot see. Cross-section: association, not cause.",
+           verdict=None if rej_d else
+           f"Fail to reject H0 (capacity-enhancing subsidies: {int(capd['as_expected'].sum())} of {len(capd)} in the "
+           "expected direction, none significant after Holm"
+           + ("; beneficial subsidies go with a falling trophic level, the opposite of expected" if
+              (gd["significant_holm"] & ~gd["as_expected"] & gd["driver"].str.startswith("beneficial")).any() else "")
+           + ")")
+
+    # ---- figure: forest of the 12 tests + the two strongest scatters ---------------------------------------
+    fig = plt.figure(figsize=(17, 6.4))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.45, 1, 1], wspace=0.62)
+    a1, a2, a3 = (fig.add_subplot(gs[i]) for i in range(3))
+    res_ = res.reset_index(drop=True)
+    ypos = np.arange(len(res_))[::-1]
+    cols = {"trophic-level trend (EPI RMTI)": v.SERIES[0], "median B/Bmsy (RAM)": v.SERIES[1],
+            "% stocks above Umsy (RAM)": v.SERIES[2]}
+    for yp, (_, r) in zip(ypos, res_.iterrows()):
+        c = cols[r["response"]]
+        a1.errorbar(r["beta_standardised"], yp, xerr=1.96 * r["se_hc3"], fmt="o", color=c, ecolor=c, elinewidth=1.3,
+                    capsize=0, markersize=6, mfc=c if r["significant_holm"] else v.SURFACE)
+        a1.text(1.01, yp, f"n {r['n_countries']}, Holm p {fmt_p(r['p_holm'])}", transform=a1.get_yaxis_transform(),
+                va="center", fontsize=7.8, color=v.INK_2)
+    a1.axvline(0, color=v.AXIS, lw=0.8)
+    a1.axhline(5.5, color=v.GRID, lw=1)
+    a1.set_yticks(ypos, [f"{r['hypothesis']} {r['driver'].split(' (')[0].replace(' score', '')}"
+                         for _, r in res_.iterrows()], fontsize=8.3)
+    a1.set_xlabel("Standardised effect on the response (95% CI, HC3)")
+    a1.grid(axis="y", visible=False)
+    a1.legend(handles=[plt.Line2D([], [], marker="o", ls="", color=c, label=k) for k, c in cols.items()],
+              loc="upper center", bbox_to_anchor=(0.45, -0.12), ncol=2, fontsize=8)
+    a1.set_title("1 · All 12 tests (hollow = not significant after Holm)", fontsize=9.5)
+    for ax, (x, y, xl, yl) in [(a2, ("response", "rmti", "IUU response score 2019 (1 best – 5 worst)",
+                                     "trophic-level trend, mean 2015–19")),
+                               (a3, ("capacity_per_t", "rmti", "capacity-enhancing subsidies 2018,\nlog(1 + USD per t of catch)",
+                                     "trophic-level trend, mean 2015–19"))]:
+        d = t.dropna(subset=[x, y])
+        sea = d["iso3"].isin(["MYS", "IDN", "THA", "VNM", "PHL"])
+        ax.scatter(d.loc[~sea, x], d.loc[~sea, y], s=16, color=v.NEUTRAL, alpha=0.8, edgecolor="none")
+        ax.scatter(d.loc[sea, x], d.loc[sea, y], s=34, color=v.SERIES[0], zorder=3)
+        for _, r in d[sea].iterrows():
+            ax.annotate(r["iso3"], (r[x], r[y]), xytext=(4, 3), textcoords="offset points", fontsize=8, color=v.INK_2)
+        k = np.polyfit(d[x], d[y], 1); gx = np.linspace(d[x].min(), d[x].max(), 2)
+        ax.plot(gx, np.polyval(k, gx), color=v.INK_2, lw=1.1, ls=(0, (4, 2)))
+        ax.axhline(0, color=v.AXIS, lw=0.8)
+        ax.set_xlabel(xl); ax.set_ylabel(yl)
+        r_ = res[(res["response"].str.startswith("trophic")) & (res["driver"].str.startswith(
+            "IUU response" if x == "response" else "capacity"))].iloc[0]
+        ax.set_title(f"{2 if x == 'response' else 3} · β_std {r_['beta_standardised']:+.2f}, Holm p "
+                     f"{fmt_p(r_['p_holm'])} (n {r_['n_countries']}; SEA5 in blue)", fontsize=9.5)
+    v.suptitle(fig, "Iteration 8 · H8c, H8d — Management, illegal fishing and subsidies across countries",
+               "Cross-country OLS, controls log GDP per capita and log catch; RMTI < 0 = catch moving down the food "
+               "web. Cross-sectional associations, not causal effects")
+    fig.subplots_adjust(top=0.83, bottom=0.22, left=0.12, right=0.98)
+    save_fig(fig, sec, "I8.03_h8cd_management_subsidies",
+             "IUU Fishing Risk Index 2019 (Poseidon / GI-TOC); Sumaila et al. 2019; Yale EPI 2026 (RMTI); "
+             "RAM Legacy v4.66; World Bank & FAO via OWID")
+
+
 SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": section_h1b,
             "h2a": section_h2a, "h2b": section_h2b, "h2c": section_h2c,
             # iteration 2: fishing effort replaces catch as the pressure variable
@@ -4006,7 +4475,7 @@ SECTIONS = {"stationarity": section_stationarity, "h1a": section_h1a, "h1b": sec
             # iteration 7: sea and water pollution, alone and with the other drivers (new hypothesis H7)
             "i7_data": section_i7_data, "i7_h7a": section_i7_h7a, "i7_h7b": section_i7_h7b,
             "i7_descriptive": section_i7_descriptive, "i7_h7c": section_i7_h7c, "i7_h7d": section_i7_h7d,
-            "i7_h7e": section_i7_h7e, "i7_h7f": section_i7_h7f,
+            "i7_h7e": section_i7_h7e, "i7_h7f": section_i7_h7f, "i8_h8a": section_i8_h8a, "i8_h8b": section_i8_h8b, "i8_h8cd": section_i8_h8cd,
             # summary across iterations (report figure S.01)
             "summary": section_summary,
             "diagnostics": section_diagnostics}

@@ -1,4 +1,21 @@
 table,rule,detail,count
+causes/epi2026_regional_marine_trophic_index_raw.csv,C1–C3 file checks,220 rows × 34 columns; duplicates 0; infinite 0,0
+causes/epi2026_regional_marine_trophic_index_raw.csv,C4 missing values,empty cells across all columns,1736
+causes/epi2026_regional_marine_trophic_index_raw.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',1
+causes/iuu_fishing_index_2019-2025_indicator_scores.csv,C1–C3 file checks,24320 rows × 9 columns; duplicates 0; infinite 0,0
+causes/iuu_fishing_index_2019-2025_indicator_scores.csv,C4 missing values,empty cells across all columns,1733
+causes/iuu_fishing_index_2019-2025_indicator_scores.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',40
+causes/owid_capture-fishery-production_all_countries.csv,C1–C3 file checks,13757 rows × 4 columns; duplicates 0; infinite 0,0
+causes/owid_capture-fishery-production_all_countries.csv,C4 missing values,empty cells across all columns,0
+causes/owid_gdp-per-capita-worldbank_all_countries.csv,C1–C3 file checks,7445 rows × 5 columns; duplicates 0; infinite 0,0
+causes/owid_gdp-per-capita-worldbank_all_countries.csv,C4 missing values,empty cells across all columns,468
+causes/ram_v4.66_stocks.csv,C1–C3 file checks,1514 rows × 12 columns; duplicates 0; infinite 0,0
+causes/ram_v4.66_stocks.csv,C4 missing values,empty cells across all columns,228
+causes/ram_v4.66_timeseries.csv,C1–C3 file checks,46957 rows × 6 columns; duplicates 0; infinite 0,0
+causes/ram_v4.66_timeseries.csv,C4 missing values,empty cells across all columns,69760
+causes/sumaila2019_fisheries_subsidies_2018.csv,C1–C3 file checks,1980 rows × 8 columns; duplicates 0; infinite 0,0
+causes/sumaila2019_fisheries_subsidies_2018.csv,C4 missing values,empty cells across all columns,0
+causes/sumaila2019_fisheries_subsidies_2018.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',13
 owid/aquaculture-farmed-fish-production.csv,C1–C3 file checks,390 rows × 4 columns; duplicates 0; infinite 0,0
 owid/aquaculture-farmed-fish-production.csv,C4 missing values,empty cells across all columns,0
 owid/beach-litter.csv,C1–C3 file checks,33 rows × 4 columns; duplicates 0; infinite 0,0
@@ -186,7 +203,7 @@ validation/un_sdg/14_4_1_ER_H2O_FWTL.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',8
 validation/world_bank/ER.FSH.CAPT.MT.csv,C1–C3 file checks,396 rows × 4 columns; duplicates 0; infinite 0,0
 validation/world_bank/ER.FSH.CAPT.MT.csv,C4 missing values,empty cells across all columns,6
 validation/world_bank/ER.FSH.CAPT.MT.csv,R1 harmonise,'Viet Nam' -> 'Vietnam',66
-clean copies,Stage A,90 CSV files checked and written to data/processed/clean/,90
+clean copies,Stage A,97 CSV files checked and written to data/processed/clean/,97
 global_annual,R4 exclude,UN SDG 14.4.1 world values after 2021 (FAO 2025 method change),2
 global_annual,R4 flag,FAO world years on a straight line between neighbours (likely interpolated),5
 global_annual,R5 drop,partial year 2026 of the SST series,1
